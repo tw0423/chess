@@ -8,7 +8,7 @@ import java.util.Collection;
 public class QueenMovesCalculator extends ChessMoveCalculator {
     private int col;
     private int row;
-    private final ChessPosition current_position;
+    private final ChessPosition currentPosition;
     private final ChessBoard board;
     private ChessPiece piece;
 
@@ -17,7 +17,7 @@ public class QueenMovesCalculator extends ChessMoveCalculator {
         super(position, board, piece); // Call the base class constructor
         this.col = position.getColumn();
         this.row = position.getRow();
-        this.current_position = position;
+        this.currentPosition = position;
         this.board = board;
         this.piece = piece;
     }
@@ -25,156 +25,194 @@ public class QueenMovesCalculator extends ChessMoveCalculator {
 
     public Collection<ChessMove> QueenMoves() {
         Collection<ChessMove> chessMoves = new ArrayList<>();
-        int c = col;
-        int r = row;
-        //lower left diagonal
+         int [][]directions =
+                 {
+                         {-1, -1}, // lower left
+                         {-1, 1},  // lower right
+                         {1, -1},  // upper left
+                         {1, 1},   // upper right
+                         {0, -1},  // left
+                         {0, 1},   // right
+                         {-1, 0},  // down
+                         {1, 0}    // up
+                 };
 
-        while ( c > 1  && r > 1 ) {
-            r -= 1;
-            c -= 1;
-            ChessPosition movingPosition = new ChessPosition(r, c);
-            if(board.empty(movingPosition)) {
-                chessMoves.add(new ChessMove(current_position,movingPosition, null));
-            }
-            else if (!board.sameTeamPos(movingPosition, current_position)) {
-                chessMoves.add(new ChessMove(current_position,movingPosition, null));
-                break;
-            }
-            else{
-                break;
+        for (int[] direction : directions) {
+            int movingRow = row;
+            int movingCol = col;
+            while (true) {
+                movingRow += direction[0];
+                movingCol += direction[1];
+                if (movingRow < 1 || movingCol < 1 || movingRow > 8 || movingCol > 8) {
+                    break;
+                }
+
+                ChessPosition movingPosition = new ChessPosition(movingRow, movingCol);
+
+                if (board.empty(movingPosition)) {
+                    chessMoves.add(new ChessMove(currentPosition, movingPosition, null));
+                } else if (!board.sameTeamPos(movingPosition, currentPosition)) {
+                    chessMoves.add(new ChessMove(currentPosition, movingPosition, null));
+                    break;
+                } else {
+                    break;
+                }
             }
         }
-
-
-
-        // Lower right diagonal
-        c = col;
-        r = row;
-        while (c < 8 && r > 1) {
-            c += 1;
-            r -= 1;
-            ChessPosition movingPosition = new ChessPosition(r, c);
-            if(board.empty(movingPosition)) {
-                chessMoves.add(new ChessMove(current_position,movingPosition, null));
-            }
-            else if (!board.sameTeamPos(movingPosition, current_position)) {
-                chessMoves.add(new ChessMove(current_position,movingPosition, null));
-                break;
-            }
-            else{
-                break;
-            }
-        }
-
-        // Upper left diagonal
-        c = col;
-        r = row;
-        while (c > 1 && r < 8) {
-            c -= 1;
-            r += 1;
-            ChessPosition movingPosition = new ChessPosition(r, c);
-            if(board.empty(movingPosition)) {
-                chessMoves.add(new ChessMove(current_position,movingPosition, null));
-            }
-            else if (!board.sameTeamPos(movingPosition, current_position)) {
-                chessMoves.add(new ChessMove(current_position,movingPosition, null));
-                break;
-            }
-            else{
-                break;
-            }
-        }
-
-        // Upper right diagonal
-        c = col;
-        r = row;
-        while (c < 8 && r < 8) {
-            c += 1;
-            r += 1;
-            ChessPosition movingPosition = new ChessPosition(r, c);
-            if(board.empty(movingPosition)) {
-                chessMoves.add(new ChessMove(current_position,movingPosition, null));
-            }
-            else if (!board.sameTeamPos(movingPosition, current_position)) {
-                chessMoves.add(new ChessMove(current_position,movingPosition, null));
-                break;
-            }
-            else{
-                break;
-            }
-        }
-
-        // Left
-        c = col;
-        while (c > 1) {
-            c -= 1;
-            ChessPosition movingPosition = new ChessPosition(row, c);
-            if(board.empty(movingPosition)) {
-                chessMoves.add(new ChessMove(current_position,movingPosition, null));
-            }
-            else if (!board.sameTeamPos(movingPosition, current_position)) {
-                chessMoves.add(new ChessMove(current_position,movingPosition, null));
-                break;
-            }
-            else{
-                break;
-            }
-        }
-
-        // Right
-        c = col;
-        while (c < 8) {
-            c += 1;
-            ChessPosition movingPosition = new ChessPosition(row, c);
-            if(board.empty(movingPosition)) {
-                chessMoves.add(new ChessMove(current_position,movingPosition, null));
-            }
-            else if (!board.sameTeamPos(movingPosition, current_position)) {
-                chessMoves.add(new ChessMove(current_position,movingPosition, null));
-                break;
-            }
-            else{
-                break;
-            }
-        }
-
-        // Down
-        r = row;
-        while (r > 1) {
-            r -= 1;
-            ChessPosition movingPosition = new ChessPosition(r, col);
-            if(board.empty(movingPosition)) {
-                chessMoves.add(new ChessMove(current_position,movingPosition, null));
-            }
-            else if (!board.sameTeamPos(movingPosition, current_position)) {
-                chessMoves.add(new ChessMove(current_position,movingPosition, null));
-                break;
-            }
-            else{
-                break;
-            }
-        }
-
-        // Up
-        r = row;
-        while (r < 8) {
-            r += 1;
-            ChessPosition movingPosition = new ChessPosition(r, col);
-            if(board.empty(movingPosition)) {
-                chessMoves.add(new ChessMove(current_position,movingPosition, null));
-            }
-            else if (!board.sameTeamPos(movingPosition, current_position)) {
-                chessMoves.add(new ChessMove(current_position,movingPosition, null));
-                break;
-            }
-            else{
-                break;
-            }            //  chessMoves.add(new ChessMove(position, movingPosition, ChessPiece.PieceType.QUEEN));
-        }
-
         return chessMoves;
     }
 }
+//        Collection<ChessMove> chessMoves = new ArrayList<>();
+//        int c = col;
+//        int r = row;
+        //lower left diagonal
+
+//        while ( c > 1  && r > 1 ) {
+//            r -= 1;
+//            c -= 1;
+//            ChessPosition movingPosition = new ChessPosition(r, c);
+//            if(board.empty(movingPosition)) {
+//                chessMoves.add(new ChessMove(current_position,movingPosition, null));
+//            }
+//            else if (!board.sameTeamPos(movingPosition, current_position)) {
+//                chessMoves.add(new ChessMove(current_position,movingPosition, null));
+//                break;
+//            }
+//            else{
+//                break;
+//            }
+//        }
+//
+//
+//
+//        // Lower right diagonal
+//        c = col;
+//        r = row;
+//        while (c < 8 && r > 1) {
+//            c += 1;
+//            r -= 1;
+//            ChessPosition movingPosition = new ChessPosition(r, c);
+//            if(board.empty(movingPosition)) {
+//                chessMoves.add(new ChessMove(current_position,movingPosition, null));
+//            }
+//            else if (!board.sameTeamPos(movingPosition, current_position)) {
+//                chessMoves.add(new ChessMove(current_position,movingPosition, null));
+//                break;
+//            }
+//            else{
+//                break;
+//            }
+//        }
+//
+//        // Upper left diagonal
+//        c = col;
+//        r = row;
+//        while (c > 1 && r < 8) {
+//            c -= 1;
+//            r += 1;
+//            ChessPosition movingPosition = new ChessPosition(r, c);
+//            if(board.empty(movingPosition)) {
+//                chessMoves.add(new ChessMove(current_position,movingPosition, null));
+//            }
+//            else if (!board.sameTeamPos(movingPosition, current_position)) {
+//                chessMoves.add(new ChessMove(current_position,movingPosition, null));
+//                break;
+//            }
+//            else{
+//                break;
+//            }
+//        }
+//
+//        // Upper right diagonal
+//        c = col;
+//        r = row;
+//        while (c < 8 && r < 8) {
+//            c += 1;
+//            r += 1;
+//            ChessPosition movingPosition = new ChessPosition(r, c);
+//            if(board.empty(movingPosition)) {
+//                chessMoves.add(new ChessMove(current_position,movingPosition, null));
+//            }
+//            else if (!board.sameTeamPos(movingPosition, current_position)) {
+//                chessMoves.add(new ChessMove(current_position,movingPosition, null));
+//                break;
+//            }
+//            else{
+//                break;
+//            }
+//        }
+//
+//        // Left
+//        c = col;
+//        while (c > 1) {
+//            c -= 1;
+//            ChessPosition movingPosition = new ChessPosition(row, c);
+//            if(board.empty(movingPosition)) {
+//                chessMoves.add(new ChessMove(current_position,movingPosition, null));
+//            }
+//            else if (!board.sameTeamPos(movingPosition, current_position)) {
+//                chessMoves.add(new ChessMove(current_position,movingPosition, null));
+//                break;
+//            }
+//            else{
+//                break;
+//            }
+//        }
+//
+//        // Right
+//        c = col;
+//        while (c < 8) {
+//            c += 1;
+//            ChessPosition movingPosition = new ChessPosition(row, c);
+//            if(board.empty(movingPosition)) {
+//                chessMoves.add(new ChessMove(current_position,movingPosition, null));
+//            }
+//            else if (!board.sameTeamPos(movingPosition, current_position)) {
+//                chessMoves.add(new ChessMove(current_position,movingPosition, null));
+//                break;
+//            }
+//            else{
+//                break;
+//            }
+//        }
+//
+//        // Down
+//        r = row;
+//        while (r > 1) {
+//            r -= 1;
+//            ChessPosition movingPosition = new ChessPosition(r, col);
+//            if(board.empty(movingPosition)) {
+//                chessMoves.add(new ChessMove(current_position,movingPosition, null));
+//            }
+//            else if (!board.sameTeamPos(movingPosition, current_position)) {
+//                chessMoves.add(new ChessMove(current_position,movingPosition, null));
+//                break;
+//            }
+//            else{
+//                break;
+//            }
+//        }
+//
+//        // Up
+//        r = row;
+//        while (r < 8) {
+//            r += 1;
+//            ChessPosition movingPosition = new ChessPosition(r, col);
+//            if(board.empty(movingPosition)) {
+//                chessMoves.add(new ChessMove(current_position,movingPosition, null));
+//            }
+//            else if (!board.sameTeamPos(movingPosition, current_position)) {
+//                chessMoves.add(new ChessMove(current_position,movingPosition, null));
+//                break;
+//            }
+//            else{
+//                break;
+//            }            //  chessMoves.add(new ChessMove(position, movingPosition, ChessPiece.PieceType.QUEEN));
+//        }
+//
+//        return chessMoves;
+//    }
+
 
 // really smart way to code, I want to write it done cuz I didn't think of this way
 //
