@@ -6,7 +6,7 @@ import java.util.Collection;
 public class KingMovesCalculator extends ChessMoveCalculator {
     private int col;
     private int row;
-    private ChessPosition current_position;
+    private ChessPosition currentPosition;
     private ChessBoard board;
     private final ChessPiece kingPiece;
 
@@ -15,7 +15,7 @@ public class KingMovesCalculator extends ChessMoveCalculator {
         super(position, board, piece); // Call the base class constructor
         this.col = position.getColumn();
         this.row = position.getRow();
-        this.current_position = position;
+        this.currentPosition = position;
         this.board = board;
         this.kingPiece = piece;
 
@@ -43,10 +43,10 @@ public class KingMovesCalculator extends ChessMoveCalculator {
 
                  //check the spot is empty
                  if(board.empty(movingPosition)) {
-                     chessMoves.add(new ChessMove(current_position,movingPosition, null));
+                     chessMoves.add(new ChessMove(currentPosition,movingPosition, null));
                  }
-                 else if (!board.sameTeamPos(movingPosition, current_position)) {
-                     chessMoves.add(new ChessMove(current_position,movingPosition, null));
+                 else if (!board.sameTeamPos(movingPosition, currentPosition)) {
+                     chessMoves.add(new ChessMove(currentPosition,movingPosition, null));
                  }
 
              }
