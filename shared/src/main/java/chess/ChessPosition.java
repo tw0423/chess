@@ -10,8 +10,7 @@ import java.util.Objects;
  */
 public class ChessPosition {
     private final int row;
-    private final int column; //** finals make the objects cannot be changed after
-    // */
+    private final int column;
 
     public ChessPosition(int row, int col) {
         this.row = row;
@@ -33,7 +32,7 @@ public class ChessPosition {
      */
     public int getColumn() {
 
-       return column;
+        return column;
     }
 
     @Override
@@ -57,5 +56,4 @@ public class ChessPosition {
                 ", column=" + column +
                 '}';
     }
-
 }
