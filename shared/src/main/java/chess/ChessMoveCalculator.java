@@ -1,33 +1,14 @@
 package chess;
-
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 
-public class ChessMoveCalculator{
-    private final ChessPosition myPosition;
-    private final ChessBoard myBoard;
-    private final Collection<ChessMove> myMoves;
-    private final ChessPiece myChessPiece;
-
-
-
-    public ChessMoveCalculator(ChessPosition position, ChessBoard board, ChessPiece piece) {
-        this.myPosition = position;
-        this.myBoard = board;
-        var type = myBoard.getPiece(myPosition);
-        this.myMoves = new ArrayList<>();
-        this.myChessPiece = piece;
+public class ChessMoveCalculator {
+    public  ChessBoard board;
+    public ChessPosition position;
+    ChessMoveCalculator(ChessBoard board, ChessPosition position){
+        this.board = board;
+        this.position = position;
     }
-
-    public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-
-
-        return myMoves;
-    }
-
-
-
-
 
 }
 
