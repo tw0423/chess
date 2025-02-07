@@ -9,8 +9,8 @@ import java.util.Objects;
  * signature of the existing methods.
  */
 public class ChessMove {
-    private final ChessPosition startPosition;
-    private final ChessPosition endPosition;
+    private ChessPosition startPosition;
+    private ChessPosition endPosition;
     private final ChessPiece.PieceType promotionPiece;
 
 
@@ -27,16 +27,13 @@ public class ChessMove {
     public ChessPosition getStartPosition() {
 
         return startPosition;
-
     }
 
     /**
      * @return ChessPosition of ending location
      */
     public ChessPosition getEndPosition() {
-
         return endPosition;
-
     }
 
     /**
@@ -45,12 +42,9 @@ public class ChessMove {
      *
      * @return Type of piece to promote a pawn to, or null if no promotion
      */
-
-    //I am so confused here, so there is no input, how do I know is there a promotion or not
     public ChessPiece.PieceType getPromotionPiece() {
 
         return promotionPiece;
-
     }
 
     @Override
