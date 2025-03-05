@@ -12,9 +12,9 @@ public class MemoryUserDAO implements UserDAO {
     }
 
     @Override
-    public UserData getUser(String username) throws AccessDeniedException , EmptyDataException{
+    public UserData getUser(String username){
         if (users.isEmpty()){
-            throw new EmptyDataException("Empty data");
+            return null;
         }
 
         for (UserData user : users) {
@@ -22,7 +22,7 @@ public class MemoryUserDAO implements UserDAO {
                 return user;
             }
         }
-        throw new AccessDeniedException("User not found");
+        return null;
     }
 
     @Override

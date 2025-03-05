@@ -19,40 +19,37 @@ public class MemoryGameDAO implements GameDAO {
     }
 
     @Override
-    public GameData getGame(int gameID) throws AccessDeniedException, EmptyDataException {
+    public GameData getGame(int gameID){
         if (gamesList.isEmpty()) {
-            throw new EmptyDataException("Game list is empty");
+            return null;
         }
         for (GameData game: gamesList) {
             if(game.gameID() == gameID) {
                 return game;
             }
         }
-        throw new AccessDeniedException("Game not found");
+        return null;
     }
 
     @Override
-    public boolean ExistGame(int gameID) throws EmptyDataException, AccessDeniedException {
+    public boolean ExistGame(int gameID) {
         if (gamesList.isEmpty()) {
-            throw new EmptyDataException("Game list is empty");
+            return false;
         }
         for (GameData game: gamesList) {
             if(game.gameID() == gameID) {
                 return true;
             }
         }
-        throw new AccessDeniedException("Game not found");
+        return false;
     }
 
     @Override
-    public void updateGame(GameData game) throws AccessDeniedException {
+    public void updateGame(GameData game) {
         for(GameData originalGame: gamesList) {
             if(game.gameID() == originalGame.gameID()) {
                 gamesList.remove(originalGame);
                 gamesList.add(game);
-            }
-            else {
-                throw new AccessDeniedException("Game not found");
             }
         }
     }
