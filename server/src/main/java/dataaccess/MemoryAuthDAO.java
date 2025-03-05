@@ -25,16 +25,16 @@ public class MemoryAuthDAO implements AuthDAO {
     }
 
     @Override
-    public AuthData getAuth(String authToken) throws EmptyDataException, AuthTokenNotFound{
+    public AuthData getAuth(String authToken) {
         if (this.authDataList.isEmpty()) {
-            throw new EmptyDataException("AuthData is empty");
+            return null;
         }
         for (AuthData authData : this.authDataList) {
             if(authData.authToken().equals(authToken)){
                 return authData;
             }
         }
-        throw new AuthTokenNotFound("AuthToken is not valid");
+        return null;
         //going to throw an exception.
     }
 
