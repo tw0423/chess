@@ -45,6 +45,48 @@ public class UserService {
         }
     }
 
+    public LoginResponse login(LoginRequest request) throws UnauthorizedException, UnsureException {
+        try{
+            String username = request.username();
+            String password = request.password();
+            UserData userData = userDAO.getUser(username);
+
+            if(!userData.password().equals(password)) {
+                throw new UnauthorizedException("{ \"message\": \"Error: unauthorized\" }");
+            }
+            AuthData NewAuthData = this.createAddAuth(username);
+            return new LoginResponse(username, NewAuthData.authToken());
+        }catch(DataAccessException e) {
+            throw new UnsureException(e.getMessage());
+        }
+    }
+
+    public void logout(String authToken) throws UnauthorizedException, UnsureException {
+        try{
+            if(this.checkAuthorization(authToken)){
+                authDAO.removeAuth(authToken);
+            }
+            else{
+                throw new UnauthorizedException("{ \"message\": \"Error: unauthorized\" }");
+            }
+        }catch(DataAccessException e) {
+            throw new UnsureException(e.getMessage());
+        }
+    }
+
+    private boolean checkAuthorization(String authToken) throws DataAccessException {
+        try {
+            AuthData authData = authDAO.getAuth(authToken);
+            if (authData == null) {
+                return false;
+            }
+            return true;
+        }catch (DataAccessException e) {
+            throw e;
+        }
+    }
+
+
 
 
 

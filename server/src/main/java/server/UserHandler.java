@@ -14,7 +14,7 @@ public class UserHandler {
 
 
 
-    public Object register(Request req, Response resp) throws BadRequestException {
+    public Object register(Request req, Response resp)  {
         try {
             UserData userData = new Gson().fromJson(req.body(), UserData.class);
             RegisterRequest registerRequest = new RegisterRequest(userData.username(), userData.password(), userData.email());
@@ -38,5 +38,43 @@ public class UserHandler {
             return e.getMessage();
         }
     }
+
+    public Object login(Request req, Response resp) {
+        try {
+            LoginRequest request = new Gson().fromJson(req.body(), LoginRequest.class);
+            LoginResponse response = userService.login(request);
+
+            resp.status(200);
+            return new Gson().toJson(response);
+
+        } catch (UnauthorizedException e) {
+            resp.status(401);
+            return e.getMessage();
+        } catch (UnsureException e) {
+            resp.status(500);
+//            return new FailureResponse(e.getMessage());
+            return e.getMessage();
+        }
+    }
+
+    public Object logout(Request req, Response resp) {
+        try {
+            String authToken = req.headers("authorization");
+            userService.logout(authToken);
+
+            resp.status(200);
+            return new Gson().toJson("");
+
+        } catch (UnauthorizedException e) {
+            resp.status(401);
+            return e.getMessage();
+        } catch (UnsureException e) {
+            resp.status(500);
+//            return new FailureResponse(e.getMessage());
+            return e.getMessage();
+        }
+    }
+
+
 
 }

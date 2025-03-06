@@ -1,4 +1,4 @@
 package service;
 
-public record LoginResponse() {
+public record LoginResponse(String username, String password) {
 }
