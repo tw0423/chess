@@ -43,6 +43,5 @@ public class MemoryAuthDAO implements AuthDAO {
         this.authDataList.clear();
     }
 
-
 }
 
