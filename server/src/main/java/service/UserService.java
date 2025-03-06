@@ -86,10 +86,12 @@ public class UserService {
         }
     }
 
+    public void clear() {
 
+            userDAO.clear();
+            authDAO.clearAuth();
 
-
-
+    }
 
     private AuthData createAddAuth(String username) throws DataAccessException{
         try {

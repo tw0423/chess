@@ -74,7 +74,4 @@ public class UserHandler {
             return e.getMessage();
         }
     }
-
-
-
 }

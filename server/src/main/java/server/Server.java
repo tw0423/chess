@@ -38,14 +38,14 @@ public class Server {
 
         Spark.staticFiles.location("web");
 
+        Spark.delete("/db", this::clear);
         Spark.post("/user", userHandler::register);
-
+        Spark.post("/session", userHandler::login);
+        Spark.delete("/session", userHandler::logout);
 
         Spark.get("/game", gameHandler::listGames);
-//        Spark.post("/game", gameHandler::createGame);
-//        Spark.put("/game", gameHandler::joinGame);
-
-
+        Spark.post("/game", gameHandler::createGame);
+        Spark.put("/game", gameHandler::joinGame);
 
         // Register your endpoints and handle exceptions here.
 
@@ -60,4 +60,20 @@ public class Server {
         Spark.stop();
         Spark.awaitStop();
     }
+
+    public void clearDB() {
+
+        userService.clear();
+        gameService.clear();
+
+    }
+
+    private Object clear(Request req, Response resp) {
+
+        clearDB();
+
+        resp.status(200);
+        return "{}";
+    }
+
 }

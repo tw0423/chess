@@ -10,6 +10,6 @@ public interface GameDAO {
     boolean ExistGame(int gameID)  throws DataAccessException;
 
     void updateGame(GameData game)  throws DataAccessException;
-    void clear();
+    void clear() ;
 }
 
