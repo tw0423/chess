@@ -6,6 +6,7 @@ import model.GameData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class GameServiceTest {
@@ -69,6 +70,33 @@ public class GameServiceTest {
 
         }catch (UnauthorizedException e) {
             assert true;
+        }catch (Exception e) {
+            assert false;
+        }
+    }
+
+    @Test
+    void successfulListTest() {
+        RegisterRequest request  = new RegisterRequest("volunteer1","abcde","volunteer1@gmail.com");
+        CreateGameRequest createGame = new CreateGameRequest("game1");
+        CreateGameRequest createGame2 = new CreateGameRequest("game2");
+        CreateGameRequest createGame3 = new CreateGameRequest("game3");
+        CreateGameRequest createGame4 = new CreateGameRequest("game4");
+        try {
+            RegisterResponse response = userService.register(request);
+            Assertions.assertNotNull(response);
+
+            String authToken = response.authToken();
+            gameService.createGame(authToken, createGame);
+            gameService.createGame(authToken, createGame2);
+            gameService.createGame(authToken, createGame3);
+            gameService.createGame(authToken, createGame4);
+
+            ListGameReponse listGameReponse = gameService.listGames(authToken);
+            Assertions.assertNotNull(listGameReponse);
+            ArrayList<GameData> datas = gameDAO.listGames();
+
+            Assertions.assertEquals(datas, listGameReponse.games());
         }catch (Exception e) {
             assert false;
         }

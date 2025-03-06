@@ -3,7 +3,6 @@ package service;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import model.*;
-import service.*;
 import dataaccess.*;
 
 import java.util.ArrayList;
@@ -32,7 +31,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void FailiedRegisterTest() {
+    void failedRegisterTest() {
         RegisterRequest request  = new RegisterRequest("volunteer1","abcde","volunteer1@gmail.com");
         RegisterRequest request2  = new RegisterRequest("volunteer1","fgh","volunteer1@gmail.com");
         try {
@@ -65,7 +64,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void unauthoirzedLoginTest() {
+    void unauthorizedLoginTest() {
         RegisterRequest request  = new RegisterRequest("volunteer1","abcde","volunteer1@gmail.com");
         LoginRequest request2  = new LoginRequest(null,"abcde");
         LoginRequest request3  = new LoginRequest("volunteer1","wrongpassWord");
@@ -100,7 +99,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void UnauthorizedLogoutTest() {
+    void unauthorizedLogoutTest() {
         RegisterRequest request  = new RegisterRequest("volunteer1","abcde","volunteer1@gmail.com");
         try {
             RegisterResponse response = userService.register(request);
@@ -115,6 +114,8 @@ public class UserServiceTest {
             assert false;
         }
     }
+
+
 
 
 }
