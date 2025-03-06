@@ -53,7 +53,7 @@ public class ChessPiece {
      *
      * @return Collection of valid moves
      */
-    public Collection<chessMove> pieceMoves(ChessBoard board, chessPosition myPosition) {
+    public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         if (this.pieceType == PieceType.KING){
             KingMoveCalculator KingMoves = new KingMoveCalculator(board, myPosition);
             return KingMoves.kingMoves();
@@ -67,8 +67,8 @@ public class ChessPiece {
             return PawnMoves.pawnMoves();
         }
         else if(this.pieceType == PieceType.BISHOP){
-            bishopMoveCalculator BishopMoves = new bishopMoveCalculator(board, myPosition);
-            return BishopMoves.BishopMoves();
+            BishopMoveCalculator BishopMoves = new BishopMoveCalculator(board, myPosition);
+            return BishopMoves.bishopMoves();
         }
         else if (this.pieceType == PieceType.KNIGHT){
             KnightMoveCalculator KnightMoves = new KnightMoveCalculator(board, myPosition);

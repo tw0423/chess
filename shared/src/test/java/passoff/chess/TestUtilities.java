@@ -9,21 +9,21 @@ import java.util.List;
 import java.util.Map;
 
 public class TestUtilities {
-    public static void validateMoves(String boardText, chessPosition startPosition, int[][] endPositions) {
+    public static void validateMoves(String boardText, ChessPosition startPosition, int[][] endPositions) {
         var board = loadBoard(boardText);
         var testPiece = board.getPiece(startPosition);
         var validMoves = loadMoves(startPosition, endPositions);
         validateMoves(board, testPiece, startPosition, validMoves);
     }
 
-    public static void validateMoves(ChessBoard board, ChessPiece testPiece, chessPosition startPosition,
-                                     List<chessMove> validMoves) {
+    public static void validateMoves(ChessBoard board, ChessPiece testPiece, ChessPosition startPosition,
+                                     List<ChessMove> validMoves) {
         var pieceMoves = new ArrayList<>(testPiece.pieceMoves(board, startPosition));
         validateMoves(validMoves, pieceMoves);
     }
 
-    public static void validateMoves(List<chessMove> expected, List<chessMove> actual) {
-        Comparator<chessMove> comparator = Comparator.comparingInt(TestUtilities::moveToInt);
+    public static void validateMoves(List<ChessMove> expected, List<ChessMove> actual) {
+        Comparator<ChessMove> comparator = Comparator.comparingInt(TestUtilities::moveToInt);
         expected.sort(comparator);
         actual.sort(comparator);
 
@@ -56,7 +56,7 @@ public class TestUtilities {
                     ChessGame.TeamColor color = Character.isLowerCase(c) ? ChessGame.TeamColor.BLACK
                             : ChessGame.TeamColor.WHITE;
                     var type = CHAR_TO_TYPE_MAP.get(Character.toLowerCase(c));
-                    var position = new chessPosition(row, column);
+                    var position = new ChessPosition(row, column);
                     var piece = new ChessPiece(color, type);
                     board.addPiece(position, piece);
                     column++;
@@ -79,20 +79,20 @@ public class TestUtilities {
                 """);
     }
 
-    public static List<chessMove> loadMoves(chessPosition startPosition, int[][] endPositions) {
-        var validMoves = new ArrayList<chessMove>();
+    public static List<ChessMove> loadMoves(ChessPosition startPosition, int[][] endPositions) {
+        var validMoves = new ArrayList<ChessMove>();
         for (var endPosition : endPositions) {
-            validMoves.add(new chessMove(startPosition,
-                    new chessPosition(endPosition[0], endPosition[1]), null));
+            validMoves.add(new ChessMove(startPosition,
+                    new ChessPosition(endPosition[0], endPosition[1]), null));
         }
         return validMoves;
     }
 
-    private static int positionToInt(chessPosition position) {
+    private static int positionToInt(ChessPosition position) {
         return 10 * position.getRow() + position.getColumn();
     }
 
-    private static int moveToInt(chessMove move) {
+    private static int moveToInt(ChessMove move) {
         return 1000 * positionToInt(move.getStartPosition()) + 10 * positionToInt(move.getEndPosition()) +
                 ((move.getPromotionPiece() != null) ? move.getPromotionPiece().ordinal() + 1 : 0);
     }

@@ -29,7 +29,7 @@ public class EnPassantTests {
                 | | | | | | | | |
                 | | | | |K| | | |
                 """);
-        chessMove setupMove = new chessMove(new chessPosition(7, 3), new chessPosition(5, 3), null);
+        ChessMove setupMove = new ChessMove(new ChessPosition(7, 3), new ChessPosition(5, 3), null);
         /*
                 | | | | | | | | |
                 | | | | | | | | |
@@ -41,7 +41,7 @@ public class EnPassantTests {
                 | | | | |K| | | |
          */
 
-        chessMove enPassantMove = new chessMove(new chessPosition(5, 2), new chessPosition(6, 3), null);
+        ChessMove enPassantMove = new ChessMove(new ChessPosition(5, 2), new ChessPosition(6, 3), null);
         ChessBoard endBoard = TestUtilities.loadBoard("""
                 | | | | | | | | |
                 | | | | | | | | |
@@ -71,7 +71,7 @@ public class EnPassantTests {
                 | | | | |K| | | |
                 """);
 
-        chessMove setupMove = new chessMove(new chessPosition(7, 3), new chessPosition(5, 3), null);
+        ChessMove setupMove = new ChessMove(new ChessPosition(7, 3), new ChessPosition(5, 3), null);
         /*
                 | | | | | | | | |
                 | | | | | | | | |
@@ -82,7 +82,7 @@ public class EnPassantTests {
                 | | | | | | | | |
                 | | | | |K| | | |
          */
-        chessMove enPassantMove = new chessMove(new chessPosition(5, 4), new chessPosition(6, 3), null);
+        ChessMove enPassantMove = new ChessMove(new ChessPosition(5, 4), new ChessPosition(6, 3), null);
         ChessBoard endBoard = TestUtilities.loadBoard("""
                 | | | | | | | | |
                 | | | | | | | | |
@@ -111,7 +111,7 @@ public class EnPassantTests {
                 | | | | | | |P| |
                 | | | | | | | | |
                 """);
-        chessMove setupMove = new chessMove(new chessPosition(2, 7), new chessPosition(4, 7), null);
+        ChessMove setupMove = new ChessMove(new ChessPosition(2, 7), new ChessPosition(4, 7), null);
         /*
                 | | | |k| | | | |
                 | | | | | | | | |
@@ -122,7 +122,7 @@ public class EnPassantTests {
                 | | | | | | | | |
                 | | | | | | | | |
          */
-        chessMove enPassantMove = new chessMove(new chessPosition(4, 6), new chessPosition(3, 7), null);
+        ChessMove enPassantMove = new ChessMove(new ChessPosition(4, 6), new ChessPosition(3, 7), null);
         ChessBoard endBoard = TestUtilities.loadBoard("""
                 | | | |k| | | | |
                 | | | | | | | | |
@@ -151,7 +151,7 @@ public class EnPassantTests {
                 | | | | | | |P| |
                 | | | | | | | | |
                 """);
-        chessMove setupMove = new chessMove(new chessPosition(2, 7), new chessPosition(4, 7), null);
+        ChessMove setupMove = new ChessMove(new ChessPosition(2, 7), new ChessPosition(4, 7), null);
         /*
                 | | | |k| | | | |
                 | | | | | | | | |
@@ -162,7 +162,7 @@ public class EnPassantTests {
                 | | | | | | | | |
                 | | | | | | | | |
          */
-        chessMove enPassantMove = new chessMove(new chessPosition(4, 8), new chessPosition(3, 7), null);
+        ChessMove enPassantMove = new ChessMove(new ChessPosition(4, 8), new ChessPosition(3, 7), null);
         ChessBoard endBoard = TestUtilities.loadBoard("""
                 | | | |k| | | | |
                 | | | | | | | | |
@@ -195,7 +195,7 @@ public class EnPassantTests {
         game.setTeamTurn(ChessGame.TeamColor.BLACK);
 
         //move black piece 2 spaces
-        game.makeMove(new chessMove(new chessPosition(7, 3), new chessPosition(5, 3), null));
+        game.makeMove(new ChessMove(new ChessPosition(7, 3), new ChessPosition(5, 3), null));
         /*
                 | | | | |k| | | |
                 | | | | | | | | |
@@ -208,8 +208,8 @@ public class EnPassantTests {
          */
 
         //filler moves
-        game.makeMove(new chessMove(new chessPosition(6, 8), new chessPosition(7, 8), null));
-        game.makeMove(new chessMove(new chessPosition(3, 8), new chessPosition(2, 8), null));
+        game.makeMove(new ChessMove(new ChessPosition(6, 8), new ChessPosition(7, 8), null));
+        game.makeMove(new ChessMove(new ChessPosition(3, 8), new ChessPosition(2, 8), null));
         /*
                 | | | | |k| | | |
                 | | | | | | | |P|
@@ -222,14 +222,14 @@ public class EnPassantTests {
          */
 
         //make sure pawn cannot do En Passant move
-        chessPosition enPassantPosition = new chessPosition(5, 2);
-        chessMove enPassantMove = new chessMove(enPassantPosition, new chessPosition(6, 3), null);
+        ChessPosition enPassantPosition = new ChessPosition(5, 2);
+        ChessMove enPassantMove = new ChessMove(enPassantPosition, new ChessPosition(6, 3), null);
         Assertions.assertFalse(game.validMoves(enPassantPosition).contains(enPassantMove),
                 "ChessGame validMoves contained a En Passant move after the move became invalid");
     }
 
-    private void assertValidEnPassant(ChessBoard board, ChessGame.TeamColor turn, chessMove setupMove,
-                                      chessMove enPassantMove, ChessBoard endBoard) throws InvalidMoveException {
+    private void assertValidEnPassant(ChessBoard board, ChessGame.TeamColor turn, ChessMove setupMove,
+                                      ChessMove enPassantMove, ChessBoard endBoard) throws InvalidMoveException {
         ChessGame game = new ChessGame();
         game.setBoard(board);
         game.setTeamTurn(turn);

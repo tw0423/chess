@@ -37,9 +37,9 @@ public class CastlingTests {
         game.setTeamTurn(ChessGame.TeamColor.WHITE);
 
         //check that with nothing in way, king can castle
-        chessPosition kingPosition = new chessPosition(1, 5);
-        chessMove queenSide = new chessMove(kingPosition, new chessPosition(1, 3), null);
-        chessMove kingSide = new chessMove(kingPosition, new chessPosition(1, 7), null);
+        ChessPosition kingPosition = new ChessPosition(1, 5);
+        ChessMove queenSide = new ChessMove(kingPosition, new ChessPosition(1, 3), null);
+        ChessMove kingSide = new ChessMove(kingPosition, new ChessPosition(1, 7), null);
 
         Assertions.assertTrue(game.validMoves(kingPosition).contains(queenSide), VALID_CASTLE_MISSING);
         Assertions.assertTrue(game.validMoves(kingPosition).contains(kingSide), VALID_CASTLE_MISSING);
@@ -104,9 +104,9 @@ public class CastlingTests {
         game.setTeamTurn(ChessGame.TeamColor.BLACK);
 
         //check that with nothing in way, king can castle
-        chessPosition kingPosition = new chessPosition(8, 5);
-        chessMove queenSide = new chessMove(kingPosition, new chessPosition(8, 3), null);
-        chessMove kingSide = new chessMove(kingPosition, new chessPosition(8, 7), null);
+        ChessPosition kingPosition = new ChessPosition(8, 5);
+        ChessMove queenSide = new ChessMove(kingPosition, new ChessPosition(8, 3), null);
+        ChessMove kingSide = new ChessMove(kingPosition, new ChessPosition(8, 7), null);
 
         Assertions.assertTrue(game.validMoves(kingPosition).contains(queenSide), VALID_CASTLE_MISSING);
         Assertions.assertTrue(game.validMoves(kingPosition).contains(kingSide), VALID_CASTLE_MISSING);
@@ -172,9 +172,9 @@ public class CastlingTests {
         game.setTeamTurn(ChessGame.TeamColor.WHITE);
 
         //check that with nothing in way, king can castle
-        chessPosition kingPosition = new chessPosition(1, 5);
-        chessMove queenSide = new chessMove(kingPosition, new chessPosition(1, 3), null);
-        chessMove kingSide = new chessMove(kingPosition, new chessPosition(1, 7), null);
+        ChessPosition kingPosition = new ChessPosition(1, 5);
+        ChessMove queenSide = new ChessMove(kingPosition, new ChessPosition(1, 3), null);
+        ChessMove kingSide = new ChessMove(kingPosition, new ChessPosition(1, 7), null);
 
         //make sure king cannot castle
         Assertions.assertFalse(game.validMoves(kingPosition).contains(queenSide), INVALID_CASTLE_PRESENT);
@@ -199,9 +199,9 @@ public class CastlingTests {
         game.setBoard(board);
 
         //make sure king cannot castle on either side
-        chessPosition kingPosition = new chessPosition(8, 5);
-        chessMove queenSide = new chessMove(kingPosition, new chessPosition(8, 3), null);
-        chessMove kingSide = new chessMove(kingPosition, new chessPosition(8, 7), null);
+        ChessPosition kingPosition = new ChessPosition(8, 5);
+        ChessMove queenSide = new ChessMove(kingPosition, new ChessPosition(8, 3), null);
+        ChessMove kingSide = new ChessMove(kingPosition, new ChessPosition(8, 7), null);
         Assertions.assertFalse(game.validMoves(kingPosition).contains(queenSide), INVALID_CASTLE_PRESENT);
         Assertions.assertFalse(game.validMoves(kingPosition).contains(kingSide), INVALID_CASTLE_PRESENT);
     }
@@ -225,11 +225,11 @@ public class CastlingTests {
         game.setTeamTurn(ChessGame.TeamColor.WHITE);
 
         //move left rook
-        game.makeMove(new chessMove(new chessPosition(1, 1), new chessPosition(1, 4), null));
-        game.makeMove(new chessMove(new chessPosition(8, 3), new chessPosition(8, 2), null));
+        game.makeMove(new ChessMove(new ChessPosition(1, 1), new ChessPosition(1, 4), null));
+        game.makeMove(new ChessMove(new ChessPosition(8, 3), new ChessPosition(8, 2), null));
 
         //move rook back to starting spot
-        game.makeMove(new chessMove(new chessPosition(1, 4), new chessPosition(1, 1), null));
+        game.makeMove(new ChessMove(new ChessPosition(1, 4), new ChessPosition(1, 1), null));
         /*
                 | |k| | | | | | |
 		        | | | | | | | | |
@@ -241,17 +241,17 @@ public class CastlingTests {
 		        |R| | | |K| | |R|
          */
 
-        chessPosition kingPosition = new chessPosition(1, 5);
-        chessMove queenSide = new chessMove(kingPosition, new chessPosition(1, 3), null);
-        chessMove kingSide = new chessMove(kingPosition, new chessPosition(1, 7), null);
+        ChessPosition kingPosition = new ChessPosition(1, 5);
+        ChessMove queenSide = new ChessMove(kingPosition, new ChessPosition(1, 3), null);
+        ChessMove kingSide = new ChessMove(kingPosition, new ChessPosition(1, 7), null);
 
         //make sure king can't castle towards moved rook, but still can to unmoved rook
         Assertions.assertFalse(game.validMoves(kingPosition).contains(queenSide), INVALID_CASTLE_PRESENT);
         Assertions.assertTrue(game.validMoves(kingPosition).contains(kingSide), VALID_CASTLE_MISSING);
 
         //move king
-        game.makeMove(new chessMove(new chessPosition(8, 2), new chessPosition(8, 3), null));
-        game.makeMove(new chessMove(kingPosition, new chessPosition(1, 6), null));
+        game.makeMove(new ChessMove(new ChessPosition(8, 2), new ChessPosition(8, 3), null));
+        game.makeMove(new ChessMove(kingPosition, new ChessPosition(1, 6), null));
         /*
                 | | |k| | | | | |
                 | | | | | | | | |
@@ -264,8 +264,8 @@ public class CastlingTests {
          */
 
         //move king back to starting position
-        game.makeMove(new chessMove(new chessPosition(8, 3), new chessPosition(8, 4), null));
-        game.makeMove(new chessMove(new chessPosition(1, 6), kingPosition, null));
+        game.makeMove(new ChessMove(new ChessPosition(8, 3), new ChessPosition(8, 4), null));
+        game.makeMove(new ChessMove(new ChessPosition(1, 6), kingPosition, null));
         /*
                 | | | |k| | | | |
                 | | | | | | | | |

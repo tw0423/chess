@@ -1,6 +1,6 @@
 package passoff.chess;
 
-import chess.chessPosition;
+import chess.ChessPosition;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -10,14 +10,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ChessPositionTests {
-    private chessPosition original;
-    private chessPosition equal;
-    private chessPosition different;
+    private ChessPosition original;
+    private ChessPosition equal;
+    private ChessPosition different;
     @BeforeEach
     public void setUp() {
-        original = new chessPosition(3, 7);
-        equal = new chessPosition(3, 7);
-        different = new chessPosition(7, 3);
+        original = new ChessPosition(3, 7);
+        equal = new ChessPosition(3, 7);
+        different = new ChessPosition(7, 3);
     }
 
     @Test
@@ -39,7 +39,7 @@ public class ChessPositionTests {
     @Test
     @DisplayName("Combined Testing")
     public void hashSetTest() {
-        Set<chessPosition> set = new HashSet<>();
+        Set<ChessPosition> set = new HashSet<>();
         set.add(original);
 
         Assertions.assertTrue(set.contains(original));

@@ -8,11 +8,11 @@ import java.util.Objects;
  * Note: You can add to this class, but you may not alter
  * signature of the existing methods.
  */
-public class chessPosition {
+public class ChessPosition {
     private final int row;
     private final int column;
 
-    public chessPosition(int row, int col) {
+    public ChessPosition(int row, int col) {
         this.row = row;
         this.column = col;
     }
@@ -40,7 +40,7 @@ public class chessPosition {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        chessPosition that = (chessPosition) o;
+        ChessPosition that = (ChessPosition) o;
         return row == that.row && column == that.column;
     }
 

@@ -1,8 +1,8 @@
 package passoff.chess;
 
-import chess.chessMove;
+import chess.ChessMove;
 import chess.ChessPiece;
-import chess.chessPosition;
+import chess.ChessPosition;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,18 +13,18 @@ import java.util.Set;
 
 
 public class ChessMoveTests {
-    private chessMove original;
-    private chessMove equal;
-    private chessMove startDifferent;
-    private chessMove endDifferent;
-    private chessMove promoteDifferent;
+    private ChessMove original;
+    private ChessMove equal;
+    private ChessMove startDifferent;
+    private ChessMove endDifferent;
+    private ChessMove promoteDifferent;
     @BeforeEach
     public void setUp() {
-        original = new chessMove(new chessPosition(2, 6), new chessPosition(1, 5), null);
-        equal = new chessMove(new chessPosition(2, 6), new chessPosition(1, 5), null);
-        startDifferent = new chessMove(new chessPosition(2, 4), new chessPosition(1, 5), null);
-        endDifferent = new chessMove(new chessPosition(2, 6), new chessPosition(5, 3), null);
-        promoteDifferent = new chessMove(new chessPosition(2, 6), new chessPosition(1, 5),
+        original = new ChessMove(new ChessPosition(2, 6), new ChessPosition(1, 5), null);
+        equal = new ChessMove(new ChessPosition(2, 6), new ChessPosition(1, 5), null);
+        startDifferent = new ChessMove(new ChessPosition(2, 4), new ChessPosition(1, 5), null);
+        endDifferent = new ChessMove(new ChessPosition(2, 6), new ChessPosition(5, 3), null);
+        promoteDifferent = new ChessMove(new ChessPosition(2, 6), new ChessPosition(1, 5),
                 ChessPiece.PieceType.QUEEN);
     }
 
@@ -53,7 +53,7 @@ public class ChessMoveTests {
     @Test
     @DisplayName("Combined Testing")
     public void hashSetTest() {
-        Set<chessMove> set = new HashSet<>();
+        Set<ChessMove> set = new HashSet<>();
         set.add(original);
 
         Assertions.assertTrue(set.contains(original));

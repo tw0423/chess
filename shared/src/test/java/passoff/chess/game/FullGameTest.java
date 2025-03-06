@@ -1,8 +1,8 @@
 package passoff.chess.game;
 
 import chess.ChessGame;
-import chess.chessMove;
-import chess.chessPosition;
+import chess.ChessMove;
+import chess.ChessPosition;
 import chess.InvalidMoveException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -13,7 +13,7 @@ public class FullGameTest {
     @DisplayName("Full Game Checkmate")
     public void scholarsMate() throws InvalidMoveException {
         var game = new ChessGame();
-        game.makeMove(new chessMove(new chessPosition(2, 5), new chessPosition(4, 5), null));
+        game.makeMove(new ChessMove(new ChessPosition(2, 5), new ChessPosition(4, 5), null));
         /*
                 |r|n|b|q|k|b|n|r|
                 |p|p|p|p|p|p|p|p|
@@ -24,7 +24,7 @@ public class FullGameTest {
                 |P|P|P|P| |P|P|P|
                 |R|N|B|Q|K|B|N|R|
          */
-        game.makeMove(new chessMove(new chessPosition(7, 5), new chessPosition(5, 5), null));
+        game.makeMove(new ChessMove(new ChessPosition(7, 5), new ChessPosition(5, 5), null));
         /*
                 |r|n|b|q|k|b|n|r|
                 |p|p|p|p| |p|p|p|
@@ -35,7 +35,7 @@ public class FullGameTest {
                 |P|P|P|P| |P|P|P|
                 |R|N|B|Q|K|B|N|R|
          */
-        game.makeMove(new chessMove(new chessPosition(1, 6), new chessPosition(4, 3), null));
+        game.makeMove(new ChessMove(new ChessPosition(1, 6), new ChessPosition(4, 3), null));
         /*
                 |r|n|b|q|k|b|n|r|
                 |p|p|p|p| |p|p|p|
@@ -46,7 +46,7 @@ public class FullGameTest {
                 |P|P|P|P| |P|P|P|
                 |R|N|B|Q|K| |N|R|
          */
-        game.makeMove(new chessMove(new chessPosition(8, 7), new chessPosition(6, 6), null));
+        game.makeMove(new ChessMove(new ChessPosition(8, 7), new ChessPosition(6, 6), null));
         /*
                 |r|n|b|q|k|b| |r|
                 |p|p|p|p| |p|p|p|
@@ -57,7 +57,7 @@ public class FullGameTest {
                 |P|P|P|P| |P|P|P|
                 |R|N|B|Q|K| |N|R|
          */
-        game.makeMove(new chessMove(new chessPosition(1, 4), new chessPosition(5, 8), null));
+        game.makeMove(new ChessMove(new ChessPosition(1, 4), new ChessPosition(5, 8), null));
         /*
                 |r|n|b|q|k|b| |r|
                 |p|p|p|p| |p|p|p|
@@ -68,7 +68,7 @@ public class FullGameTest {
                 |P|P|P|P| |P|P|P|
                 |R|N|B| |K| |N|R|
          */
-        game.makeMove(new chessMove(new chessPosition(8, 2), new chessPosition(6, 3), null));
+        game.makeMove(new ChessMove(new ChessPosition(8, 2), new ChessPosition(6, 3), null));
         /*
                 |r| |b|q|k|b| |r|
                 |p|p|p|p| |p|p|p|
@@ -79,7 +79,7 @@ public class FullGameTest {
                 |P|P|P|P| |P|P|P|
                 |R|N|B| |K| |N|R|
          */
-        game.makeMove(new chessMove(new chessPosition(5, 8), new chessPosition(7, 6), null));
+        game.makeMove(new ChessMove(new ChessPosition(5, 8), new ChessPosition(7, 6), null));
         /*
                 |r| |b|q|k|b| |r|
                 |p|p|p|p| |Q|p|p|

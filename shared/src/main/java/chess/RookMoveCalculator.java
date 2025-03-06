@@ -6,13 +6,13 @@ import java.util.Collection;
 public class RookMoveCalculator extends ChessMoveCalculator {
     private int row;
     private int col;
-    public RookMoveCalculator(ChessBoard board, chessPosition position) {
+    public RookMoveCalculator(ChessBoard board, ChessPosition position) {
         super(board, position);
         this.row = position.getRow();
         this.col = position.getColumn();
     }
-    public Collection<chessMove> rookMoves() {
-        Collection<chessMove> moves = new ArrayList<>();
+    public Collection<ChessMove> rookMoves() {
+        Collection<ChessMove> moves = new ArrayList<>();
 
         int [][] directions = {
                 {1, 0},//up
@@ -35,12 +35,12 @@ public class RookMoveCalculator extends ChessMoveCalculator {
                 if (MovingRow < 1 || MovingRow > 8 || MovingCol < 1 || MovingCol > 8) {
                     break;
                 }
-                chessPosition MovingPosition = new chessPosition(MovingRow, MovingCol);
+                ChessPosition MovingPosition = new ChessPosition(MovingRow, MovingCol);
                 if(board.empty(MovingPosition)){
-                    moves.add(new chessMove(this.position, MovingPosition, null));
+                    moves.add(new ChessMove(this.position, MovingPosition, null));
                 }
                 else if(board.notSameTeam(MovingPosition, this.position)){
-                    moves.add(new chessMove(this.position, MovingPosition, null));
+                    moves.add(new ChessMove(this.position, MovingPosition, null));
                     break;
                 }
                 else{
