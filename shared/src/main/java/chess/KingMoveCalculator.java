@@ -26,15 +26,15 @@ public class KingMoveCalculator extends ChessMoveCalculator {
                 {1, -1}//upper left
         };
         for (int[] direction : directions) {
-            int MovingRow = row + direction[0];
-            int MovingCol = col + direction[1];
-            ChessPosition MovingPosition = new ChessPosition(MovingRow, MovingCol);
-            if (MovingRow < 1 || MovingRow > 8 || MovingCol < 1 || MovingCol > 8) {
+            int movingRow = row + direction[0];
+            int movingCol = col + direction[1];
+            ChessPosition movingPosition = new ChessPosition(movingRow, movingCol);
+            if (movingRow < 1 || movingRow > 8 || movingCol < 1 || movingCol > 8) {
                 continue;
             }
-            else if (this.board.empty(MovingPosition) || this.board.notSameTeam(this.position, MovingPosition))
+            else if (this.board.empty(movingPosition) || this.board.notSameTeam(this.position, movingPosition))
             {
-                moves.add(new ChessMove(this.position, MovingPosition, null));
+                moves.add(new ChessMove(this.position, movingPosition, null));
             }
 
 

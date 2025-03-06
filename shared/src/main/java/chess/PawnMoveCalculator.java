@@ -16,63 +16,63 @@ public class PawnMoveCalculator extends ChessMoveCalculator {
     public Collection<ChessMove> pawnMoves() {
         Collection<ChessMove> moves = new ArrayList<>();
         if (piece.getTeamColor() == ChessGame.TeamColor.WHITE) {
-            ChessPosition FarwordPosition = new ChessPosition(row +1, col);
-            ChessPosition DoubleFarword = new ChessPosition(row+2, col);
-            ChessPosition RightFarword = new ChessPosition(row+1, col+1);
-            ChessPosition LeftFarword = new ChessPosition(row+1, col-1);
+            ChessPosition farwordPosition = new ChessPosition(row +1, col);
+            ChessPosition doubleFarword = new ChessPosition(row+2, col);
+            ChessPosition rightFarword = new ChessPosition(row+1, col+1);
+            ChessPosition leftFarword = new ChessPosition(row+1, col-1);
 
-            if(row+1<=7 && this.board.empty(FarwordPosition)){
-                moves.add(new ChessMove(this.position,FarwordPosition,null ));
-                if(row == 2 && this.board.empty(DoubleFarword)){
-                    moves.add(new ChessMove(this.position,DoubleFarword,null ));
+            if(row+1<=7 && this.board.empty(farwordPosition)){
+                moves.add(new ChessMove(this.position,farwordPosition,null ));
+                if(row == 2 && this.board.empty(doubleFarword)){
+                    moves.add(new ChessMove(this.position,doubleFarword,null ));
                 }
             }
-            if(row+1<=7 && col+1 <= 8 && this.board.notSameTeam(this.position, RightFarword)){
-                moves.add(new ChessMove(this.position,RightFarword,null ));
+            if(row+1<=7 && col+1 <= 8 && this.board.notSameTeam(this.position, rightFarword)){
+                moves.add(new ChessMove(this.position,rightFarword,null ));
             }
-            if(row+1<=7 && col-1 >= 1 && this.board.notSameTeam(this.position, LeftFarword)){
-                moves.add(new ChessMove(this.position,LeftFarword,null ));
+            if(row+1<=7 && col-1 >= 1 && this.board.notSameTeam(this.position, leftFarword)){
+                moves.add(new ChessMove(this.position,leftFarword,null ));
             }
             if(row == 7){
-                if(board.empty(FarwordPosition)){
-                    addPromotion(moves,FarwordPosition);
+                if(board.empty(farwordPosition)){
+                    addPromotion(moves,farwordPosition);
                 }
-                if(col+1<=8 && board.notSameTeam(this.position, RightFarword)){
-                    addPromotion(moves,RightFarword);
+                if(col+1<=8 && board.notSameTeam(this.position, rightFarword)){
+                    addPromotion(moves,rightFarword);
                 }
-                if(col-1 >= 1 && board.notSameTeam(this.position, LeftFarword)){
-                    addPromotion(moves,LeftFarword);
+                if(col-1 >= 1 && board.notSameTeam(this.position, leftFarword)){
+                    addPromotion(moves,leftFarword);
                 }
             }
         }
         else if (piece.getTeamColor() == ChessGame.TeamColor.BLACK) {
-            ChessPosition BackwardPosition = new ChessPosition(row -1, col);
-            ChessPosition DoubleBackward = new ChessPosition(row-2, col);
-            ChessPosition RightBackward = new ChessPosition(row-1, col+1);
-            ChessPosition LeftBackward = new ChessPosition(row-1, col-1);
+            ChessPosition chessPosition = new ChessPosition(row -1, col);
+            ChessPosition doubleBackward = new ChessPosition(row-2, col);
+            ChessPosition rightBackward = new ChessPosition(row-1, col+1);
+            ChessPosition leftBackward = new ChessPosition(row-1, col-1);
 
-            if(row- 1 >= 2 && this.board.empty(BackwardPosition)){
-                moves.add(new ChessMove(this.position,BackwardPosition,null ));
-                if(row == 7 && this.board.empty(DoubleBackward)){
-                    moves.add(new ChessMove(this.position,DoubleBackward,null ));
+            if(row- 1 >= 2 && this.board.empty(chessPosition)){
+                moves.add(new ChessMove(this.position,chessPosition,null ));
+                if(row == 7 && this.board.empty(doubleBackward)){
+                    moves.add(new ChessMove(this.position,doubleBackward,null ));
                 }
             }
-            if(row-1>=2 && col+1 <= 8 && this.board.notSameTeam(this.position, RightBackward)){
-                moves.add(new ChessMove(this.position,RightBackward,null ));
+            if(row-1>=2 && col+1 <= 8 && this.board.notSameTeam(this.position, rightBackward)){
+                moves.add(new ChessMove(this.position,rightBackward,null ));
             }
-            if(row-1>=2 && col-1 >= 1 && this.board.notSameTeam(this.position, LeftBackward)){
-                moves.add(new ChessMove(this.position,LeftBackward,null ));
+            if(row-1>=2 && col-1 >= 1 && this.board.notSameTeam(this.position, leftBackward)){
+                moves.add(new ChessMove(this.position,leftBackward,null ));
             }
 
             if(row == 2){
-                if(board.empty(BackwardPosition)){
-                    addPromotion(moves,BackwardPosition);
+                if(board.empty(chessPosition)){
+                    addPromotion(moves,chessPosition);
                 }
-                if(col+1<=8 && board.notSameTeam(this.position, RightBackward)){
-                    addPromotion(moves,RightBackward);
+                if(col+1<=8 && board.notSameTeam(this.position, rightBackward)){
+                    addPromotion(moves,rightBackward);
                 }
-                if(col-1 >= 1 && board.notSameTeam(this.position, LeftBackward)){
-                    addPromotion(moves,LeftBackward);
+                if(col-1 >= 1 && board.notSameTeam(this.position, leftBackward)){
+                    addPromotion(moves,leftBackward);
                 }
             }
         }
@@ -80,11 +80,11 @@ public class PawnMoveCalculator extends ChessMoveCalculator {
 
     }
 
-    public void addPromotion(Collection<ChessMove> moves, ChessPosition MovingPosition) {
-        moves.add(new ChessMove(this.position,MovingPosition, ChessPiece.PieceType.QUEEN));
-        moves.add(new ChessMove(this.position,MovingPosition, ChessPiece.PieceType.ROOK));
-        moves.add(new ChessMove(this.position,MovingPosition, ChessPiece.PieceType.BISHOP));
-        moves.add(new ChessMove(this.position,MovingPosition, ChessPiece.PieceType.KNIGHT));
+    public void addPromotion(Collection<ChessMove> moves, ChessPosition movingPosition) {
+        moves.add(new ChessMove(this.position,movingPosition, ChessPiece.PieceType.QUEEN));
+        moves.add(new ChessMove(this.position,movingPosition, ChessPiece.PieceType.ROOK));
+        moves.add(new ChessMove(this.position,movingPosition, ChessPiece.PieceType.BISHOP));
+        moves.add(new ChessMove(this.position,movingPosition, ChessPiece.PieceType.KNIGHT));
 
 
     }

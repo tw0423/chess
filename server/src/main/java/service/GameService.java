@@ -22,9 +22,7 @@ public class GameService {
                 throw new UnauthorizedException("{ \"message\": \"Error: unauthorized\" }");
             }
             ArrayList<GameData> games = gameDAO.listGames();
-//            if (games.isEmpty()) {
-//                throw new UnauthorizedException("{ \"message\": \"Error: unauthorized\" }");
-//            }
+
             return new ListGameReponse(gameDAO.listGames());
         } catch (DataAccessException e) {
             throw new UnsureException(e.getMessage());
@@ -33,7 +31,8 @@ public class GameService {
     }
     //will the int be zero if missing some statement
     //if Game doesn't exit, is it a badRequest??
-    public void joinGame(String authToken, JoinGameRequest request) throws UnsureException, UnauthorizedException, BadRequestException, AlreadyTakenException {
+    public void joinGame(String authToken, JoinGameRequest request)
+            throws UnsureException, UnauthorizedException, BadRequestException, AlreadyTakenException {
         try{
             if( request.playerColor() == null){
                 throw new BadRequestException("{ \"message\": \"Error: bad request\" }");
@@ -77,7 +76,8 @@ public class GameService {
         }
     }
     //what is the bad request for ???????
-    public CreateGameResponse createGame(String authToken, CreateGameRequest request) throws BadRequestException, UnsureException, UnauthorizedException{
+    public CreateGameResponse createGame(String authToken, CreateGameRequest request)
+            throws BadRequestException, UnsureException, UnauthorizedException{
         try {
             if (request.gameName() == null) {
                 throw new BadRequestException("{ \"message\": \"Error: bad request\" }");

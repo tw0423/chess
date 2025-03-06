@@ -53,22 +53,41 @@ public class ChessGame implements Cloneable {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        ChessPiece Piece = board.getPiece(startPosition);
-        if(Piece == null) {
+        ChessPiece piece = getPieceAtPosition(startPosition);
+        if (piece == null) {
             return new ArrayList<>();
         }
-        Collection<ChessMove> moves = Piece.pieceMoves(board, startPosition);
+        Collection<ChessMove> potentialMoves = getPotentialMoves(piece, startPosition);
+        return filterValidMoves(piece, potentialMoves);
+    }
+
+    // Helper method to get the piece at a given position
+    private ChessPiece getPieceAtPosition(ChessPosition position) {
+        return board.getPiece(position);
+    }
+
+    // Helper method to get all potential moves for a piece
+    private Collection<ChessMove> getPotentialMoves(ChessPiece piece, ChessPosition startPosition) {
+        return piece.pieceMoves(board, startPosition);
+    }
+
+    // Helper method to filter out moves that would result in a check
+    private Collection<ChessMove> filterValidMoves(ChessPiece piece, Collection<ChessMove> potentialMoves) {
         ArrayList<ChessMove> validMoves = new ArrayList<>();
-        for (ChessMove move : moves) {
-            ChessGame copiedGame = this.clone();
-            copiedGame.board.addPiece(move.getStartPosition(), null);
-            copiedGame.board.addPiece(move.getEndPosition(),Piece);
-            if(!copiedGame.isInCheck(Piece.getTeamColor())){
+        for (ChessMove move : potentialMoves) {
+            if (isMoveSafe(piece, move)) {
                 validMoves.add(move);
             }
         }
         return validMoves;
-//        ChessBoard copiedBoard = board.copy;
+    }
+
+    // Helper method to check if a move is safe (does not result in check)
+    private boolean isMoveSafe(ChessPiece piece, ChessMove move) {
+        ChessGame copiedGame = this.clone();
+        copiedGame.board.addPiece(move.getStartPosition(), null);
+        copiedGame.board.addPiece(move.getEndPosition(), piece);
+        return !copiedGame.isInCheck(piece.getTeamColor());
     }
 
     /**

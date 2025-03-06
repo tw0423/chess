@@ -58,8 +58,8 @@ public class UserService {
             if(!userData.password().equals(password)) {
                 throw new UnauthorizedException("{ \"message\": \"Error: unauthorized\" }");
             }
-            AuthData NewAuthData = this.createAddAuth(username);
-            return new LoginResponse(username, NewAuthData.authToken());
+            AuthData newAuthData = this.createAddAuth(username);
+            return new LoginResponse(username, newAuthData.authToken());
         }catch(DataAccessException e) {
             throw new UnsureException(e.getMessage());
         }

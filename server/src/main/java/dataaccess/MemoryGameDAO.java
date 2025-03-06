@@ -31,18 +31,7 @@ public class MemoryGameDAO implements GameDAO {
         return null;
     }
 
-    @Override
-    public boolean ExistGame(int gameID) {
-        if (gamesList.isEmpty()) {
-            return false;
-        }
-        for (GameData game: gamesList) {
-            if(game.gameID() == gameID) {
-                return true;
-            }
-        }
-        return false;
-    }
+
 
     @Override
     public void updateGame(GameData game) {

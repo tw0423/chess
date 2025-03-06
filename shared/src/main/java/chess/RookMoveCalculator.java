@@ -26,21 +26,21 @@ public class RookMoveCalculator extends ChessMoveCalculator {
         };
         for (int[] direction : directions) {
 
-            int MovingRow = row;
-            int MovingCol = col;
+            int movingRow = row;
+            int movingCol = col;
             while (true)
             {
-                MovingRow += direction[0];
-                MovingCol += direction[1];
-                if (MovingRow < 1 || MovingRow > 8 || MovingCol < 1 || MovingCol > 8) {
+                movingRow += direction[0];
+                movingCol += direction[1];
+                if (movingRow < 1 || movingRow > 8 || movingCol < 1 || movingCol > 8) {
                     break;
                 }
-                ChessPosition MovingPosition = new ChessPosition(MovingRow, MovingCol);
-                if(board.empty(MovingPosition)){
-                    moves.add(new ChessMove(this.position, MovingPosition, null));
+                ChessPosition movingPosition = new ChessPosition(movingRow, movingCol);
+                if(board.empty(movingPosition)){
+                    moves.add(new ChessMove(this.position, movingPosition, null));
                 }
-                else if(board.notSameTeam(MovingPosition, this.position)){
-                    moves.add(new ChessMove(this.position, MovingPosition, null));
+                else if(board.notSameTeam(movingPosition, this.position)){
+                    moves.add(new ChessMove(this.position, movingPosition, null));
                     break;
                 }
                 else{
