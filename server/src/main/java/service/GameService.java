@@ -17,9 +17,14 @@ public class GameService {
 
     public ListGameReponse listGames(String authToken)  throws UnsureException, UnauthorizedException {
         try {
+
             if (!this.checkAuthorization(authToken)) {
-                throw new UnauthorizedException(" \"message\": \"Error: unauthorized\" ");
+                throw new UnauthorizedException("{ \"message\": \"Error: unauthorized\" }");
             }
+            ArrayList<GameData> games = gameDAO.listGames();
+//            if (games.isEmpty()) {
+//                throw new UnauthorizedException("{ \"message\": \"Error: unauthorized\" }");
+//            }
             return new ListGameReponse(gameDAO.listGames());
         } catch (DataAccessException e) {
             throw new UnsureException(e.getMessage());
