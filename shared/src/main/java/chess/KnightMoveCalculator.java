@@ -29,14 +29,7 @@ public class KnightMoveCalculator extends ChessMoveCalculator {
         for (int[] direction : directions) {
             int movingRow = row + direction[0];
             int movingCol = col + direction[1];
-            ChessPosition movingPosition = new ChessPosition(movingRow, movingCol);
-            if (movingRow < 1 || movingRow > 8 || movingCol < 1 || movingCol > 8) {
-                continue;
-            }
-            else if (this.board.empty(movingPosition) || this.board.notSameTeam(this.position, movingPosition))
-            {
-                moves.add(new ChessMove(this.position, movingPosition, null));
-            }
+            addMoveIfValid(moves, movingRow, movingCol);
 
 
         }
