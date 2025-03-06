@@ -17,7 +17,7 @@ public class GameService {
 
     public ListGameReponse listGames(String authToken)  throws UnsureException, UnauthorizedException {
         try {
-            if (this.checkAuthorization(authToken)) {
+            if (!this.checkAuthorization(authToken)) {
                 throw new UnauthorizedException(" \"message\": \"Error: unauthorized\" ");
             }
             return new ListGameReponse(gameDAO.listGames());
@@ -33,7 +33,7 @@ public class GameService {
             if( request.playerColor() == null){
                 throw new BadRequestException("{ \"message\": \"Error: bad request\" }");
             }
-            if (this.checkAuthorization(authToken)) {
+            if (!this.checkAuthorization(authToken)) {
                 throw new UnauthorizedException("{ \"message\": \"Error: unauthorized\" }");
             }
 
@@ -61,6 +61,8 @@ public class GameService {
                         throw new AlreadyTakenException("{ \"message\": \"Error: already taken\" }");
                     }
                     break;
+                default:
+                    throw new BadRequestException("{ \"message\": \"Error: bad request\" }");
             }
 
             GameData newGameData = new GameData(gameID, whiteUser, blackUser, currentGameData.gameName(), currentGameData.game());

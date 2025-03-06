@@ -48,10 +48,10 @@ public class GameHandler {
                 // UnauthorizedException
             }
         }catch (UnsureException e){
-            resp.status(401);
+            resp.status(500);
             return e.getMessage();
         } catch (UnauthorizedException e){
-            resp.status(500);
+            resp.status(401);
             return e.getMessage();
         } catch (BadRequestException e){
             resp.status(400);
@@ -64,7 +64,7 @@ public class GameHandler {
         try {
 
             if (!req.body().contains("\"gameID\":")) {
-                resp.status(200);
+                resp.status(400);
                 return "{ \"message\": \"Error: bad request\" }";
             }
 
@@ -73,7 +73,7 @@ public class GameHandler {
             gameService.joinGame(authToken, joinGameRequest);
 
             resp.status(200);
-            return "";
+            return "{}";
 
             // UnsureException, UnauthorizedException, BadRequestException, AlreadyTakenException
         } catch (BadRequestException e){
