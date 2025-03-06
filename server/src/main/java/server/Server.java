@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 public class Server {
 
     UserHandler userHandler;
+    GameHandler gameHandler;
 
 
     UserService userService;
@@ -23,10 +24,10 @@ public class Server {
         gameDAO = new MemoryGameDAO();
 
         userService = new UserService(authDAO, userDAO);
-//        gameService = new GameService(gameDAO, authDAO);
+        gameService = new GameService(authDAO, gameDAO);
 
         userHandler = new UserHandler(userService);
-//        gameHandler = new GameHandler(gameService);
+        gameHandler = new GameHandler(gameService);
 
 
 
@@ -38,6 +39,12 @@ public class Server {
         Spark.staticFiles.location("web");
 
         Spark.post("/user", userHandler::register);
+
+
+        Spark.get("/game", gameHandler::listGames);
+//        Spark.post("/game", gameHandler::createGame);
+//        Spark.put("/game", gameHandler::joinGame);
+
 
 
         // Register your endpoints and handle exceptions here.

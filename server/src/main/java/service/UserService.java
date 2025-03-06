@@ -47,6 +47,8 @@ public class UserService {
 
 
 
+
+
     private AuthData createAddAuth(String username) throws DataAccessException{
         try {
             String authToken = UUID.randomUUID().toString();
