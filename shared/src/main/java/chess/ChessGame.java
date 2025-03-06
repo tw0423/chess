@@ -189,25 +189,31 @@ public class ChessGame implements Cloneable {
     //how t heck should I check this
     public boolean isInCheckmate(TeamColor teamColor) {
         if(this.isInCheck(teamColor)){
-            for(int i =1; i<=8; i++){
-                for(int j =1; j<=8; j++){
-                    ChessPosition detectingPosition = new ChessPosition(i, j);
-                    ChessPiece detectingPiece = board.getPiece(detectingPosition);
-                    if(detectingPiece != null && detectingPiece.getTeamColor() == teamColor){
-                        Collection<ChessMove> validMoves = this.validMoves(detectingPosition);
-                        if(!validMoves.isEmpty()){
-                            return false;
-                        }
-                    }
-                }
-            }
+            if( forLoopCheckMate(teamColor)){
+                return false;
+            };
+
             return true;
         }
         else{
             return false;
         }
     }
-
+    public boolean forLoopCheckMate(TeamColor teamColor) {
+        for(int i =1; i<=8; i++){
+            for(int j =1; j<=8; j++){
+                ChessPosition detectingPosition = new ChessPosition(i, j);
+                ChessPiece detectingPiece = board.getPiece(detectingPosition);
+                if(detectingPiece != null && detectingPiece.getTeamColor() == teamColor){
+                    Collection<ChessMove> validMoves = this.validMoves(detectingPosition);
+                    if(!validMoves.isEmpty()){
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
     /**
      * Determines if the given team is in stalemate, which here is defined as having
      * no valid moves

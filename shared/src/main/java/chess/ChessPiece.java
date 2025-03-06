@@ -55,28 +55,28 @@ public class ChessPiece {
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         if (this.pieceType == PieceType.KING){
-            KingMoveCalculator KingMoves = new KingMoveCalculator(board, myPosition);
-            return KingMoves.kingMoves();
+            KingMoveCalculator kingMoves = new KingMoveCalculator(board, myPosition);
+            return kingMoves.kingMoves();
         }
         else if (this.pieceType == PieceType.QUEEN){
-            QueenMoveCalculator QueenMoves = new QueenMoveCalculator(board, myPosition);
-            return QueenMoves.queenMoves();
+            QueenMoveCalculator queenMoves = new QueenMoveCalculator(board, myPosition);
+            return queenMoves.queenMoves();
         }
         else if (this.pieceType == PieceType.PAWN){
-            PawnMoveCalculator PawnMoves = new PawnMoveCalculator(board, myPosition);
-            return PawnMoves.pawnMoves();
+            PawnMoveCalculator pawnMoves = new PawnMoveCalculator(board, myPosition);
+            return pawnMoves.pawnMoves();
         }
         else if(this.pieceType == PieceType.BISHOP){
-            BishopMoveCalculator BishopMoves = new BishopMoveCalculator(board, myPosition);
-            return BishopMoves.bishopMoves();
+            BishopMoveCalculator bishopMoves = new BishopMoveCalculator(board, myPosition);
+            return bishopMoves.bishopMoves();
         }
         else if (this.pieceType == PieceType.KNIGHT){
-            KnightMoveCalculator KnightMoves = new KnightMoveCalculator(board, myPosition);
-            return KnightMoves.knightMoves();
+            KnightMoveCalculator knightMoves = new KnightMoveCalculator(board, myPosition);
+            return knightMoves.knightMoves();
         }
         else if (this.pieceType == PieceType.ROOK){
-            RookMoveCalculator RookMoves = new RookMoveCalculator(board, myPosition);
-            return RookMoves.rookMoves();
+            RookMoveCalculator rookMoves = new RookMoveCalculator(board, myPosition);
+            return rookMoves.rookMoves();
         }
         return this.pieceMoves(board, myPosition);
     }

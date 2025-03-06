@@ -35,12 +35,12 @@ public class BishopMoveCalculator extends ChessMoveCalculator {
                 if (movingRow < 1 || movingRow > 8 || movingCol < 1 || movingCol > 8) {
                     break;
                 }
-                ChessPosition MovingPosition = new ChessPosition(movingRow, movingCol);
-                if(board.empty(MovingPosition)){
-                    moves.add(new ChessMove(this.position, MovingPosition, null));
+                ChessPosition movingPosition = new ChessPosition(movingRow, movingCol);
+                if(board.empty(movingPosition)){
+                    moves.add(new ChessMove(this.position, movingPosition, null));
                 }
-                else if(board.notSameTeam(MovingPosition, this.position)){
-                    moves.add(new ChessMove(this.position, MovingPosition, null));
+                else if(board.notSameTeam(movingPosition, this.position)){
+                    moves.add(new ChessMove(this.position, movingPosition, null));
                     break;
                 }
                 else{
