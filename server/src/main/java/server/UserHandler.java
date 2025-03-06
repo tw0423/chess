@@ -63,7 +63,7 @@ public class UserHandler {
             userService.logout(authToken);
 
             resp.status(200);
-            return new Gson().toJson("");
+            return new Gson().toJson("{}");
 
         } catch (UnauthorizedException e) {
             resp.status(401);

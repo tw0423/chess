@@ -49,7 +49,11 @@ public class UserService {
         try{
             String username = request.username();
             String password = request.password();
+
             UserData userData = userDAO.getUser(username);
+            if (userData == null) {
+                throw new UnauthorizedException("{ \"message\": \"Error: unauthorized\" }");
+            }
 
             if(!userData.password().equals(password)) {
                 throw new UnauthorizedException("{ \"message\": \"Error: unauthorized\" }");
