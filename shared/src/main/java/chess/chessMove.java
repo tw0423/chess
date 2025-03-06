@@ -8,13 +8,13 @@ import java.util.Objects;
  * Note: You can add to this class, but you may not alter
  * signature of the existing methods.
  */
-public class ChessMove {
-    private ChessPosition startPosition;
-    private ChessPosition endPosition;
+public class chessMove {
+    private chessPosition startPosition;
+    private chessPosition endPosition;
     private final ChessPiece.PieceType promotionPiece;
 
 
-    public ChessMove(ChessPosition startPosition, ChessPosition endPosition,
+    public chessMove(chessPosition startPosition, chessPosition endPosition,
                      ChessPiece.PieceType promotionPiece) {
         this.startPosition = startPosition;
         this.endPosition = endPosition;
@@ -24,7 +24,7 @@ public class ChessMove {
     /**
      * @return ChessPosition of starting location
      */
-    public ChessPosition getStartPosition() {
+    public chessPosition getStartPosition() {
 
         return startPosition;
     }
@@ -32,7 +32,7 @@ public class ChessMove {
     /**
      * @return ChessPosition of ending location
      */
-    public ChessPosition getEndPosition() {
+    public chessPosition getEndPosition() {
         return endPosition;
     }
 
@@ -52,7 +52,7 @@ public class ChessMove {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        ChessMove chessMove = (ChessMove) o;
+        chessMove chessMove = (chessMove) o;
         return Objects.equals(startPosition, chessMove.startPosition) && Objects.equals(endPosition, chessMove.endPosition) && promotionPiece == chessMove.promotionPiece;
     }
 

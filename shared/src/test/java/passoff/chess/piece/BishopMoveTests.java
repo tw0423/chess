@@ -1,6 +1,6 @@
 package passoff.chess.piece;
 
-import chess.ChessPosition;
+import chess.chessPosition;
 import org.junit.jupiter.api.Test;
 import passoff.chess.TestUtilities;
 
@@ -18,7 +18,7 @@ public class BishopMoveTests {
                         | | | | | | | | |
                         | | | | | | | | |
                         """,
-                new ChessPosition(5, 4),
+                new chessPosition(5, 4),
                 new int[][]{
                         {6, 5}, {7, 6}, {8, 7},
                         {4, 5}, {3, 6}, {2, 7}, {1, 8},
@@ -41,7 +41,7 @@ public class BishopMoveTests {
                         | | | | |P| | | |
                         | | | | | | | | |
                         """,
-                new ChessPosition(5, 2),
+                new chessPosition(5, 2),
                 new int[][]{
                         {6, 3}, {7, 4},
                         {4, 3}, {3, 4}, {2, 5},
@@ -64,7 +64,7 @@ public class BishopMoveTests {
                         | | | | |R| |P| |
                         | | | | | |B| | |
                         """,
-                new ChessPosition(1, 6),
+                new chessPosition(1, 6),
                 new int[][]{}
         );
     }

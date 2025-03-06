@@ -1,6 +1,6 @@
 package passoff.chess.piece;
 
-import chess.ChessPosition;
+import chess.chessPosition;
 import org.junit.jupiter.api.Test;
 import passoff.chess.TestUtilities;
 
@@ -17,7 +17,7 @@ public class QueenMoveTests {
                         | | | | | | | | |
                         | | | | | | | | |
                         """,
-                new ChessPosition(7, 7),
+                new chessPosition(7, 7),
                 new int[][]{
                         {8, 7},
                         {8, 8},
@@ -44,7 +44,7 @@ public class QueenMoveTests {
                         |P| |n| | | | | |
                         | | | | | | | | |
                         """,
-                new ChessPosition(4, 1),
+                new chessPosition(4, 1),
                 new int[][]{
                         {5, 1}, {6, 1}, {7, 1}, {8, 1},
                         {5, 2},
@@ -68,7 +68,7 @@ public class QueenMoveTests {
                         |P|R| | | | | | |
                         |Q|K| | | | | | |
                         """,
-                new ChessPosition(1, 1),
+                new chessPosition(1, 1),
                 new int[][]{}
         );
     }

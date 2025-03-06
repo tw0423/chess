@@ -23,7 +23,7 @@ public class ChessBoard {
      * @param position where to add the piece to
      * @param piece    the piece to add
      */
-    public void addPiece(ChessPosition position, ChessPiece piece) {
+    public void addPiece(chessPosition position, ChessPiece piece) {
         int row = position.getRow();
         int column = position.getColumn();
         board[row-1][column-1] = piece;
@@ -36,7 +36,7 @@ public class ChessBoard {
      * @return Either the piece at the position, or null if no piece is at that
      * position
      */
-    public ChessPiece getPiece(ChessPosition position) {
+    public ChessPiece getPiece(chessPosition position) {
         return board[position.getRow()-1][position.getColumn()-1];
 
     }
@@ -67,13 +67,13 @@ public class ChessBoard {
         this.board[row][7] = new ChessPiece(teamColor, ChessPiece.PieceType.ROOK);
     }
 
-    public boolean empty(ChessPosition position) {
+    public boolean empty(chessPosition position) {
         int row = position.getRow();
         int column = position.getColumn();
         return board[row-1][column-1] == null;
     };
 
-    public boolean notSameTeam(ChessPosition position1, ChessPosition position2) {
+    public boolean notSameTeam(chessPosition position1, chessPosition position2) {
         ChessPiece piece1 = getPiece(position1);
         ChessPiece piece2 = getPiece(position2);
         if (piece1 == null || piece2 == null) {

@@ -3,7 +3,7 @@ package passoff.chess;
 import chess.ChessBoard;
 import chess.ChessGame;
 import chess.ChessPiece;
-import chess.ChessPosition;
+import chess.chessPosition;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,7 +13,7 @@ public class ChessBoardTests {
     @Test
     @DisplayName("Add and Get Piece")
     public void getAddPiece() {
-        ChessPosition position = new ChessPosition(4, 4);
+        chessPosition position = new chessPosition(4, 4);
         ChessPiece piece = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.BISHOP);
 
         var board = new ChessBoard();
@@ -47,7 +47,7 @@ public class ChessBoardTests {
         board.resetBoard();
         for(int i = 1; i <= 8; i++) {
             for(int j = 1; j <= 8; j++) {
-                ChessPosition position = new ChessPosition(i, j);
+                chessPosition position = new chessPosition(i, j);
                 ChessPiece piece = board.getPiece(position);
                 if(piece != null) {
                     Assertions.assertDoesNotThrow(() -> piece.pieceMoves(board, position));

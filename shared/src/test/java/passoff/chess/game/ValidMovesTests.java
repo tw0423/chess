@@ -1,8 +1,8 @@
 package passoff.chess.game;
 
 import chess.ChessGame;
-import chess.ChessMove;
-import chess.ChessPosition;
+import chess.chessMove;
+import chess.chessPosition;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,12 +32,12 @@ public class ValidMovesTests {
                     """));
 
         // Knight moves
-        ChessPosition knightPosition = new ChessPosition(4, 3);
+        chessPosition knightPosition = new chessPosition(4, 3);
         var validMoves = TestUtilities.loadMoves(knightPosition, new int[][]{{3, 5}, {6, 2}});
         assertMoves(game, validMoves, knightPosition);
 
         // Queen Moves
-        ChessPosition queenPosition = new ChessPosition(2, 4);
+        chessPosition queenPosition = new chessPosition(2, 4);
         validMoves = TestUtilities.loadMoves(queenPosition, new int[][]{{3, 5}, {4, 4}});
         assertMoves(game, validMoves, queenPosition);
     }
@@ -59,7 +59,7 @@ public class ValidMovesTests {
                     | | | | | | | | |
                     """));
 
-        ChessPosition rookPosition = new ChessPosition(5, 6);
+        chessPosition rookPosition = new chessPosition(5, 6);
         var validMoves = TestUtilities.loadMoves(rookPosition, new int[][]{
                 {5, 7}, {5, 5}, {5, 4}, {5, 3}, {5, 2}
         });
@@ -83,7 +83,7 @@ public class ValidMovesTests {
                     | | | | | | | | |
                     """));
 
-        ChessPosition position = new ChessPosition(4, 4);
+        chessPosition position = new chessPosition(4, 4);
         Assertions.assertTrue(game.validMoves(position).isEmpty(), TRAPPED_PIECE_MOVES);
     }
 
@@ -106,12 +106,12 @@ public class ValidMovesTests {
                     """));
 
         //get positions
-        ChessPosition kingPosition = new ChessPosition(7, 4);
-        ChessPosition pawnPosition = new ChessPosition(2, 6);
-        ChessPosition bishopPosition = new ChessPosition(7, 8);
-        ChessPosition queenPosition = new ChessPosition(1, 2);
-        ChessPosition knightPosition = new ChessPosition(5, 4);
-        ChessPosition rookPosition = new ChessPosition(3, 8);
+        chessPosition kingPosition = new chessPosition(7, 4);
+        chessPosition pawnPosition = new chessPosition(2, 6);
+        chessPosition bishopPosition = new chessPosition(7, 8);
+        chessPosition queenPosition = new chessPosition(1, 2);
+        chessPosition knightPosition = new chessPosition(5, 4);
+        chessPosition rookPosition = new chessPosition(3, 8);
 
 
         var validMoves = TestUtilities.loadMoves(kingPosition, new int[][]{{6, 5}});
@@ -143,7 +143,7 @@ public class ValidMovesTests {
                     | | | | | | | | |
                     """));
 
-        ChessPosition position = new ChessPosition(2, 6);
+        chessPosition position = new chessPosition(2, 6);
         var validMoves = TestUtilities.loadMoves(position, new int[][]{
                 {1, 5}, {1, 6}, {1, 7}, {2, 5}, {2, 7},
         });
@@ -157,14 +157,14 @@ public class ValidMovesTests {
         game.setBoard(TestUtilities.defaultBoard());
         game.setTeamTurn(ChessGame.TeamColor.BLACK);
 
-        ChessPosition position = new ChessPosition(2, 5);
+        chessPosition position = new chessPosition(2, 5);
         var validMoves = TestUtilities.loadMoves(position, new int[][]{
                 {3, 5}, {4, 5}
         });
         assertMoves(game, validMoves, position);
     }
 
-    private static void assertMoves(ChessGame game, List<ChessMove> validMoves, ChessPosition position) {
+    private static void assertMoves(ChessGame game, List<chessMove> validMoves, chessPosition position) {
         var generatedMoves = game.validMoves(position);
         var actualMoves = new ArrayList<>(generatedMoves);
         TestUtilities.validateMoves(validMoves, actualMoves);

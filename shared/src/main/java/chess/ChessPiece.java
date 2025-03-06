@@ -53,30 +53,30 @@ public class ChessPiece {
      *
      * @return Collection of valid moves
      */
-    public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
+    public Collection<chessMove> pieceMoves(ChessBoard board, chessPosition myPosition) {
         if (this.pieceType == PieceType.KING){
             KingMoveCalculator KingMoves = new KingMoveCalculator(board, myPosition);
-            return KingMoves.KingMoves();
+            return KingMoves.kingMoves();
         }
         else if (this.pieceType == PieceType.QUEEN){
             QueenMoveCalculator QueenMoves = new QueenMoveCalculator(board, myPosition);
-            return QueenMoves.QueenMoves();
+            return QueenMoves.queenMoves();
         }
         else if (this.pieceType == PieceType.PAWN){
             PawnMoveCalculator PawnMoves = new PawnMoveCalculator(board, myPosition);
-            return PawnMoves.PawnMoves();
+            return PawnMoves.pawnMoves();
         }
         else if(this.pieceType == PieceType.BISHOP){
-            BishopMoveCalculator BishopMoves = new BishopMoveCalculator(board, myPosition);
+            bishopMoveCalculator BishopMoves = new bishopMoveCalculator(board, myPosition);
             return BishopMoves.BishopMoves();
         }
         else if (this.pieceType == PieceType.KNIGHT){
             KnightMoveCalculator KnightMoves = new KnightMoveCalculator(board, myPosition);
-            return KnightMoves.KnightMoves();
+            return KnightMoves.knightMoves();
         }
         else if (this.pieceType == PieceType.ROOK){
             RookMoveCalculator RookMoves = new RookMoveCalculator(board, myPosition);
-            return RookMoves.RookMoves();
+            return RookMoves.rookMoves();
         }
         return this.pieceMoves(board, myPosition);
     }
