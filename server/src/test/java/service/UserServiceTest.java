@@ -1,5 +1,6 @@
 package service;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import model.*;
@@ -9,11 +10,9 @@ import java.util.ArrayList;
 
 
 public class UserServiceTest {
-    AuthDAO authDAO = new MemoryAuthDAO();
-    UserDAO userDAO = new MemoryUserDAO();
-
-    GameService gameService;
-    UserService userService = new UserService(authDAO, userDAO);
+     AuthDAO authDAO = new MemoryAuthDAO();
+     UserDAO userDAO = new MemoryUserDAO();
+     UserService userService = new UserService(authDAO, userDAO);
 
     @Test
     void successfulRegisterTest() {
