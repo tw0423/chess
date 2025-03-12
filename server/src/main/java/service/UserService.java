@@ -91,10 +91,13 @@ public class UserService {
         }
     }
 
-    public void clear() {
-
-            userDAO.clear();
-            authDAO.clearAuth();
+    public void clear() throws UnsureException{
+            try {
+                userDAO.clear();
+                authDAO.clearAuth();
+            }catch (DataAccessException e) {
+                throw new UnsureException(e.getMessage());
+            }
 
     }
 

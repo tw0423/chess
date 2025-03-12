@@ -60,7 +60,7 @@ public class Server {
         Spark.stop();
         Spark.awaitStop();
     }
-
+    //??ask tomorrow how to handle this error here
     public void clearDB() {
 
         userService.clear();
