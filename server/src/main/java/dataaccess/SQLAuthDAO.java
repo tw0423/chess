@@ -76,7 +76,6 @@ public class SQLAuthDAO implements AuthDAO {
     @Override
     public void clearAuth() throws DataAccessException {
         String sql = "TRUNCATE auth";
-
         try (var conn = DatabaseManager.getConnection()) {
             try (var statement = conn.prepareStatement(sql)) {
                 statement.executeUpdate();
@@ -85,15 +84,10 @@ public class SQLAuthDAO implements AuthDAO {
         }catch (SQLException | DataAccessException e) {
             throw new DataAccessException(e.getMessage());
         }
-
-
-
     }
-
-
 }
 
 
 
 
-}
+

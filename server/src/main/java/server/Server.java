@@ -61,7 +61,7 @@ public class Server {
         Spark.awaitStop();
     }
     //??ask tomorrow how to handle this error here
-    public void clearDB() {
+    public void clearDB() throws UnsureException {
 
         userService.clear();
         gameService.clear();
@@ -70,7 +70,12 @@ public class Server {
 
     private Object clear(Request req, Response resp) {
 
-        clearDB();
+        try {
+            clearDB();
+        } catch (UnsureException e) {
+            resp.status(200);
+            return e.getMessage();
+        }
 
         resp.status(200);
         return "{}";
