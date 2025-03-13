@@ -25,8 +25,8 @@ public class SQLUserDAO implements UserDAO {
         try (var conn = DatabaseManager.getConnection()) {
             String createGameStatements = """
                     CREATE TABLE if NOT EXISTS userTable (
-                            username VARCHAR(255),
-                            password VARCHAR(255),
+                            username VARCHAR(255) NOT NULL,
+                            password VARCHAR(255) NOT NULL,
                             email VARCHAR(255),
                             PRIMARY KEY (username)
                             )
