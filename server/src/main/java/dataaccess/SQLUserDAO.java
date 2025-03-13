@@ -56,7 +56,7 @@ public class SQLUserDAO implements UserDAO {
                     String emailFromDB = rs.getString("email");
 
 
-                    if (checkPassword(password, passwordFromDB)) {
+                    if (checkHashedPassword( passwordFromDB, password)) {
                         return new UserData(username, password, emailFromDB);
                     } else {
                         return null;
@@ -78,7 +78,8 @@ public class SQLUserDAO implements UserDAO {
             var sql = "INSERT INTO userTable ( username, password, email) VALUES (?, ?, ?)";
             try (var statement = conn.prepareStatement(sql)) {
                 updateStatement(statement, user.username(), 1);
-                updateStatement(statement, user.password(), 2);
+                String hashedPassword = createHashPassword(user.password());
+                updateStatement(statement, hashedPassword, 2);
                 updateStatement(statement, user.email(), 3);
                 statement.executeUpdate();
             }
@@ -119,10 +120,6 @@ public class SQLUserDAO implements UserDAO {
         return userDataArrayList;
     }
 
-    private boolean checkPassword(String password, String password2) {
-        return password.equals(password2);
-
-    }
 
     private UserData readUser(ResultSet rs) throws SQLException {
         String username = rs.getString("username");
@@ -133,6 +130,18 @@ public class SQLUserDAO implements UserDAO {
 
     private void updateStatement(PreparedStatement statement, String string, int index) throws SQLException {
         statement.setString(index, string);
+    }
+
+    private boolean checkHashedPassword(String hashedPassword, String providedClearTextPassword) {
+        // read the previously hashed password from the database
+
+        return BCrypt.checkpw(providedClearTextPassword, hashedPassword);
+    }
+
+    private String createHashPassword(String clearTextPassword) {
+
+        return BCrypt.hashpw(clearTextPassword, BCrypt.gensalt());
+        // write the hashed password in database along with the user's other information
     }
 
 
