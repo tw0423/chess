@@ -58,6 +58,24 @@ public class GameDAOTest {
             assert false;
         }
     }
+    @Test
+    public void testPositiveGetGame() throws SQLException {
+        try {
+            gameDAO.clear();
+            gameDAO.createGame(game1);
+            ArrayList<GameData> lists = gameDAO.listGames();
+
+            Assertions.assertEquals(1, lists.size());
+            GameData data = gameDAO.getGame(1);
+            Assertions.assertNotNull(data);
+            Assertions.assertEquals(data, game1);
+
+
+        } catch (DataAccessException e) {
+            assert false;
+        }
+    }
+
 
 
 
