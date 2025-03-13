@@ -131,15 +131,4 @@ public class SQLUserDAO implements UserDAO {
         statement.setString(index, string);
     }
 
-//    private void updateStatementInt(PreparedStatement statement, int value, int index) throws SQLException {
-//        statement.setInt(index, value);
-//    }
-
-
-//    private void storeUserPassword(String username, String clearTextPassword) {
-//        String hashedPassword = BCrypt.hashpw(clearTextPassword, BCrypt.gensalt());
-//
-//        // write the hashed password in database along with the user's other information
-//        writeHashedPasswordToDatabase(username, hashedPassword);
-//    }
 }
