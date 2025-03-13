@@ -12,13 +12,13 @@ public class MemoryUserDAO implements UserDAO {
     }
 
     @Override
-    public UserData getUser(String username){
+    public UserData getUser(String username, String password ){
         if (users.isEmpty()){
             return null;
         }
 
         for (UserData user : users) {
-            if(user.username().equals(username)) {
+            if(user.username().equals(username) && user.password().equals(password)) {
                 return user;
             }
         }

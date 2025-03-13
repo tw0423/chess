@@ -31,7 +31,7 @@ public class UserService {
                 email = request.email();
                 userData = new UserData(username, password, email);
             }
-            UserData userData1 = userDAO.getUser(username);
+            UserData userData1 = userDAO.getUser(username, password);
             if (userData1 != null) {
                 throw new AlreadyTakenException("{ \"message\": \"Error: already taken\" }");
             }
@@ -51,14 +51,12 @@ public class UserService {
             String username = request.username();
             String password = request.password();
 
-            UserData userData = userDAO.getUser(username);
+            UserData userData = userDAO.getUser(username, password);
             if (userData == null) {
                 throw new UnauthorizedException("{ \"message\": \"Error: unauthorized\" }");
             }
 
-            if(!userData.password().equals(password)) {
-                throw new UnauthorizedException("{ \"message\": \"Error: unauthorized\" }");
-            }
+
             AuthData newAuthData = this.createAddAuth(username);
             return new LoginResponse(username, newAuthData.authToken());
         }catch(DataAccessException e) {
