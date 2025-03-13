@@ -1,6 +1,7 @@
 package dataaccess;
 
 import com.google.gson.Gson;
+import model.GameData;
 import model.UserData;
 
 import java.sql.ResultSet;
@@ -100,13 +101,33 @@ public class SQLUserDAO implements UserDAO {
     }
 
     @Override
-    public ArrayList<UserData> getUsers() {
-        return null;
+    public ArrayList<UserData> getUsers() throws DataAccessException{
+        ArrayList<UserData> userDataArrayList = new ArrayList<UserData>();
+        try (var conn = DatabaseManager.getConnection()) {
+            var statement = "SELECT username,password,email FROM userTable";
+            try (var ps = conn.prepareStatement(statement)) {
+                try (var rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        userDataArrayList.add(readUser(rs));
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new DataAccessException(String.format("Unable to read data: %s", e.getMessage()));
+        }
+        return userDataArrayList;
     }
 
     private boolean checkPassword(String password, String password2) {
         return password.equals(password2);
 
+    }
+
+    private UserData readUser(ResultSet rs) throws SQLException {
+        String username = rs.getString("username");
+        String password = rs.getString("password");
+        String email = rs.getString("email");
+        return new UserData(username, password, email);
     }
 
 //    private void storeUserPassword(String username, String clearTextPassword) {
