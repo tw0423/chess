@@ -4,6 +4,7 @@ import chess.ChessGame;
 import model.AuthData;
 import model.GameData;
 
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import com.google.gson.Gson;
@@ -66,13 +67,12 @@ public class SQLGameDAO implements GameDAO {
 
         try (var conn = DatabaseManager.getConnection()) {
             var sql = "INSERT INTO gameTable ( gameID, whiteUsername, blackUsername, gameName, jsonChessGame) VALUES (?, ?, ?, ?, ?)";
-            try (var statement = conn.prepareStatement(sql)) {
-                statement.setInt(1, game.gameID());
-                statement.setString(2, game.whiteUsername());
-                statement.setString(3, game.blackUsername());
-                statement.setString(4, game.gameName());
-                var jsonGame = new Gson().toJson(game.game());
-                statement.setString(5, jsonGame);
+            try (PreparedStatement statement = conn.prepareStatement(sql)) {
+                updateStatementInt(statement, game.gameID(), 1);
+                updateStatement(statement, game.whiteUsername(), 2);
+                updateStatement(statement, game.blackUsername(), 3);
+                updateStatement(statement, game.gameName(), 4);
+                updateStatement(statement, new Gson().toJson(game.game()), 5);
                 statement.executeUpdate();
             }
         } catch (SQLException | DataAccessException e) {
@@ -88,28 +88,29 @@ public class SQLGameDAO implements GameDAO {
             try (var statement = conn.prepareStatement(sql)) {
                 statement.setInt(1, gameID);
                 ResultSet rs = statement.executeQuery();
-                return readGame(rs);
+                if (rs.next()) {
+                    return readGame(rs);
+                }
 
             }
         } catch (SQLException | DataAccessException e) {
             throw new DataAccessException(e.getMessage());
         }
+        return null;
     }
 
     @Override
     public void updateGame(GameData game) throws DataAccessException {
 
         String sql = "UPDATE gameTable" +
-                "set whiteUsername = ?, blackUsername = ?, gameName = ?, jsonChessGame = ? WHERE gameID = ?";
+                " SET whiteUsername = ?, blackUsername = ?, gameName = ?, jsonChessGame = ? WHERE gameID = ?";
 
         try (var conn = DatabaseManager.getConnection()) {
             try (var statement = conn.prepareStatement(sql)) {
-
-                statement.setString(1, game.whiteUsername());
-                statement.setString(2, game.blackUsername());
-                statement.setString(3, game.gameName());
-                var jsonGame = new Gson().toJson(game.game());
-                statement.setString(4, jsonGame);
+                updateStatement(statement, game.whiteUsername(), 1);
+                updateStatement(statement, game.blackUsername(), 2);
+                updateStatement(statement, game.gameName(), 3);
+                updateStatement(statement, new Gson().toJson(game.game()), 4);
                 statement.setInt(5, game.gameID());
 
                 if( statement.executeUpdate() !=1){
@@ -126,7 +127,7 @@ public class SQLGameDAO implements GameDAO {
 
     @Override
     public void clear() throws DataAccessException {
-        String sql = "TRUNCATE auth";
+        String sql = "TRUNCATE gameTable";
         try (var conn = DatabaseManager.getConnection()) {
             try (var statement = conn.prepareStatement(sql)) {
                 statement.executeUpdate();
@@ -141,8 +142,19 @@ public class SQLGameDAO implements GameDAO {
         String whiteUsername = rs.getString("whiteUsername");
         String blackUsername = rs.getString("blackUsername");
         String gameName = rs.getString("gameName");
-        var jasonGame = rs.getString("jasonChesGame");
+        var jasonGame = rs.getString("jsonChessGame");
         ChessGame chessGame = new Gson().fromJson(jasonGame, ChessGame.class);
         return new GameData(gameID, whiteUsername, blackUsername, gameName, chessGame);
     }
+
+    private void updateStatement(PreparedStatement statement, String string, int index) throws SQLException {
+
+        statement.setString(index, string);
+
+    }
+
+    private void updateStatementInt(PreparedStatement statement, int value, int index) throws SQLException {
+        statement.setInt(index, value);
+    }
 }
+
