@@ -20,7 +20,6 @@ public class AuthDAOTest {
     }
 
 
-    private UserData userData = new UserData("volunteer1","abcde","volunteer1@gmail.com");
     private AuthData volunteer1 = new AuthData("volunteer1","doesn't matter");
     private AuthData volunteer2 = new AuthData("volunteer2","who cares");
     private AuthData badAuth = new AuthData("volunteer2",null);
