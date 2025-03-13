@@ -13,16 +13,6 @@ import java.util.ArrayList;
 
 public class SQLUserDAO implements UserDAO {
 
-    private final String createGameStatements = """
-
-    CREATE TABLE if NOT EXISTS userTable (
-            username VARCHAR(255),
-            password VARCHAR(255),
-            email VARCHAR(255),
-            PRIMARY KEY (username)
-            )
-    """;
-
 
     public SQLUserDAO() throws DataAccessException {
         try {
@@ -32,6 +22,14 @@ public class SQLUserDAO implements UserDAO {
         }
 
         try (var conn = DatabaseManager.getConnection()) {
+            String createGameStatements = """
+                    CREATE TABLE if NOT EXISTS userTable (
+                            username VARCHAR(255),
+                            password VARCHAR(255),
+                            email VARCHAR(255),
+                            PRIMARY KEY (username)
+                            )
+                    """;
             try (var preparedStatement = conn.prepareStatement(createGameStatements)) {
                 preparedStatement.executeUpdate();
             } catch (SQLException e) {
@@ -133,9 +131,9 @@ public class SQLUserDAO implements UserDAO {
         statement.setString(index, string);
     }
 
-    private void updateStatementInt(PreparedStatement statement, int value, int index) throws SQLException {
-        statement.setInt(index, value);
-    }
+//    private void updateStatementInt(PreparedStatement statement, int value, int index) throws SQLException {
+//        statement.setInt(index, value);
+//    }
 
 
 //    private void storeUserPassword(String username, String clearTextPassword) {

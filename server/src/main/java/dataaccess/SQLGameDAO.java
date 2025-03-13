@@ -12,17 +12,6 @@ import java.sql.ResultSet;
 
 public class SQLGameDAO implements GameDAO {
 
-    private final String createGameStatements =
-            """            
-                    CREATE TABLE if NOT EXISTS gameTable (
-                                    gameID INT NOT NULL,
-                                    whiteUsername VARCHAR(255),
-                                    blackUsername VARCHAR(255),
-                                    gameName VARCHAR(255),
-                                    jsonChessGame TEXT,
-                                    PRIMARY KEY (gameID)
-                                    )""";
-
     public SQLGameDAO() throws DataAccessException {
         try {
             DatabaseManager.createDatabase();
@@ -31,6 +20,15 @@ public class SQLGameDAO implements GameDAO {
         }
 
         try (var conn = DatabaseManager.getConnection()) {
+            String createGameStatements = """            
+                    CREATE TABLE if NOT EXISTS gameTable (
+                                    gameID INT NOT NULL,
+                                    whiteUsername VARCHAR(255),
+                                    blackUsername VARCHAR(255),
+                                    gameName VARCHAR(255),
+                                    jsonChessGame TEXT,
+                                    PRIMARY KEY (gameID)
+                                    )""";
             try (var preparedStatement = conn.prepareStatement(createGameStatements)) {
                 preparedStatement.executeUpdate();
             } catch (SQLException e) {

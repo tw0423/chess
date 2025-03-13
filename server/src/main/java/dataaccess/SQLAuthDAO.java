@@ -5,19 +5,17 @@ import java.sql.SQLException;
 import java.sql.ResultSet;
 public class SQLAuthDAO implements AuthDAO {
 
-    private final String createAuthStatements =
-            """
-                        CREATE TABLE if NOT EXISTS auth (
-                                        username VARCHAR(255) NOT NULL,
-                                        authToken VARCHAR(255) NOT NULL,
-                                        PRIMARY KEY (authToken)
-                                        )
-            """;
-
     public SQLAuthDAO() throws DataAccessException {
 
         DatabaseManager.createDatabase();
         try (var conn = DatabaseManager.getConnection()) {
+            String createAuthStatements = """
+                                CREATE TABLE if NOT EXISTS auth (
+                                                username VARCHAR(255) NOT NULL,
+                                                authToken VARCHAR(255) NOT NULL,
+                                                PRIMARY KEY (authToken)
+                                                )
+                    """;
             try (var preparedStatement = conn.prepareStatement(createAuthStatements)) {
                 preparedStatement.executeUpdate();
             }catch (SQLException e){
