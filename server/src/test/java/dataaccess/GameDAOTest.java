@@ -26,6 +26,9 @@ public class GameDAOTest {
 
     private UserData volunteer1 = new UserData("volunteer1","abcde","volunteer1@gmail.com");
     private GameData game1 = new GameData(1, null, null, "game1", new ChessGame());
+    private GameData updatedGame1 = new GameData(1, "volunteer", null, "game1", new ChessGame());
+
+
 
     private AuthData badAuth = new AuthData("volunteer2",null);
 
@@ -58,6 +61,7 @@ public class GameDAOTest {
             assert false;
         }
     }
+
     @Test
     public void testPositiveGetGame() throws SQLException {
         try {
@@ -69,6 +73,28 @@ public class GameDAOTest {
             GameData data = gameDAO.getGame(1);
             Assertions.assertNotNull(data);
             Assertions.assertEquals(data, game1);
+
+
+        } catch (DataAccessException e) {
+            assert false;
+        }
+    }
+
+    @Test
+    public void testPositiveUpdateGame() throws SQLException {
+        try {
+            gameDAO.clear();
+            gameDAO.createGame(game1);
+            ArrayList<GameData> lists = gameDAO.listGames();
+
+            Assertions.assertEquals(1, lists.size());
+            GameData data = gameDAO.getGame(1);
+            Assertions.assertNotNull(data);
+            Assertions.assertEquals(data, game1);
+
+            gameDAO.updateGame(updatedGame1);
+            GameData updatedData = gameDAO.getGame(1);
+            Assertions.assertNotEquals(updatedData, data);
 
 
         } catch (DataAccessException e) {
