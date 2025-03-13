@@ -126,6 +126,41 @@ public class GameDAOTest {
         }
     }
 
+    @Test
+    public void testPositiveListGame() throws SQLException {
+        try {
+            gameDAO.clear();
+            gameDAO.createGame(game1);
+            gameDAO.createGame(updatedGame1);
+            ArrayList<GameData> lists = gameDAO.listGames();
+
+            Assertions.assertEquals(2, lists.size());
+
+
+
+
+        } catch (DataAccessException e) {
+            assert true;
+        }
+    }
+
+    @Test
+    public void testNegativeListGame() throws SQLException {
+        try {
+            gameDAO.clear();
+
+            ArrayList<GameData> lists = gameDAO.listGames();
+
+            Assertions.assertEquals(0, lists.size());
+
+
+
+
+        } catch (DataAccessException e) {
+            assert true;
+        }
+    }
+
 
 
 
