@@ -148,9 +148,7 @@ public class SQLGameDAO implements GameDAO {
     }
 
     private void updateStatement(PreparedStatement statement, String string, int index) throws SQLException {
-
         statement.setString(index, string);
-
     }
 
     private void updateStatementInt(PreparedStatement statement, int value, int index) throws SQLException {

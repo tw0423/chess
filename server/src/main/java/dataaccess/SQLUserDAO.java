@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import model.GameData;
 import model.UserData;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -21,8 +22,6 @@ public class SQLUserDAO implements UserDAO {
             PRIMARY KEY (username)
             )
     """;
-
-
 
 
     public SQLUserDAO() throws DataAccessException {
@@ -76,9 +75,9 @@ public class SQLUserDAO implements UserDAO {
         try (var conn = DatabaseManager.getConnection()) {
             var sql = "INSERT INTO userTable ( username, password, email) VALUES (?, ?, ?)";
             try (var statement = conn.prepareStatement(sql)) {
-                statement.setString(1, user.username());
-                statement.setString(2, user.password());
-                statement.setString(3, user.email());
+                updateStatement(statement, user.username(), 1);
+                updateStatement(statement, user.password(), 2);
+                updateStatement(statement, user.email(), 3);
                 statement.executeUpdate();
             }
         } catch (SQLException | DataAccessException e) {
@@ -129,6 +128,15 @@ public class SQLUserDAO implements UserDAO {
         String email = rs.getString("email");
         return new UserData(username, password, email);
     }
+
+    private void updateStatement(PreparedStatement statement, String string, int index) throws SQLException {
+        statement.setString(index, string);
+    }
+
+    private void updateStatementInt(PreparedStatement statement, int value, int index) throws SQLException {
+        statement.setInt(index, value);
+    }
+
 
 //    private void storeUserPassword(String username, String clearTextPassword) {
 //        String hashedPassword = BCrypt.hashpw(clearTextPassword, BCrypt.gensalt());
