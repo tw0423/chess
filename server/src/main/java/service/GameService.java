@@ -111,7 +111,12 @@ public class GameService {
     }
 
     public void clear() {
+
+        try {
             gameDAO.clear();
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
