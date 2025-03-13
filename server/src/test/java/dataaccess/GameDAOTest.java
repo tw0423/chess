@@ -27,10 +27,11 @@ public class GameDAOTest {
     private UserData volunteer1 = new UserData("volunteer1","abcde","volunteer1@gmail.com");
     private GameData game1 = new GameData(1, null, null, "game1", new ChessGame());
     private GameData updatedGame1 = new GameData(1, "volunteer", null, "game1", new ChessGame());
+    private GameData badUpdatedGame1 = new GameData(2, "volunteer", null, "game1", new ChessGame());
 
 
 
-    private AuthData badAuth = new AuthData("volunteer2",null);
+
 
     @Test
     public void testPositiveCreatGames() throws SQLException {
@@ -101,6 +102,30 @@ public class GameDAOTest {
             assert false;
         }
     }
+
+
+    @Test
+    public void testNegativeUpdateGame() throws SQLException {
+        try {
+            gameDAO.clear();
+            gameDAO.createGame(game1);
+            ArrayList<GameData> lists = gameDAO.listGames();
+
+            Assertions.assertEquals(1, lists.size());
+            GameData data = gameDAO.getGame(1);
+            Assertions.assertNotNull(data);
+            Assertions.assertEquals(data, game1);
+
+            gameDAO.updateGame(badUpdatedGame1);
+            assert false;
+
+
+
+        } catch (DataAccessException e) {
+            assert true;
+        }
+    }
+
 
 
 
