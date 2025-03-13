@@ -23,11 +23,12 @@ public class AuthDAOTest {
     private UserData userData = new UserData("volunteer1","abcde","volunteer1@gmail.com");
     private AuthData volunteer1 = new AuthData("volunteer1","doesn't matter");
     private AuthData volunteer2 = new AuthData("volunteer2","who cares");
-    private AuthData badAuth = new AuthData("volunteer2","");
+    private AuthData badAuth = new AuthData("volunteer2",null);
 
     @Test
     public void testPositiveAddAuth() throws SQLException {
         try {
+            authDAO.clearAuth();
             authDAO.addAuth(volunteer1);
             AuthData data = authDAO.getAuth("doesn't matter");
             Assertions.assertNotNull(data);
@@ -50,6 +51,7 @@ public class AuthDAOTest {
     @Test
     public void testPositiveGetAuth() throws SQLException {
         try {
+            authDAO.clearAuth();
             authDAO.addAuth(volunteer1);
             authDAO.addAuth(volunteer2);
             AuthData data = authDAO.getAuth("doesn't matter");
@@ -65,6 +67,7 @@ public class AuthDAOTest {
     @Test
     public void testNegativeGetAuth() throws SQLException {
         try {
+            authDAO.clearAuth();
             authDAO.addAuth(volunteer1);
             authDAO.addAuth(volunteer2);
             AuthData data = authDAO.getAuth("wrong authToken");
@@ -78,6 +81,7 @@ public class AuthDAOTest {
     @Test
     public void testBadInputGetAuth() throws SQLException {
         try {
+            authDAO.clearAuth();
             authDAO.addAuth(volunteer1);
             authDAO.addAuth(volunteer2);
             AuthData data = authDAO.getAuth("");
@@ -91,6 +95,7 @@ public class AuthDAOTest {
     @Test
     public void testPositiveRemoveAuth() throws SQLException {
         try {
+            authDAO.clearAuth();
             authDAO.addAuth(volunteer1);
             authDAO.addAuth(volunteer2);
             authDAO.removeAuth("doesn't matter");
