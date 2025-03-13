@@ -74,8 +74,8 @@ public class SQLUserDAO implements UserDAO {
     public void createUser(UserData user) throws DataAccessException {
 
         try (var conn = DatabaseManager.getConnection()) {
-            var SQLRequest = "INSERT INTO userTable ( username, password, email) VALUES (?, ?, ?)";
-            try (var statement = conn.prepareStatement(SQLRequest)) {
+            var sql = "INSERT INTO userTable ( username, password, email) VALUES (?, ?, ?)";
+            try (var statement = conn.prepareStatement(sql)) {
                 statement.setString(1, user.username());
                 statement.setString(2, user.password());
                 statement.setString(3, user.email());

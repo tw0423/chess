@@ -31,8 +31,8 @@ public class SQLAuthDAO implements AuthDAO {
 
     public void addAuth(AuthData authData) throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
-            var SQLRequest = "INSERT INTO auth (username, authToken) VALUES (?, ?)";
-            try (var statement = conn.prepareStatement(SQLRequest)) {
+            var sql = "INSERT INTO auth (username, authToken) VALUES (?, ?)";
+            try (var statement = conn.prepareStatement(sql)) {
                 statement.setString(1, authData.username());
                 statement.setString(2, authData.authToken());
                 statement.executeUpdate();

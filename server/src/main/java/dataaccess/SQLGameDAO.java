@@ -65,8 +65,8 @@ public class SQLGameDAO implements GameDAO {
     public void createGame(GameData game) throws DataAccessException {
 
         try (var conn = DatabaseManager.getConnection()) {
-            var SQLRequest = "INSERT INTO gameTable ( gameID, whiteUsername, blackUsername, gameName, jsonChessGame) VALUES (?, ?, ?, ?, ?)";
-            try (var statement = conn.prepareStatement(SQLRequest)) {
+            var sql = "INSERT INTO gameTable ( gameID, whiteUsername, blackUsername, gameName, jsonChessGame) VALUES (?, ?, ?, ?, ?)";
+            try (var statement = conn.prepareStatement(sql)) {
                 statement.setInt(1, game.gameID());
                 statement.setString(2, game.whiteUsername());
                 statement.setString(3, game.blackUsername());
