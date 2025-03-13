@@ -3,6 +3,7 @@ package dataaccess;
 import com.google.gson.Gson;
 import model.GameData;
 import model.UserData;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -44,21 +45,24 @@ public class SQLUserDAO implements UserDAO {
 
     @Override
     public UserData getUser(String username, String password) throws DataAccessException {
-        String sql = "SELECT username,password,email from gameTable WHERE username = ?";
+        String sql = "SELECT username,password,email FROM userTable WHERE username = ?";
 
         try (var conn = DatabaseManager.getConnection()) {
             try (var statement = conn.prepareStatement(sql)) {
                 statement.setString(1, username);
                 ResultSet rs = statement.executeQuery();
+                if(rs.next()) {
+                    String passwordFromDB = rs.getString("password");
+                    String emailFromDB = rs.getString("email");
 
-                String passwordFromDB = rs.getString("password");
-                String emailFromDB = rs.getString("email");
 
-                if(checkPassword(password, passwordFromDB)) {
-                    return new UserData(username, password, emailFromDB);
-                }else{
-                    return null;
+                    if (checkPassword(password, passwordFromDB)) {
+                        return new UserData(username, password, emailFromDB);
+                    } else {
+                        return null;
+                    }
                 }
+                return null;
 
             }
         } catch (SQLException | DataAccessException e) {
@@ -130,5 +134,9 @@ public class SQLUserDAO implements UserDAO {
     private void updateStatement(PreparedStatement statement, String string, int index) throws SQLException {
         statement.setString(index, string);
     }
+
+
+
+
 
 }

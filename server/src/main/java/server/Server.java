@@ -18,10 +18,15 @@ public class Server {
     GameDAO gameDAO;
 
     public Server() {
+//change it here
+        try {
+            userDAO = new SQLUserDAO();
+            authDAO = new SQLAuthDAO();
+            gameDAO = new SQLGameDAO();
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
 
-        userDAO = new MemoryUserDAO();
-        authDAO = new MemoryAuthDAO();
-        gameDAO = new MemoryGameDAO();
 
         userService = new UserService(authDAO, userDAO);
         gameService = new GameService(authDAO, gameDAO);
