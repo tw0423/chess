@@ -67,6 +67,8 @@ public class UserDAOTest {
         }
     }
 
+
+
     @Test
     public void testNegativeGetUsers() throws SQLException {
         try {
