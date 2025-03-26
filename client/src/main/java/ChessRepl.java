@@ -3,6 +3,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.util.ArrayList;
+import ui.EscapeSequences;
 public class ChessRepl {
     private final ChessClient client;
     private State state;
@@ -18,7 +19,7 @@ public class ChessRepl {
         Scanner scanner = new Scanner(System.in);
 
         while(true){
-            System.out.print("> ");
+            System.out.print("[" +state + "}" +">>> " );
             String line = scanner.nextLine();
             if(line.equals("exit")) {
                 System.out.println("Hope to see you next time!");
@@ -30,7 +31,7 @@ public class ChessRepl {
         }
     }
 
-    public void evalCOmmand(String command){
+    public void evalCommand(String command){
         var tokens = command.toLowerCase().split(" ");
         var cmd = (tokens.length > 0) ? tokens[0] : "help";
         var params = Arrays.copyOfRange(tokens, 1, tokens.length);
@@ -51,26 +52,23 @@ public class ChessRepl {
                 printPostloginHelp();
                 break;
             case "create":
-                doLogout();
+                client.doLogout();
                 break;
             case "list":
-                doCreateGame();
+                client.doCreateGame();
                 break;
             case "join":
-                doListGames();
+                client.doListGames();
                 break;
             case "observe":
-                doPlayGame();
+                client.doPlayGame();
                 break;
             case "logout":
-                doObserveGame();
+                client.doObserveGame();
                 break;
             case "quit":
-                doQuit():
-                break:
-            case "help":
-                doHelp():
-                break:
+                client.doQuit():
+                break;
             default:
                 System.out.println("Unknown command. Type 'help' for options.");
         }
@@ -83,17 +81,46 @@ public class ChessRepl {
                 printPreloginHelp();
                 break;
             case "login":
-                doLogin();
+                client.doLogin();
                 break;
             case "register":
-                doRegister();
+                client.doRegister();
                 break;
-            case "help":
-                help();
-                break;
+
             default:
                 System.out.println("Unknown command. Type 'help' for options.");
         }
+    }
+
+    private void printPreloginHelp(){
+        pirntNewLineBlue("register <USERNAME> <PASSWORD> <EMAIL> ");
+        printGray("- to create an account ");
+        pirntNewLineBlue("login <USERNAME> <PASSWORD> <EMAIL> ");
+        printGray("- to play chess game ");
+        pirntNewLineBlue("quit ");
+        printGray("- quit chess");
+        pirntNewLineBlue("help ");
+        printGray("- see all possible commands");
+
+    }
+
+    private void printPostloginHelp(){
+        pirntNewLineBlue("create <NAME> <PASSWORD> <EMAIL> ");
+        printGray("- to create an account ");
+        pirntNewLineBlue("login <USERNAME> <PASSWORD> <EMAIL> ");
+        printGray("- to play chess game ");
+        pirntNewLineBlue("quit ");
+        printGray("- quit chess");
+        pirntNewLineBlue("help ");
+        printGray("- see all possible commands");
+
+    }
+    private void pirntNewLineBlue(String text){
+        System.out.println(EscapeSequences.SET_TEXT_COLOR_BLUE + text + EscapeSequences.RESET_TEXT_COLOR);
+    }
+    private void printGray(String text){
+        System.out.print(EscapeSequences.SET_BG_COLOR_DARK_GREY + text + EscapeSequences.RESET_TEXT_COLOR);
+
     }
 
 
