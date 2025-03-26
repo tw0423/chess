@@ -67,7 +67,7 @@ public class ChessRepl {
                 client.doObserveGame();
                 break;
             case "quit":
-                client.doQuit():
+                client.doQuit();
                 break;
             default:
                 System.out.println("Unknown command. Type 'help' for options.");

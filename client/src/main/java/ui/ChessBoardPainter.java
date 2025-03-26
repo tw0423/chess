@@ -8,7 +8,7 @@ import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 
 public class ChessBoardPainter {
-    private static EscapeSequences es = null;
+    private static EscapeSequences es = new EscapeSequences();
 
     private static final int BoardSquareLength = 8;
     private static final int SquareCharactersWidth = 3;
@@ -29,8 +29,8 @@ public class ChessBoardPainter {
 
         drawBoard(out);
 
-        out.print(SET_BG_COLOR_BLACK);
-        out.print(SET_TEXT_COLOR_WHITE);
+//        out.print(SET_BG_COLOR_BLACK);
+//        out.print(SET_TEXT_COLOR_WHITE);
     }
 
     public static void drawBoard(PrintStream out) {
@@ -41,15 +41,25 @@ public class ChessBoardPainter {
     }
 
     public static void drawSquares(PrintStream out, int row) {
+        int middleline = SquareCharactersWidth / 2;
         for (int subline = 0; subline < SquareCharactersWidth; ++subline) {
             for (int squareNum = 0; squareNum < BoardSquareLength; ++squareNum) {
                 setSqaureColors(out);
-                int prefixLength = SquareCharactersWidth / 2;
-                int suffixLength = SquareCharactersWidth - prefixLength - 1;
-                out.print(es.EMPTY.repeat(prefixLength));
-                printPlayer(out, row, squareNum);
-                out.print(EMPTY.repeat(suffixLength));
+                if (squareNum == middleline) {
+                    int prefixLength = SquareCharactersWidth / 2;
+                    int suffixLength = SquareCharactersWidth - prefixLength - 1;
+                    out.print(es.EMPTY.repeat(prefixLength));
+                    printPlayer(out, row, squareNum);
+                    out.print(es.EMPTY.repeat(suffixLength));
+                }
+                else {
+                    out.print(es.EMPTY.repeat(SquareCharactersWidth));
+                }
+
+                //If want to draw a vertical line, put it here, but I don't want to
+
             }
+            out.println();
 
 
         }
@@ -64,6 +74,7 @@ public class ChessBoardPainter {
             squareColor = SquareColor.GREEN;
         }
     }
+
     private static void printPlayer(PrintStream out, int row, int col) {
         ChessPiece piece = chessGame.getBoard().getPiece(new ChessPosition(row, col));
         ChessPiece.PieceType type = piece.getPieceType();
@@ -118,7 +129,7 @@ public class ChessBoardPainter {
 
 
 
-    }
+
 
 
 
