@@ -8,9 +8,9 @@ public class ChessRepl {
     private final ChessClient client;
     private State state;
 
-    public ChessRepl(String serverHost, int serverPort) {
-        this.client = new ChessClient(serverHost, serverPort);
-        state = State.LOGOUT;
+    public ChessRepl(String serverURL) {
+        this.client = new ChessClient(serverURL, this);
+
     }
 
     public void run(){
@@ -51,24 +51,24 @@ public class ChessRepl {
             case "help":
                 printPostloginHelp();
                 break;
-            case "create":
-                client.doLogout();
-                break;
-            case "list":
-                client.doCreateGame();
-                break;
-            case "join":
-                client.doListGames();
-                break;
-            case "observe":
-                client.doPlayGame();
-                break;
-            case "logout":
-                client.doObserveGame();
-                break;
-            case "quit":
-                client.doQuit();
-                break;
+//            case "create":
+//                client.doLogout();
+//                break;
+//            case "list":
+//                client.doCreateGame();
+//                break;
+//            case "join":
+//                client.doListGames();
+//                break;
+//            case "observe":
+//                client.doPlayGame();
+//                break;
+//            case "logout":
+//                client.doObserveGame();
+//                break;
+//            case "quit":
+//                client.doQuit();
+//                break;
             default:
                 System.out.println("Unknown command. Type 'help' for options.");
         }
@@ -80,9 +80,9 @@ public class ChessRepl {
             case "help":
                 printPreloginHelp();
                 break;
-            case "login":
-                client.doLogin();
-                break;
+//            case "login":
+//                client.doLogin();
+//                break;
             case "register":
                 client.doRegister();
                 break;

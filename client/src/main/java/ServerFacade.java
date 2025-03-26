@@ -7,7 +7,7 @@ import java.net.HttpURLConnection;
 
 import java.net.URI;
 import java.net.URL;
-
+import java.util.Map;
 import com.google.gson.Gson;
 
 
@@ -19,15 +19,25 @@ public class ServerFacade {
 
     }
     public void registerUser(String username, String password, String email) {
+        var path = "/user";
+        RegisterRequest registerRequest = new RegisterRequest(username, password, email);
+        RegisterResponse registerResponse = null;
+        try {
+            return this.makeRequest("POST", path, registerRequest, RegisterResponse.class);
+        }catch (ResponseException e){
+
+        }
 
     }
 
     private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass) throws ResponseException {
         try {
             URL url = (new URI(serverUrl + path)).toURL();
+
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
             http.setRequestMethod(method);
             http.setDoOutput(true);
+
 
             writeBody(request, http);
             http.connect();
