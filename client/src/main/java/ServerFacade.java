@@ -18,7 +18,7 @@ public class ServerFacade {
         this.serverUrl = url;
 
     }
-    public void registerUser(String username, String password, String email) {
+    public RegisterResponse registerUser(String username, String password, String email) {
         var path = "/user";
         RegisterRequest registerRequest = new RegisterRequest(username, password, email);
         RegisterResponse registerResponse = null;
@@ -27,6 +27,7 @@ public class ServerFacade {
         }catch (ResponseException e){
 
         }
+        return null;
 
     }
 
@@ -66,7 +67,8 @@ public class ServerFacade {
             try (InputStream respErr = http.getErrorStream()) {
                 if (respErr != null) {
                     // why the fromJson doesn't work
-                    throw ResponseException.fromJson(respErr);
+                    throw new ResponseException(status, respErr.toString());
+//                    throw ResponseException.fromJson(respErr);
                 }
             }
 

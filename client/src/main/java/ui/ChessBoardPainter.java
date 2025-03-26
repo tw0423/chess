@@ -11,12 +11,12 @@ public class ChessBoardPainter {
     private static EscapeSequences es = new EscapeSequences();
 
     private static final int BoardSquareLength = 8;
-    private static final int SquareCharactersWidth = 3;
+    private static final int SquareCharactersWidth = 1;
     private static final int LINE_WIDTH_IN_PADDED_CHARS = 1;
 
     //I don't know what should logic here to be so I will use chessGame first
     private static ChessGame chessGame = new ChessGame();
-    private static SquareColor squareColor = SquareColor.GREEN;
+    private static SquareColor squareColor = SquareColor.WHITE;
 
 
     public static void main(String[] args) {
@@ -37,7 +37,7 @@ public class ChessBoardPainter {
         for (int row = 0; row < BoardSquareLength; row++) {
             drawSquares(out, row);
             //reset the colors
-            setSqaureColors(out);
+            switchSqaureColors(out);
             out.println();
         }
 
@@ -47,7 +47,7 @@ public class ChessBoardPainter {
         int middleline = SquareCharactersWidth / 2;
         for (int subline = 0; subline < SquareCharactersWidth; ++subline) {
             for (int squareNum = 0; squareNum < BoardSquareLength; ++squareNum) {
-                setSqaureColors(out);
+                switchSqaureColors(out);
                 if (subline == middleline) {
                     int prefixLength = SquareCharactersWidth / 2;
                     int suffixLength = SquareCharactersWidth - prefixLength - 1;
@@ -62,30 +62,32 @@ public class ChessBoardPainter {
                 //If want to draw a vertical line, put it here, but I don't want to
 
             }
-            out.println();
+//            out.println();
 
 
         }
     }
 
-    private static void setSqaureColors(PrintStream out) {
-        if(squareColor==SquareColor.GREEN){
-            setGreen(out);
-            squareColor = SquareColor.BLACK;
+    private static void switchSqaureColors(PrintStream out) {
+        if(squareColor==SquareColor.GREY){
+            setGrey(out);
+            squareColor = SquareColor.WHITE;
+
         }else{
-            setBlack(out);
-            squareColor = SquareColor.GREEN;
+            setWhite(out);
+            squareColor = SquareColor.GREY;
         }
     }
 
     private static void printPlayer(PrintStream out, int row, int col) {
-        ChessPiece piece = chessGame.getBoard().getPiece(new ChessPosition(row, col));
+        ChessPiece piece = chessGame.getBoard().getPiece(new ChessPosition(row+1, col+1));
         if (piece == null) {
             out.print(es.EMPTY);
             return;
         }
         ChessPiece.PieceType type = piece.getPieceType();
         ChessGame.TeamColor teamColor = piece.getTeamColor();
+        out.print(es.SET_TEXT_COLOR_BLACK);
         if(type != null && teamColor != null){
             if (teamColor == ChessGame.TeamColor.BLACK) {
                 switch (type){
@@ -131,6 +133,7 @@ public class ChessBoardPainter {
                 }
 
             }
+            out.print(es.RESET_TEXT_COLOR);
         }
 
     }
@@ -147,6 +150,11 @@ public class ChessBoardPainter {
     private static void setWhite(PrintStream out) {
         out.print(es.SET_BG_COLOR_WHITE);
         out.print(es.SET_TEXT_COLOR_WHITE);
+    }
+
+    private static void setGrey(PrintStream out) {
+        out.print(es.SET_BG_COLOR_LIGHT_GREY);
+        out.print(es.SET_TEXT_COLOR_LIGHT_GREY);
     }
 
     private static void setRed(PrintStream out) {
