@@ -105,10 +105,16 @@ public class ChessRepl {
     }
 
     private void printPostloginHelp(){
-        pirntNewLineBlue("create <NAME> <PASSWORD> <EMAIL> ");
-        printGray("- to create an account ");
-        pirntNewLineBlue("login <USERNAME> <PASSWORD> <EMAIL> ");
-        printGray("- to play chess game ");
+        pirntNewLineBlue("create <NAME> ");
+        printGray("- to create an game ");
+        pirntNewLineBlue("list ");
+        printGray("- to see all the games can join ");
+        pirntNewLineBlue("join <ID> [WHITE|BLACK]");
+        printGray("- join game and slect sides to join");
+        pirntNewLineBlue("observe <ID> ");
+        printGray("- a game");
+        pirntNewLineBlue("logout ");
+        printGray("- when you are done");
         pirntNewLineBlue("quit ");
         printGray("- quit chess");
         pirntNewLineBlue("help ");
