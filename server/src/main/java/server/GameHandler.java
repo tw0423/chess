@@ -1,7 +1,6 @@
 package server;
 
 import com.google.gson.Gson;
-import model.UserData;
 import service.*;
 import spark.Request;
 import spark.Response;

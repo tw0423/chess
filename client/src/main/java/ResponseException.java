@@ -1,5 +1,5 @@
 public class ResponseException extends Exception {
-    public ResponseException(String message) {
+    public ResponseException(int statusCode, String message) {
         super(message);
     }
 }
