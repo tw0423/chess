@@ -36,6 +36,9 @@ public class ChessBoardPainter {
     public static void drawBoard(PrintStream out) {
         for (int row = 0; row < BoardSquareLength; row++) {
             drawSquares(out, row);
+            //reset the colors
+            setSqaureColors(out);
+            out.println();
         }
 
     }
@@ -45,7 +48,7 @@ public class ChessBoardPainter {
         for (int subline = 0; subline < SquareCharactersWidth; ++subline) {
             for (int squareNum = 0; squareNum < BoardSquareLength; ++squareNum) {
                 setSqaureColors(out);
-                if (squareNum == middleline) {
+                if (subline == middleline) {
                     int prefixLength = SquareCharactersWidth / 2;
                     int suffixLength = SquareCharactersWidth - prefixLength - 1;
                     out.print(es.EMPTY.repeat(prefixLength));
@@ -77,53 +80,60 @@ public class ChessBoardPainter {
 
     private static void printPlayer(PrintStream out, int row, int col) {
         ChessPiece piece = chessGame.getBoard().getPiece(new ChessPosition(row, col));
+        if (piece == null) {
+            out.print(es.EMPTY);
+            return;
+        }
         ChessPiece.PieceType type = piece.getPieceType();
         ChessGame.TeamColor teamColor = piece.getTeamColor();
-        if (teamColor == ChessGame.TeamColor.BLACK) {
-            switch (type){
-                case KING:
-                    out.print(es.BLACK_KING);
-                    break;
-                case QUEEN:
-                    out.print(es.BLACK_QUEEN);
-                    break;
-                case BISHOP:
-                    out.print(es.BLACK_BISHOP);
-                    break;
-                case KNIGHT:
-                    out.print(es.BLACK_KNIGHT);
-                    break;
-                case ROOK:
-                    out.print(es.BLACK_ROOK);
-                    break;
-                case PAWN:
-                    out.print(es.BLACK_PAWN);
-                    break;
-            }
-        }else{
-            switch (type){
-                case KING:
-                    out.print(es.WHITE_KING);
-                    break;
-                case QUEEN:
-                    out.print(es.WHITE_QUEEN);
-                    break;
-                case BISHOP:
-                    out.print(es.WHITE_BISHOP);
-                    break;
-                case KNIGHT:
-                    out.print(es.WHITE_KNIGHT);
-                    break;
-                case ROOK:
-                    out.print(es.WHITE_ROOK);
-                    break;
-                case PAWN:
-                    out.print(es.WHITE_PAWN);
-                    break;
-            }
+        if(type != null && teamColor != null){
+            if (teamColor == ChessGame.TeamColor.BLACK) {
+                switch (type){
+                    case KING:
+                        out.print(es.BLACK_KING);
+                        break;
+                    case QUEEN:
+                        out.print(es.BLACK_QUEEN);
+                        break;
+                    case BISHOP:
+                        out.print(es.BLACK_BISHOP);
+                        break;
+                    case KNIGHT:
+                        out.print(es.BLACK_KNIGHT);
+                        break;
+                    case ROOK:
+                        out.print(es.BLACK_ROOK);
+                        break;
+                    case PAWN:
+                        out.print(es.BLACK_PAWN);
+                        break;
+                }
+            }else{
+                switch (type){
+                    case KING:
+                        out.print(es.WHITE_KING);
+                        break;
+                    case QUEEN:
+                        out.print(es.WHITE_QUEEN);
+                        break;
+                    case BISHOP:
+                        out.print(es.WHITE_BISHOP);
+                        break;
+                    case KNIGHT:
+                        out.print(es.WHITE_KNIGHT);
+                        break;
+                    case ROOK:
+                        out.print(es.WHITE_ROOK);
+                        break;
+                    case PAWN:
+                        out.print(es.WHITE_PAWN);
+                        break;
+                }
 
+            }
         }
-        }
+
+    }
 
 
 
