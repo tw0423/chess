@@ -19,9 +19,8 @@ public class ChessRepl {
         System.out.println("Welcome to Chess !!!");
         System.out.println("Below is the command line arguments you can type in");
         Scanner scanner = new Scanner(System.in);
-
+        printPreloginHelp();
         while(true){
-            printPreloginHelp();
             System.out.print("[" +state + "}" +">>> " );
             String line = scanner.nextLine();
             if(line.equals("exit")) {
@@ -66,14 +65,11 @@ public class ChessRepl {
             case "join":
                 client.joinGame(params);
                 break;
-//            case "observe":
-//                client.doPlayGame();
-//                break;
+            case "observe":
+                client.observeGame(params);
+                break;
 //            case "logout":
 //                client.doObserveGame();
-//                break;
-//            case "quit":
-//                client.doQuit();
 //                break;
             default:
                 System.out.println("Unknown command. Type 'help' for options.");
@@ -117,8 +113,6 @@ public class ChessRepl {
         printBlue("help ");
         printGray("- see all possible commands");
         System.out.println();
-
-
     }
 
     private void printPostloginHelp(){
@@ -136,8 +130,8 @@ public class ChessRepl {
         printGray("- quit chess");
         printBlue("help ");
         printGray("- see all possible commands");
-
     }
+
     private void printBlue(String text){
         System.out.print(EscapeSequences.SET_TEXT_COLOR_BLUE + text + EscapeSequences.RESET_TEXT_COLOR);
     }

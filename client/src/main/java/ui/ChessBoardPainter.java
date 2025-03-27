@@ -15,9 +15,14 @@ public class ChessBoardPainter {
     private static final int LINE_WIDTH_IN_PADDED_CHARS = 1;
 
     //I don't know what should logic here to be so I will use chessGame first
-    private static ChessGame chessGame = new ChessGame();
+    private static ChessGame chessGame;
     private static SquareColor squareColor = SquareColor.WHITE;
+    private String color;
+    public ChessBoardPainter(ChessGame chessGame, String playerColor) {
+        this.chessGame = chessGame;
+        this.color = playerColor;
 
+    }
 
     public static void main(String[] args) {
 

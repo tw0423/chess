@@ -53,7 +53,7 @@ public class ServerFacade {
     }
 
     public CreateGameResponse createGame(String gameName) {
-        var path = "/session";
+        var path = "/game";
         Map map = Map.of("gameName", gameName);
         try {
             return this.makeRequest("POST", path, map, CreateGameResponse.class);
@@ -66,7 +66,7 @@ public class ServerFacade {
     public ListGameReponse getGames() {
         var path = "/game";
         try {
-            return this.makeRequest("Get", path, null, ListGameReponse.class);
+            return this.makeRequest("GET", path, null, ListGameReponse.class);
         }catch (ResponseException e){
             System.out.println("error: "+ e.getMessage());
         }
@@ -77,13 +77,10 @@ public class ServerFacade {
         var path = "/game";
         Map map = Map.of("playerColor",playerColor,"gameID", gameID);
         try {
-            this.makeRequest("Get", path, map, null);
+            this.makeRequest("GET", path, map, null);
         }catch (ResponseException e){
             System.out.println("error: "+ e.getMessage());
         }
-
-
-
     }
 
 
@@ -138,7 +135,6 @@ public class ServerFacade {
 
     private static <T> T readBody(HttpURLConnection http, Class<T> responseClass) throws IOException {
         T response = null;
-        System.out.print("reach to here ");
         if (http.getContentLength() < 0) {
             try (InputStream respBody = http.getInputStream()) {
                 InputStreamReader reader = new InputStreamReader(respBody);
@@ -163,7 +159,6 @@ public class ServerFacade {
 
 
 
-    record RegisterRequest(String username, String password, String email) {}
-    record RegisterResponse(String authToken) {}
+
 
 }

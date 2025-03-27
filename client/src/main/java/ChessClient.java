@@ -1,9 +1,11 @@
+import chess.ChessGame;
 import model.GameData;
 import model.UserData;
 import service.CreateGameRequest;
 import service.CreateGameResponse;
 import service.ListGameReponse;
 import service.LoginResponse;
+import ui.ChessBoardPainter;
 
 import java.util.ArrayList;
 
@@ -42,6 +44,9 @@ public class ChessClient{
     public int creatGame(String ... para) {
         String gameName = para[0];
         CreateGameResponse res = facade.createGame(gameName);
+        if(res ==null){
+            return -1;
+        }
         return res.gameID();
     }
 
@@ -55,6 +60,23 @@ public class ChessClient{
         int gameID = Integer.parseInt(para[1]);
         facade.joinGame(playerColor, gameID);
         return true;
+
+    }
+
+    public boolean observeGame(String ... para){
+        String playerColor = para[1];
+        int gameID = Integer.parseInt(para[0]);
+        ListGameReponse res = facade.getGames();
+        ArrayList<GameData> games = res.games();
+        for(GameData game: games){
+            if(game.gameID() == gameID){
+                ChessGame chessGame = game.game();
+                ChessBoardPainter painter= new ui.ChessBoardPainter(chessGame, playerColor);
+                painter.main(null);
+            }
+        }
+        return true;
+
 
     }
 
