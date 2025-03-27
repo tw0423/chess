@@ -28,33 +28,36 @@ public class ChessRepl {
                 break;
             };
 
-            evalCommand(line);
+            evalCommand(line, scanner);
 
         }
     }
 
-    public void evalCommand(String command){
+    public void evalCommand(String command, Scanner scanner) {
         var tokens = command.toLowerCase().split(" ");
         var cmd = (tokens.length > 0) ? tokens[0] : "help";
-        var params = Arrays.copyOfRange(tokens, 1, tokens.length);
+//        var params = Arrays.copyOfRange(tokens, 1, tokens.length);
 
 
         if (state == State.LOGOUT) {
-            handleLOGOUT(cmd, params);
+            handleLOGOUT(cmd, scanner);
         }
         else{
-            handleLOGGIN(cmd, params);
+            handleLOGGIN(cmd, scanner);
         }
 
     }
 
-    private void handleLOGGIN(String command, String[] params) {
+    private void handleLOGGIN(String command, Scanner scanner) {
         switch (command) {
             case "help":
                 printPostloginHelp();
                 break;
             case "create":
-                client.creatGame(params);
+                System.out.print("<GAME NAME>: ");
+                String gameName = scanner.nextLine();
+                String[] createParams = { gameName };
+                client.creatGame(createParams);
                 break;
             case "list":
                 ArrayList<GameData> gameDataList =  client.listGames();
@@ -63,10 +66,22 @@ public class ChessRepl {
                 }
                 break;
             case "join":
-                client.joinGame(params);
+                System.out.print("<GAME ID>: ");
+                String joinId = scanner.nextLine();
+                System.out.print("<COLOR> [WHITE or BLACK]: ");
+                String joinColor = scanner.nextLine();
+                String[] joinParams = { joinId, joinColor };
+
+                client.joinGame(joinParams);
                 break;
+
             case "observe":
-                client.observeGame(params);
+                System.out.println("<GAME ID>: ");
+                String obsId = scanner.nextLine();
+
+                String[] obsParams = { obsId };
+
+                client.observeGame(obsParams);
                 break;
             case "logout":
                 client.logout();
@@ -77,20 +92,40 @@ public class ChessRepl {
     }
 
 
-    private void handleLOGOUT(String command, String[] params){
+    private void handleLOGOUT(String command, Scanner scanner) {
+        ArrayList<String> params = null;
         switch (command) {
             case "help":
                 printPreloginHelp();
                 break;
             case "login":
-                if(client.doLogin(params)) {
+                System.out.print("<USERNAME>: ");
+                String loginUser = scanner.nextLine();
+                System.out.print("<PASSWORD>: ");
+                String loginPass = scanner.nextLine();
+
+                String[] loginParams = { loginUser, loginPass };
+
+                if (client.doLogin(loginParams)) {
                     state = State.LOGIN;
+                } else {
+                    System.out.println("Login failed");
                 }
                 break;
             case "register":
-                if(!client.doRegister(params)){
+                System.out.print("<USERNAME>: ");
+                String username = scanner.nextLine();
+                System.out.print("<PASSWORD>: ");
+                String password = scanner.nextLine();
+
+                System.out.print("<EMAIL>: ");
+                String email = scanner.nextLine();
+
+                String[] registerParams = { username, password, email };
+
+                if (!client.doRegister(registerParams)) {
                     System.out.println("Registration failed");
-                };
+                }
                 break;
 
             default:
@@ -99,37 +134,53 @@ public class ChessRepl {
     }
 
     private void printPreloginHelp(){
-        printBlue("register <USERNAME> <PASSWORD> <EMAIL> ");
+        printBlue("register  ");
         printGray("- to create an account ");
-        System.out.println();
-        printBlue("login <USERNAME> <PASSWORD> <EMAIL> ");
-        printGray("- to play chess game ");
-        System.out.println();
 
+        newLine();        printBlue("login  ");
+        printGray("- to play chess game ");
+
+        newLine();
         printBlue("quit ");
         printGray("- quit chess");
-        System.out.println();
 
+        newLine();
         printBlue("help ");
         printGray("- see all possible commands");
-        System.out.println();
+        newLine();
+
     }
 
     private void printPostloginHelp(){
-        printBlue("create <NAME> ");
+        printBlue("create ");
         printGray("- to create an game ");
+
+        newLine();
         printBlue("list ");
         printGray("- to see all the games can join ");
-        printBlue("join <ID> [WHITE|BLACK]");
+
+        newLine();
+        printBlue("join ");
         printGray("- join game and slect sides to join");
-        printBlue("observe <ID> [WHITE|BLACK]");
+
+        newLine();
+        printBlue("observe");
         printGray("- a game");
+
+        newLine();
         printBlue("logout ");
         printGray("- when you are done");
+
+        newLine();
         printBlue("exit ");
         printGray("- quit chess");
+        newLine();
         printBlue("help ");
         printGray("- see all possible commands");
+    }
+
+    private void newLine(){
+        System.out.println();
     }
 
     private void printBlue(String text){
