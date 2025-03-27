@@ -3,6 +3,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.util.ArrayList;
+
+import model.GameData;
 import ui.EscapeSequences;
 public class ChessRepl {
     private final ChessClient client;
@@ -10,15 +12,16 @@ public class ChessRepl {
 
     public ChessRepl(String serverURL) {
         this.client = new ChessClient(serverURL, this);
-
+        this.state = State.LOGOUT;
     }
 
     public void run(){
-        System.out.println("Welcome to Chess");
-
+        System.out.println("Welcome to Chess !!!");
+        System.out.println("Below is the command line arguments you can type in");
         Scanner scanner = new Scanner(System.in);
 
         while(true){
+            printPreloginHelp();
             System.out.print("[" +state + "}" +">>> " );
             String line = scanner.nextLine();
             if(line.equals("exit")) {
@@ -51,15 +54,18 @@ public class ChessRepl {
             case "help":
                 printPostloginHelp();
                 break;
-//            case "create":
-//                client.doLogout();
-//                break;
-//            case "list":
-//                client.doCreateGame();
-//                break;
-//            case "join":
-//                client.doListGames();
-//                break;
+            case "create":
+                client.creatGame(params);
+                break;
+            case "list":
+                ArrayList<GameData> gameDataList =  client.listGames();
+                for (GameData gameData : gameDataList) {
+                    System.out.println(gameData);
+                }
+                break;
+            case "join":
+                client.joinGame(params);
+                break;
 //            case "observe":
 //                client.doPlayGame();
 //                break;
@@ -80,11 +86,15 @@ public class ChessRepl {
             case "help":
                 printPreloginHelp();
                 break;
-//            case "login":
-//                client.doLogin();
-//                break;
+            case "login":
+                if(client.doLogin(params)) {
+                    state = State.LOGIN;
+                }
+                break;
             case "register":
-                client.doRegister();
+                if(!client.doRegister(params)){
+                    System.out.println("Registration failed");
+                };
                 break;
 
             default:
@@ -93,36 +103,43 @@ public class ChessRepl {
     }
 
     private void printPreloginHelp(){
-        pirntNewLineBlue("register <USERNAME> <PASSWORD> <EMAIL> ");
+        printBlue("register <USERNAME> <PASSWORD> <EMAIL> ");
         printGray("- to create an account ");
-        pirntNewLineBlue("login <USERNAME> <PASSWORD> <EMAIL> ");
+        System.out.println();
+        printBlue("login <USERNAME> <PASSWORD> <EMAIL> ");
         printGray("- to play chess game ");
-        pirntNewLineBlue("quit ");
+        System.out.println();
+
+        printBlue("quit ");
         printGray("- quit chess");
-        pirntNewLineBlue("help ");
+        System.out.println();
+
+        printBlue("help ");
         printGray("- see all possible commands");
+        System.out.println();
+
 
     }
 
     private void printPostloginHelp(){
-        pirntNewLineBlue("create <NAME> ");
+        printBlue("create <NAME> ");
         printGray("- to create an game ");
-        pirntNewLineBlue("list ");
+        printBlue("list ");
         printGray("- to see all the games can join ");
-        pirntNewLineBlue("join <ID> [WHITE|BLACK]");
+        printBlue("join <ID> [WHITE|BLACK]");
         printGray("- join game and slect sides to join");
-        pirntNewLineBlue("observe <ID> ");
+        printBlue("observe <ID> ");
         printGray("- a game");
-        pirntNewLineBlue("logout ");
+        printBlue("logout ");
         printGray("- when you are done");
-        pirntNewLineBlue("quit ");
+        printBlue("quit ");
         printGray("- quit chess");
-        pirntNewLineBlue("help ");
+        printBlue("help ");
         printGray("- see all possible commands");
 
     }
-    private void pirntNewLineBlue(String text){
-        System.out.println(EscapeSequences.SET_TEXT_COLOR_BLUE + text + EscapeSequences.RESET_TEXT_COLOR);
+    private void printBlue(String text){
+        System.out.print(EscapeSequences.SET_TEXT_COLOR_BLUE + text + EscapeSequences.RESET_TEXT_COLOR);
     }
     private void printGray(String text){
         System.out.print(EscapeSequences.SET_BG_COLOR_DARK_GREY + text + EscapeSequences.RESET_TEXT_COLOR);

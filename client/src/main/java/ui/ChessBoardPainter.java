@@ -38,7 +38,10 @@ public class ChessBoardPainter {
             drawSquares(out, row);
             //reset the colors
             switchSqaureColors(out);
+            setBlack(out);
             out.println();
+            out.print(es.RESET_TEXT_COLOR);
+            out.print(es.RESET_BG_COLOR);
         }
 
     }
@@ -139,14 +142,6 @@ public class ChessBoardPainter {
     }
 
 
-
-
-
-
-
-
-
-
     private static void setWhite(PrintStream out) {
         out.print(es.SET_BG_COLOR_WHITE);
         out.print(es.SET_TEXT_COLOR_WHITE);
@@ -157,20 +152,14 @@ public class ChessBoardPainter {
         out.print(es.SET_TEXT_COLOR_LIGHT_GREY);
     }
 
-    private static void setRed(PrintStream out) {
-        out.print(es.SET_BG_COLOR_RED);
-        out.print(es.SET_TEXT_COLOR_RED);
-    }
+
 
     private static void setBlack(PrintStream out) {
         out.print(es.SET_BG_COLOR_BLACK);
         out.print(es.SET_TEXT_COLOR_BLACK);
     }
 
-    private static void setGreen(PrintStream out) {
-        out.print(es.SET_BG_COLOR_GREEN);
-        out.print(es.SET_TEXT_COLOR_GREEN);
-    }
+
 
 
 }
