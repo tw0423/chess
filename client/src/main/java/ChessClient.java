@@ -66,6 +66,7 @@ public class ChessClient{
     public boolean logout(){
         facade.logoutUser();
         this.authToken = null;
+        return true;
 
     }
 

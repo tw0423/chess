@@ -68,9 +68,9 @@ public class ChessRepl {
             case "observe":
                 client.observeGame(params);
                 break;
-//            case "logout":
-//                client.doObserveGame();
-//                break;
+            case "logout":
+                client.logout();
+                break;
             default:
                 System.out.println("Unknown command. Type 'help' for options.");
         }

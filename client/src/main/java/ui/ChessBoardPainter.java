@@ -17,10 +17,14 @@ public class ChessBoardPainter {
     //I don't know what should logic here to be so I will use chessGame first
     private static ChessGame chessGame;
     private static SquareColor squareColor = SquareColor.WHITE;
-    private String color;
+    private static ChessGame.TeamColor color;
     public ChessBoardPainter(ChessGame chessGame, String playerColor) {
         this.chessGame = chessGame;
-        this.color = playerColor;
+        if (playerColor.equals("white")) {
+            color = ChessGame.TeamColor.WHITE;
+        }else{
+            color = ChessGame.TeamColor.BLACK;
+        }
 
     }
 
@@ -39,6 +43,11 @@ public class ChessBoardPainter {
     }
 
     public static void drawBoard(PrintStream out) {
+        if(color.equals(ChessGame.TeamColor.BLACK)){
+            squareColor = SquareColor.GREY;
+        }else{
+            squareColor = SquareColor.WHITE;
+        }
         for (int row = 0; row < BoardSquareLength; row++) {
             drawSquares(out, row);
             //reset the colors
@@ -67,7 +76,6 @@ public class ChessBoardPainter {
                     out.print(es.EMPTY.repeat(SquareCharactersWidth));
                 }
 
-                //If want to draw a vertical line, put it here, but I don't want to
 
             }
 //            out.println();
@@ -88,7 +96,12 @@ public class ChessBoardPainter {
     }
 
     private static void printPlayer(PrintStream out, int row, int col) {
-        ChessPiece piece = chessGame.getBoard().getPiece(new ChessPosition(row+1, col+1));
+        ChessPiece piece;
+        if(color.equals(ChessGame.TeamColor.WHITE)){
+             piece = chessGame.getBoard().getPiece(new ChessPosition(row+1, col+1));
+        }else{
+             piece = chessGame.getBoard().getPiece(new ChessPosition(9-(row+1), 9-(col+1)));
+        }
         if (piece == null) {
             out.print(es.EMPTY);
             return;
@@ -163,8 +176,6 @@ public class ChessBoardPainter {
         out.print(es.SET_BG_COLOR_BLACK);
         out.print(es.SET_TEXT_COLOR_BLACK);
     }
-
-
 
 
 }
