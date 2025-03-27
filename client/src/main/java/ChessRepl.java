@@ -122,11 +122,11 @@ public class ChessRepl {
         printGray("- to see all the games can join ");
         printBlue("join <ID> [WHITE|BLACK]");
         printGray("- join game and slect sides to join");
-        printBlue("observe <ID> ");
+        printBlue("observe <ID> [WHITE|BLACK]");
         printGray("- a game");
         printBlue("logout ");
         printGray("- when you are done");
-        printBlue("quit ");
+        printBlue("exit ");
         printGray("- quit chess");
         printBlue("help ");
         printGray("- see all possible commands");

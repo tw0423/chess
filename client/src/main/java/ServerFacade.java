@@ -83,6 +83,19 @@ public class ServerFacade {
         }
     }
 
+    public void logoutUser(){
+        var path = "/session";
+
+        try {
+            this.makeRequest("DELETE", path, null, null);
+            this.authToken = null;
+
+        }catch (ResponseException e){
+            System.out.println("error: "+ e.getMessage());
+        }
+
+    }
+
 
 
     private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass) throws ResponseException {

@@ -37,7 +37,7 @@ public class ChessClient{
         String password = para[1];
         LoginResponse res = facade.loginUser(username, password);
         System.out.println("Successfully registered user " + res.username());
-        authToken = res.authToken();
+        this.authToken = res.authToken();
         return true;
     }
 
@@ -63,6 +63,12 @@ public class ChessClient{
 
     }
 
+    public boolean logout(){
+        facade.logoutUser();
+        this.authToken = null;
+
+    }
+
     public boolean observeGame(String ... para){
         String playerColor = para[1];
         int gameID = Integer.parseInt(para[0]);
@@ -76,8 +82,6 @@ public class ChessClient{
             }
         }
         return true;
-
-
     }
 
 
