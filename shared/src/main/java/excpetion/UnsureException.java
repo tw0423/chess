@@ -1,4 +1,4 @@
-package service;
+package excpetion;
 
 public class UnsureException extends Exception {
     public UnsureException(String message) {

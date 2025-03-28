@@ -2,10 +2,7 @@ import chess.ChessGame;
 import jdk.jshell.spi.ExecutionControlProvider;
 import model.GameData;
 import model.UserData;
-import service.CreateGameRequest;
-import service.CreateGameResponse;
-import service.ListGameReponse;
-import service.LoginResponse;
+import ReqRes.*;
 import ui.ChessBoardPainter;
 
 import java.util.ArrayList;

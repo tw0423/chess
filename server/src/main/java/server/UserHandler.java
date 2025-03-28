@@ -1,4 +1,9 @@
 package server;
+import ReqRes.*;
+import excpetion.AlreadyTakenException;
+import excpetion.BadRequestException;
+import excpetion.UnauthorizedException;
+import excpetion.UnsureException;
 import service.*;
 import spark.Request;
 import spark.Response;

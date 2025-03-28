@@ -1,4 +1,4 @@
-package service;
+package excpetion;
 
 public class UnauthorizedException extends Exception {
     public UnauthorizedException(String message) {

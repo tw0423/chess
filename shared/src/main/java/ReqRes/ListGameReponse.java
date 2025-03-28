@@ -1,4 +1,4 @@
-package service;
+package ReqRes;
 import model.GameData;
 
 import java.util.ArrayList;

@@ -12,13 +12,10 @@ import java.util.HashMap;
 import java.util.Map;
 import com.google.gson.Gson;
 import model.*;
-import service.CreateGameResponse;
-import service.ListGameReponse;
-import service.LoginResponse;
+import excpetion.*;
+import ReqRes.*;
 
-import service.UnauthorizedException;
-import service.AlreadyTakenException;
-import service.BadRequestException;
+
 
 import chess.ChessGame.TeamColor;
 
