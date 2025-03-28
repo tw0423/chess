@@ -54,7 +54,7 @@ public class ServerFacade {
             return response;
         }catch (ResponseException e){
             if (e.statusCode() == 401) {
-                throw new UnauthorizedException("Wrong Password");
+                throw new UnauthorizedException("Wrong password or wrong username");
 
             }
         }
@@ -199,9 +199,9 @@ public class ServerFacade {
         return this.authToken;
     }
 
+    //only use it for unit test
     public void clear(){
         var path = "/db";
-
 
         try {
             this.makeRequest("DELETE", path, null, null);

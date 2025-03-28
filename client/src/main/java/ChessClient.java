@@ -42,6 +42,7 @@ public class ChessClient{
             }
             UserData response = facade.registerUser(username, password, email);
             System.out.println("Successfully registered user " + response.username());
+            this.doLogin(username, password);
 
         }
         catch (Exception e){
@@ -87,8 +88,6 @@ public class ChessClient{
         if(res ==null){
             return -1;
         }
-        int displayNumber = matchingIDMap.size();
-        matchingIDMap.put(displayNumber, res.gameID());
 
         return res.gameID();
     }
@@ -110,10 +109,7 @@ public class ChessClient{
     }
 
     public boolean joinGame(String ... para){
-        if(para.length != 2){
-            System.out.println("missing required information");
-            return false;
-        }
+
         String playerColor = para[1];
         int gameID;
         if(isInteger(para[0])) {
@@ -129,6 +125,10 @@ public class ChessClient{
         }
 
         ArrayList<GameData> list = this.listGames();
+        if(gameID >= list.size() || gameID < 0 ){
+            System.out.println("invalid game ID");
+            return false;
+        }
         GameData gameData = list.get(gameID-1);
         try {
             facade.joinGame(playerColor, gameData.gameID()
@@ -138,6 +138,8 @@ public class ChessClient{
             return false;
 
         }
+
+        this.observeGame(para[0], playerColor);
         return true;
     }
 
@@ -160,9 +162,6 @@ public class ChessClient{
             System.out.println("only accept color for white or black");
             return false;
         }
-
-
-
 
 
         int gameNum = Integer.parseInt(para[0]);

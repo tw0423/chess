@@ -103,9 +103,9 @@ public class ChessBoardPainter {
     private static void printPlayer(PrintStream out, int row, int col) {
         ChessPiece piece;
         if(color.equals(ChessGame.TeamColor.BLACK)){
-             piece = chessGame.getBoard().getPiece(new ChessPosition(row+1, col+1));
+             piece = chessGame.getBoard().getPiece(new ChessPosition(row+1, 9-(col+1)));
         }else{
-             piece = chessGame.getBoard().getPiece(new ChessPosition(9-(row+1), 9-(col+1)));
+             piece = chessGame.getBoard().getPiece(new ChessPosition(9-(row+1), col+1));
         }
         if (piece == null) {
             out.print(es.EMPTY);
@@ -196,10 +196,17 @@ public class ChessBoardPainter {
     }
 
     private static void labelNumer(int i, PrintStream out){
+
         out.print(es.SET_TEXT_COLOR_WHITE);
-        out.print(String.valueOf(i+1));
+        out.print(es.SET_BG_COLOR_BLACK);
+        if(color == ChessGame.TeamColor.WHITE ) {
+            out.print(String.valueOf(i + 1));
+        }else{
+            out.print(String.valueOf(8- i ));
+        }
         out.print(es.EMPTY);
         out.print(es.RESET_TEXT_COLOR);
+        out.print(es.RESET_BG_COLOR);
     }
 
 

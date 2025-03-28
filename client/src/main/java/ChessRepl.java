@@ -155,6 +155,8 @@ public class ChessRepl {
 
                 if (!(client.doRegister(registerParams))) {
                     System.out.println("Registration failed");
+                }else{
+                    state = State.LOGIN;
                 }
                 break;
 
