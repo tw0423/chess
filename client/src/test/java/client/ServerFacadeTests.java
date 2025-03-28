@@ -27,7 +27,7 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void RegisterAndLoginTest() {
+    public void registerAndLoginTest() {
 
 
 
