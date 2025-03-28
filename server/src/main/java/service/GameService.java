@@ -1,8 +1,8 @@
 package service;
-import reqRes.CreateGameRequest;
-import reqRes.CreateGameResponse;
-import reqRes.JoinGameRequest;
-import reqRes.ListGameReponse;
+import reqres.CreateGameRequest;
+import reqres.CreateGameResponse;
+import reqres.JoinGameRequest;
+import reqres.ListGameReponse;
 import chess.ChessGame;
 import dataaccess.*;
 import model.AuthData;

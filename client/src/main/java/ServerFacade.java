@@ -11,7 +11,7 @@ import java.util.Map;
 import com.google.gson.Gson;
 import model.*;
 import excpetion.*;
-import reqRes.*;
+import reqres.*;
 
 public class ServerFacade {
     private final String serverUrl;

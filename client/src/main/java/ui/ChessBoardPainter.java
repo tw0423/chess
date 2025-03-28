@@ -10,8 +10,9 @@ import java.nio.charset.StandardCharsets;
 public class ChessBoardPainter {
     private static EscapeSequences es = new EscapeSequences();
 
-    private static final int boardSquareLength = 8;
-    private static final int squareCharactersWidth = 1;
+    private static final int BOARD_SQUARE_LENGTH = 8;
+    private static final int SQUARE_CHARACTERS_WIDTH = 1;
+
 
     //I don't know what should logic here to be so I will use chessGame first
     private static ChessGame chessGame;
@@ -48,7 +49,7 @@ public class ChessBoardPainter {
         }else{
             squareColor = SquareColor.WHITE;
         }
-        for (int row = 0; row < boardSquareLength; row++) {
+        for (int row = 0; row < BOARD_SQUARE_LENGTH; row++) {
             labelNumer(row, out);
             drawSquares(out, row);
 //            labelNumer(row, out);
@@ -65,19 +66,19 @@ public class ChessBoardPainter {
     }
 
     public static void drawSquares(PrintStream out, int row) {
-        int middleline = squareCharactersWidth / 2;
-        for (int subline = 0; subline < squareCharactersWidth; ++subline) {
-            for (int squareNum = 0; squareNum < boardSquareLength; ++squareNum) {
+        int middleline = SQUARE_CHARACTERS_WIDTH / 2;
+        for (int subline = 0; subline < SQUARE_CHARACTERS_WIDTH; ++subline) {
+            for (int squareNum = 0; squareNum < BOARD_SQUARE_LENGTH; ++squareNum) {
                 switchSqaureColors(out);
                 if (subline == middleline) {
-                    int prefixLength = squareCharactersWidth / 2;
-                    int suffixLength = squareCharactersWidth - prefixLength - 1;
+                    int prefixLength = SQUARE_CHARACTERS_WIDTH / 2;
+                    int suffixLength = SQUARE_CHARACTERS_WIDTH - prefixLength - 1;
                     out.print(es.EMPTY.repeat(prefixLength));
                     printPlayer(out, row, squareNum);
                     out.print(es.EMPTY.repeat(suffixLength));
                 }
                 else {
-                    out.print(es.EMPTY.repeat(squareCharactersWidth));
+                    out.print(es.EMPTY.repeat(SQUARE_CHARACTERS_WIDTH));
                 }
 
 
@@ -185,8 +186,8 @@ public class ChessBoardPainter {
         setBlack(out);
         out.print(es.SET_TEXT_COLOR_WHITE);
         out.print("   "); // Align with left row numbers
-        for (int i = 0; i < boardSquareLength; i++) {
-            char colLabel = (char) ('a' + (color == ChessGame.TeamColor.WHITE ? i : boardSquareLength - 1 - i));
+        for (int i = 0; i < BOARD_SQUARE_LENGTH; i++) {
+            char colLabel = (char) ('a' + (color == ChessGame.TeamColor.WHITE ? i : BOARD_SQUARE_LENGTH - 1 - i));
             out.print("  " + colLabel + "");
         }
         out.println();

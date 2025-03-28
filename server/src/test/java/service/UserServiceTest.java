@@ -7,7 +7,7 @@ import dataaccess.*;
 
 import java.util.ArrayList;
 import excpetion.*;
-import reqRes.*;
+import reqres.*;
 
 public class UserServiceTest {
      AuthDAO authDAO = new MemoryAuthDAO();

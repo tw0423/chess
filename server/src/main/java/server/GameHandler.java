@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import service.*;
 import spark.Request;
 import spark.Response;
-import reqRes.*;
+import reqres.*;
 import excpetion.*;
 
 public class GameHandler {

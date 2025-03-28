@@ -1,7 +1,7 @@
 import chess.ChessGame;
 import model.GameData;
 import model.UserData;
-import reqRes.*;
+import reqres.*;
 import ui.ChessBoardPainter;
 
 import java.util.ArrayList;
