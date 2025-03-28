@@ -199,7 +199,7 @@ public class ChessBoardPainter {
 
         out.print(es.SET_TEXT_COLOR_WHITE);
         out.print(es.SET_BG_COLOR_BLACK);
-        if(color == ChessGame.TeamColor.WHITE ) {
+        if(color == ChessGame.TeamColor.BLACK ) {
             out.print(String.valueOf(i + 1));
         }else{
             out.print(String.valueOf(8- i ));

@@ -1,3 +1,5 @@
+package client;
+
 import chess.ChessGame;
 import model.GameData;
 import model.UserData;
@@ -40,7 +42,7 @@ public class ChessClient{
                 System.out.println("missing required information");
                 return false;
             }
-            UserData response = facade.registerUser(username, password, email);
+            RegisterResponse response = facade.registerUser(username, password, email);
             System.out.println("Successfully registered user " + response.username());
             this.doLogin(username, password);
 
@@ -125,8 +127,8 @@ public class ChessClient{
         }
 
         ArrayList<GameData> list = this.listGames();
-        if(gameID >= list.size() || gameID < 0 ){
-            System.out.println("invalid game ID");
+        if(gameID >= list.size()+1 || gameID < 0 ){
+            System.out.println("invalid game Number");
             return false;
         }
         GameData gameData = list.get(gameID-1);

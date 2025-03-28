@@ -1,3 +1,4 @@
+package client;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,6 +14,7 @@ import model.*;
 import excpetion.*;
 import reqres.*;
 
+
 public class ServerFacade {
     private final String serverUrl;
     private String authToken;
@@ -21,14 +23,16 @@ public class ServerFacade {
         this.serverUrl = url;
 
     }
-    public UserData registerUser(String username, String password, String email) throws AlreadyTakenException ,BadRequestException{
+    public RegisterResponse registerUser(String username, String password, String email) throws AlreadyTakenException ,BadRequestException, UnsureException{
         var path = "/user";
 //        RegisterRequest registerRequest = new RegisterRequest(username, password, email);
-
+        if(username == null || password == null || email == null){
+            throw new BadRequestException("Missing some required information");
+        }
         Map map = Map.of("username", username, "password", password, "email", email);
         try {
-            UserData data = this.makeRequest("POST", path, map, UserData.class);
-            return data;
+            RegisterResponse res = this.makeRequest("POST", path, map, RegisterResponse.class);
+            return res;
         }catch (ResponseException e){
             if(e.statusCode() == 403) {
                 throw new AlreadyTakenException("Username has been alrealdy taken. Choose another Username.");
@@ -36,6 +40,8 @@ public class ServerFacade {
             }
             if(e.statusCode() == 401) {
                 throw new BadRequestException("Missing some required information");
+            }if (e.statusCode() == 500) {
+                throw new UnsureException("idk what happened");
             }
             //just throw error and catch error in client, it will be easier
         }
@@ -46,6 +52,9 @@ public class ServerFacade {
 
     public LoginResponse loginUser(String username, String password) throws UnauthorizedException{
         var path = "/session";
+        if(username == null || password == null){
+            throw new UnauthorizedException("Missing some required information");
+        }
         Map map = Map.of("username", username, "password", password);
         try {
             LoginResponse response = this.makeRequest("POST", path, map, LoginResponse.class);
@@ -96,8 +105,10 @@ public class ServerFacade {
         String color;
         if(playerColor.equals("white")){
             color = "WHITE";
-        }else{
+        }else if (playerColor.equals("black")){
             color = "BLACK";
+        }else{
+            throw new BadRequestException("Invalid playerColor");
         }
         Map map = Map.of("playerColor",color,"gameID", gameID);
         try {
