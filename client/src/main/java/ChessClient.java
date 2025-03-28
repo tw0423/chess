@@ -32,9 +32,18 @@ public class ChessClient{
 
     public boolean doRegister(String ... para) {
         try {
+            if(para.length != 3){
+                System.out.println("missing required information");
+                return false;
+            }
             String username = para[0];
             String password = para[1];
             String email = para[2];
+
+            if(username.isEmpty() || password.isEmpty() || email.isEmpty()){
+                System.out.println("missing required information");
+                return false;
+            }
             UserData response = facade.registerUser(username, password, email);
             System.out.println("Successfully registered user " + response.username());
 
@@ -48,8 +57,13 @@ public class ChessClient{
 
     public boolean doLogin(String ... para) {
         try {
+
             String username = para[0];
             String password = para[1];
+            if(username.isEmpty() || password.isEmpty() ){
+                System.out.println("missing required information");
+                return false;
+            }
             LoginResponse res = facade.loginUser(username, password);
             System.out.println("Successfully login as " + res.username());
             this.authToken = res.authToken();
@@ -62,7 +76,12 @@ public class ChessClient{
     }
 
     public int creatGame(String ... para) {
+
         String gameName = para[0];
+        if(gameName.isEmpty() ){
+            System.out.println("missing required information");
+            return 0;
+        }
         CreateGameResponse res = null;
         try {
             res = facade.createGame(gameName);
@@ -95,6 +114,10 @@ public class ChessClient{
     }
 
     public boolean joinGame(String ... para){
+        if(para.length != 2){
+            System.out.println("missing required information");
+            return false;
+        }
         String playerColor = para[1];
         int gameID;
         if(isInteger(para[0])) {
@@ -104,8 +127,13 @@ public class ChessClient{
             System.out.println("Please enter a valid game ID");
             return false;
         }
+        if(playerColor.isEmpty()){
+            System.out.println("missing required information");
+            return false;
+        }
+
         ArrayList<GameData> list = this.listGames();
-        GameData gameData = list.get(gameID);
+        GameData gameData = list.get(gameID-1);
         try {
             facade.joinGame(playerColor, gameData.gameID()
             );
@@ -130,6 +158,7 @@ public class ChessClient{
     }
 
     public boolean observeGame(String ... para){
+
         String playerColor = para[1];
         if(!(playerColor.equals("white")||playerColor.equals("black"))){
             System.out.println("only accept color for white or black");
@@ -138,10 +167,15 @@ public class ChessClient{
 
 
 
+
+
         int gameNum = Integer.parseInt(para[0]);
 
         ArrayList<GameData> list = this.listGames();
-        GameData gameData = list.get(gameNum+1);
+        if(gameNum > list.size()||gameNum < 0){
+            return false;
+        }
+        GameData gameData = list.get(gameNum-1);
         int gameID = gameData.gameID();
         ListGameReponse res = null;
         try {
@@ -161,15 +195,6 @@ public class ChessClient{
         return true;
     }
 
-    private void createMathcingMap() {
-        ArrayList<GameData> list = this.listGames();
-
-        for (int i = 0; i < list.size(); i++) {
-            int displayNumber = i + 1;  // 1-based index
-            int gameID = list.get(i+1).gameID();
-            matchingIDMap.put(displayNumber, gameID);  // Maps 1 -> gameID, 2 -> gameID, etc.
-        }
-    }
 
     public static boolean isInteger(String str) {
         try {

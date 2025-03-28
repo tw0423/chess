@@ -43,13 +43,16 @@ public class ChessBoardPainter {
     }
 
     public static void drawBoard(PrintStream out) {
+        drawColumnLabels(out);
         if(color.equals(ChessGame.TeamColor.BLACK)){
-            squareColor = SquareColor.GREY;
-        }else{
             squareColor = SquareColor.WHITE;
+        }else{
+            squareColor = SquareColor.GREY;
         }
         for (int row = 0; row < BoardSquareLength; row++) {
+            labelNumer(row, out);
             drawSquares(out, row);
+//            labelNumer(row, out);
             //reset the colors
             switchSqaureColors(out);
             setBlack(out);
@@ -57,6 +60,8 @@ public class ChessBoardPainter {
             out.print(es.RESET_TEXT_COLOR);
             out.print(es.RESET_BG_COLOR);
         }
+
+
 
     }
 
@@ -97,7 +102,7 @@ public class ChessBoardPainter {
 
     private static void printPlayer(PrintStream out, int row, int col) {
         ChessPiece piece;
-        if(color.equals(ChessGame.TeamColor.WHITE)){
+        if(color.equals(ChessGame.TeamColor.BLACK)){
              piece = chessGame.getBoard().getPiece(new ChessPosition(row+1, col+1));
         }else{
              piece = chessGame.getBoard().getPiece(new ChessPosition(9-(row+1), 9-(col+1)));
@@ -175,6 +180,26 @@ public class ChessBoardPainter {
     private static void setBlack(PrintStream out) {
         out.print(es.SET_BG_COLOR_BLACK);
         out.print(es.SET_TEXT_COLOR_BLACK);
+    }
+
+    private static void drawColumnLabels(PrintStream out) {
+        setBlack(out);
+        out.print(es.SET_TEXT_COLOR_WHITE);
+        out.print("   "); // Align with left row numbers
+        for (int i = 0; i < BoardSquareLength; i++) {
+            char colLabel = (char) ('a' + (color == ChessGame.TeamColor.WHITE ? i : BoardSquareLength - 1 - i));
+            out.print("  " + colLabel + "");
+        }
+        out.println();
+        out.print(es.RESET_TEXT_COLOR);
+        out.print(es.RESET_BG_COLOR);
+    }
+
+    private static void labelNumer(int i, PrintStream out){
+        out.print(es.SET_TEXT_COLOR_WHITE);
+        out.print(String.valueOf(i+1));
+        out.print(es.EMPTY);
+        out.print(es.RESET_TEXT_COLOR);
     }
 
 

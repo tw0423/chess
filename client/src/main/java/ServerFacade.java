@@ -37,7 +37,7 @@ public class ServerFacade {
         Map map = Map.of("username", username, "password", password, "email", email);
         try {
             UserData data = this.makeRequest("POST", path, map, UserData.class);
-            return this.makeRequest("POST", path, map, UserData.class);
+            return data;
         }catch (ResponseException e){
             if(e.StatusCode() == 403) {
                 throw new AlreadyTakenException("Username has been alrealdy taken. Choose another Username.");
