@@ -23,7 +23,8 @@ public class ServerFacade {
         this.serverUrl = url;
 
     }
-    public RegisterResponse registerUser(String username, String password, String email) throws AlreadyTakenException ,BadRequestException, UnsureException{
+    public RegisterResponse registerUser(String username, String password, String email)
+            throws AlreadyTakenException ,BadRequestException, UnsureException{
         var path = "/user";
 //        RegisterRequest registerRequest = new RegisterRequest(username, password, email);
         if(username == null || password == null || email == null){
@@ -77,7 +78,7 @@ public class ServerFacade {
         try {
             return this.makeRequest("POST", path, map, CreateGameResponse.class);
         }catch (ResponseException e){
-            if (e.statusCode() == 403) {
+            if (e.statusCode() == 401) {
                 throw new UnauthorizedException("You need to log in first before using this command.");
             }
             if(e.statusCode() == 400) {
@@ -100,7 +101,7 @@ public class ServerFacade {
         return null;
     }
 
-    public void joinGame(String playerColor, int gameID ) throws AlreadyTakenException, UnauthorizedException, BadRequestException{
+    public void joinGame(String playerColor, int gameID ) throws AlreadyTakenException, UnauthorizedException, BadRequestException, UnsureException{
         var path = "/game";
         String color;
         if(playerColor.equals("white")){
@@ -124,6 +125,9 @@ public class ServerFacade {
             }
             else if(e.statusCode() == 403) {
                 throw new AlreadyTakenException("The color you choosed has been taken");
+            }
+            else if(e.statusCode() == 500) {
+                throw new UnsureException(e.getMessage());
             }
         }
     }

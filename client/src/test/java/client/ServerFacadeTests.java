@@ -44,6 +44,7 @@ public class ServerFacadeTests {
     @Test
     public void registerAndLoginTest() {
         try {
+            serverFacade.clear();
             RegisterResponse res1 = serverFacade.registerUser("volunteer","aa","aa");
             Assertions.assertNotNull(res1);
             Assertions.assertTrue((res1.username().equals("volunteer")));
@@ -127,6 +128,25 @@ public class ServerFacadeTests {
     }
 
     @Test
+    public void faliedLogin3() {
+        try {
+            serverFacade.clear();
+            RegisterResponse data = serverFacade.registerUser("volunteer","aa","aa");
+            Assertions.assertNotNull(data);
+            Assertions.assertTrue((data.username().equals("volunteer")));
+            LoginResponse res = serverFacade.loginUser("abc", "a");
+
+            assert false;
+        } catch (AlreadyTakenException | UnsureException e) {
+            assert false;
+        } catch (BadRequestException e) {
+            assert true;
+        } catch (UnauthorizedException e) {
+            assert true;
+        }
+    }
+
+    @Test
     public void goodCreateAndList() {
         try {
             serverFacade.clear();
@@ -151,7 +171,7 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void CreateAndJoinGame() {
+    public void createAndJoinGame() {
         try {
             serverFacade.clear();
             RegisterResponse data = serverFacade.registerUser("volunteer","aa","aa");
@@ -175,13 +195,107 @@ public class ServerFacadeTests {
                 if(game.gameName().equals("game1")){
                     Assertions.assertEquals(game.gameID(), createRes.gameID());
                 }
-
             }
-
             assert true;
         } catch (AlreadyTakenException | BadRequestException | UnauthorizedException | UnsureException e) {
             assert false;
         }
     }
+
+    @Test
+    public void joinGameNotExit() {
+        try {
+            serverFacade.clear();
+            RegisterResponse data = serverFacade.registerUser("volunteer","aa","aa");
+            Assertions.assertNotNull(data);
+            Assertions.assertEquals("volunteer", data.username());
+            LoginResponse res = serverFacade.loginUser("volunteer", "aa");
+            Assertions.assertNotNull(res);
+
+
+            CreateGameResponse createRes = serverFacade.createGame("game1");
+
+
+
+            serverFacade.joinGame("orange", createRes.gameID());
+            ListGameReponse response = serverFacade.getGames();
+            ArrayList<GameData> games = response.games();
+
+            assert false;
+        } catch (AlreadyTakenException | UnauthorizedException | UnsureException e) {
+            assert false;
+        }catch(BadRequestException e){
+            assert true;
+        }
+    }
+
+    @Test
+    public void joinGameBadID() {
+        try {
+            serverFacade.clear();
+            RegisterResponse data = serverFacade.registerUser("volunteer","aa","aa");
+            Assertions.assertNotNull(data);
+            Assertions.assertEquals("volunteer", data.username());
+            LoginResponse res = serverFacade.loginUser("volunteer", "aa");
+            Assertions.assertNotNull(res);
+
+
+            CreateGameResponse createRes = serverFacade.createGame("game1");
+
+
+
+            serverFacade.joinGame("white", 1234);
+            ListGameReponse response = serverFacade.getGames();
+            ArrayList<GameData> games = response.games();
+
+            assert false;
+        } catch (AlreadyTakenException | UnauthorizedException | BadRequestException e) {
+            assert false;
+        }catch(UnsureException e){
+            assert true;
+        }
+    }
+
+
+    @Test
+    public void unAuthroizedCreateGame() {
+
+        try {
+            serverFacade.clear();
+            CreateGameResponse createRes = serverFacade.createGame("game1");
+
+
+            assert false;
+        } catch (BadRequestException e) {
+            assert false;
+        }catch(UnauthorizedException e){
+            assert true;
+        }
+    }
+
+    @Test
+    public void logout() {
+        try {
+            serverFacade.clear();
+            RegisterResponse data = serverFacade.registerUser("volunteer","aa","aa");
+            Assertions.assertNotNull(data);
+            Assertions.assertEquals("volunteer", data.username());
+            LoginResponse res = serverFacade.loginUser("volunteer", "aa");
+            Assertions.assertNotNull(res);
+
+            serverFacade.logoutUser();
+            CreateGameResponse createRes = serverFacade.createGame("game1");
+
+
+
+            assert false;
+        } catch (AlreadyTakenException | UnsureException | BadRequestException e) {
+            assert false;
+        }catch(UnauthorizedException e){
+            assert true;
+        }
+    }
+
+
 
 }
