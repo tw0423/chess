@@ -1,6 +1,5 @@
 package service;
 
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import model.*;
@@ -8,7 +7,7 @@ import dataaccess.*;
 
 import java.util.ArrayList;
 import excpetion.*;
-import ReqRes.*;
+import reqRes.*;
 
 public class UserServiceTest {
      AuthDAO authDAO = new MemoryAuthDAO();

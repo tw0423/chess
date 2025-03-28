@@ -7,17 +7,11 @@ import java.net.HttpURLConnection;
 
 import java.net.URI;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 import com.google.gson.Gson;
 import model.*;
 import excpetion.*;
-import ReqRes.*;
-
-
-
-import chess.ChessGame.TeamColor;
+import reqRes.*;
 
 public class ServerFacade {
     private final String serverUrl;
@@ -36,11 +30,11 @@ public class ServerFacade {
             UserData data = this.makeRequest("POST", path, map, UserData.class);
             return data;
         }catch (ResponseException e){
-            if(e.StatusCode() == 403) {
+            if(e.statusCode() == 403) {
                 throw new AlreadyTakenException("Username has been alrealdy taken. Choose another Username.");
 
             }
-            if(e.StatusCode() == 401) {
+            if(e.statusCode() == 401) {
                 throw new BadRequestException("Missing some required information");
             }
             //just throw error and catch error in client, it will be easier
@@ -59,7 +53,7 @@ public class ServerFacade {
             this.authToken = response.authToken();
             return response;
         }catch (ResponseException e){
-            if (e.StatusCode() == 401) {
+            if (e.statusCode() == 401) {
                 throw new UnauthorizedException("Wrong Password");
 
             }
@@ -74,10 +68,10 @@ public class ServerFacade {
         try {
             return this.makeRequest("POST", path, map, CreateGameResponse.class);
         }catch (ResponseException e){
-            if (e.StatusCode() == 403) {
+            if (e.statusCode() == 403) {
                 throw new UnauthorizedException("You need to log in first before using this command.");
             }
-            if(e.StatusCode() == 400) {
+            if(e.statusCode() == 400) {
                 throw new BadRequestException("You are required to type in the gameName");
             }
         }
@@ -90,7 +84,7 @@ public class ServerFacade {
         try {
             return this.makeRequest("GET", path, null, ListGameReponse.class);
         }catch (ResponseException e){
-            if (e.StatusCode() == 401){
+            if (e.statusCode() == 401){
                 throw new UnauthorizedException("You need to log in first before using this command.");
             }
         }
@@ -109,15 +103,15 @@ public class ServerFacade {
         try {
             this.makeRequest("PUT", path, map, null);
         }catch (ResponseException e){
-            if (e.StatusCode() == 400) {
+            if (e.statusCode() == 400) {
                 throw new BadRequestException("Missing required information to call join command.");
 
             }
-            else if(e.StatusCode() == 401) {
+            else if(e.statusCode() == 401) {
                 throw new UnauthorizedException("You are required to log in before using the joinGame command");
 
             }
-            else if(e.StatusCode() == 403) {
+            else if(e.statusCode() == 403) {
                 throw new AlreadyTakenException("The color you choosed has been taken");
             }
         }
@@ -131,7 +125,7 @@ public class ServerFacade {
             this.authToken = null;
 
         }catch (ResponseException e){
-            if(e.StatusCode() == 401) {
+            if(e.statusCode() == 401) {
                 throw new UnauthorizedException("User not logged in");
             }
 

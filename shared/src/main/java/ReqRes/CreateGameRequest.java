@@ -1,4 +1,4 @@
-package ReqRes;
+package reqRes;
 
 public record CreateGameRequest(String gameName) {
 }

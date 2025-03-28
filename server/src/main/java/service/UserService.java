@@ -6,7 +6,7 @@ import dataaccess.UserDAO;
 import model.AuthData;
 import model.UserData;
 import excpetion.*;
-import ReqRes.*;
+import reqRes.*;
 import java.util.UUID;
 
 public class UserService {

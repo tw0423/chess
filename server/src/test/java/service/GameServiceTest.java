@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.Objects;
 import excpetion.*;
-import ReqRes.*;
+import reqRes.*;
 public class GameServiceTest {
     AuthDAO authDAO = new MemoryAuthDAO();
     GameDAO gameDAO = new MemoryGameDAO();

@@ -1,5 +1,5 @@
 package server;
-import ReqRes.*;
+import reqRes.*;
 import excpetion.AlreadyTakenException;
 import excpetion.BadRequestException;
 import excpetion.UnauthorizedException;
