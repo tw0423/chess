@@ -16,6 +16,12 @@ import service.CreateGameResponse;
 import service.ListGameReponse;
 import service.LoginResponse;
 
+import service.UnauthorizedException;
+import service.AlreadyTakenException;
+import service.BadRequestException;
+
+import chess.ChessGame.TeamColor;
+
 public class ServerFacade {
     private final String serverUrl;
     private String authToken;
@@ -24,21 +30,30 @@ public class ServerFacade {
         this.serverUrl = url;
 
     }
-    public UserData registerUser(String username, String password, String email) {
+    public UserData registerUser(String username, String password, String email) throws AlreadyTakenException ,BadRequestException{
         var path = "/user";
 //        RegisterRequest registerRequest = new RegisterRequest(username, password, email);
 
         Map map = Map.of("username", username, "password", password, "email", email);
         try {
+            UserData data = this.makeRequest("POST", path, map, UserData.class);
             return this.makeRequest("POST", path, map, UserData.class);
         }catch (ResponseException e){
-            System.out.println("error: "+ e.getMessage());
+            if(e.StatusCode() == 403) {
+                throw new AlreadyTakenException("Username has been alrealdy taken. Choose another Username.");
+
+            }
+            if(e.StatusCode() == 401) {
+                throw new BadRequestException("Missing some required information");
+            }
+            //just throw error and catch error in client, it will be easier
         }
         return null;
 
+
     }
 
-    public LoginResponse loginUser(String username, String password) {
+    public LoginResponse loginUser(String username, String password) throws UnauthorizedException{
         var path = "/session";
         Map map = Map.of("username", username, "password", password);
         try {
@@ -47,43 +62,71 @@ public class ServerFacade {
             this.authToken = response.authToken();
             return response;
         }catch (ResponseException e){
-            System.out.println("error: "+ e.getMessage());
+            if (e.StatusCode() == 401) {
+                throw new UnauthorizedException("Wrong Password");
+
+            }
         }
         return null;
+
     }
 
-    public CreateGameResponse createGame(String gameName) {
+    public CreateGameResponse createGame(String gameName)  throws UnauthorizedException, BadRequestException{
         var path = "/game";
         Map map = Map.of("gameName", gameName);
         try {
             return this.makeRequest("POST", path, map, CreateGameResponse.class);
         }catch (ResponseException e){
-            System.out.println("error: "+ e.getMessage());
+            if (e.StatusCode() == 403) {
+                throw new UnauthorizedException("You need to log in first before using this command.");
+            }
+            if(e.StatusCode() == 400) {
+                throw new BadRequestException("You are required to type in the gameName");
+            }
         }
         return null;
+
     }
 
-    public ListGameReponse getGames() {
+    public ListGameReponse getGames()  throws UnauthorizedException{
         var path = "/game";
         try {
             return this.makeRequest("GET", path, null, ListGameReponse.class);
         }catch (ResponseException e){
-            System.out.println("error: "+ e.getMessage());
+            if (e.StatusCode() == 401){
+                throw new UnauthorizedException("You need to log in first before using this command.");
+            }
         }
         return null;
     }
 
-    public void joinGame(String playerColor, int gameID ) {
+    public void joinGame(String playerColor, int gameID ) throws AlreadyTakenException, UnauthorizedException, BadRequestException{
         var path = "/game";
-        Map map = Map.of("playerColor",playerColor,"gameID", gameID);
+        String color;
+        if(playerColor.equals("white")){
+            color = "WHITE";
+        }else{
+            color = "BLACK";
+        }
+        Map map = Map.of("playerColor",color,"gameID", gameID);
         try {
-            this.makeRequest("GET", path, map, null);
+            this.makeRequest("PUT", path, map, null);
         }catch (ResponseException e){
-            System.out.println("error: "+ e.getMessage());
+            if (e.StatusCode() == 400) {
+                throw new BadRequestException("Missing required information to call join command.");
+
+            }
+            else if(e.StatusCode() == 401) {
+                throw new UnauthorizedException("You are required to log in before using the joinGame command");
+
+            }
+            else if(e.StatusCode() == 403) {
+                throw new AlreadyTakenException("The color you choosed has been taken");
+            }
         }
     }
 
-    public void logoutUser(){
+    public void logoutUser()  throws UnauthorizedException{
         var path = "/session";
 
         try {
@@ -91,7 +134,10 @@ public class ServerFacade {
             this.authToken = null;
 
         }catch (ResponseException e){
-            System.out.println("error: "+ e.getMessage());
+            if(e.StatusCode() == 401) {
+                throw new UnauthorizedException("User not logged in");
+            }
+
         }
 
     }
@@ -135,12 +181,12 @@ public class ServerFacade {
     private void throwIfNotSuccessful(HttpURLConnection http) throws IOException, ResponseException {
         var status = http.getResponseCode();
         if (!isSuccessful(status)) {
-            try (InputStream respErr = http.getErrorStream()) {
-                if (respErr != null) {
-                    // why the fromJson doesn't work
-                    throw ResponseException.fromJson(respErr);
-                }
-            }
+//            try (InputStream respErr = http.getErrorStream()) {
+//                if (respErr != null) {
+//                    // why the fromJson doesn't work
+//                    throw ResponseException.fromJson(respErr);
+//                }
+//            }
 
             throw new ResponseException(status, "other failure: " + status);
         }
@@ -167,11 +213,5 @@ public class ServerFacade {
     private String getAuthToken() {
         return this.authToken;
     }
-
-
-
-
-
-
 
 }

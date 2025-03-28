@@ -57,34 +57,60 @@ public class ChessRepl {
                 System.out.print("<GAME NAME>: ");
                 String gameName = scanner.nextLine();
                 String[] createParams = { gameName };
-                client.creatGame(createParams);
+                if(client.creatGame(createParams) == -1) {
+                    System.out.println("Error creating game !");
+                }else{
+                    System.out.println("Game created !");
+                }
                 break;
             case "list":
-                ArrayList<GameData> gameDataList =  client.listGames();
-                for (GameData gameData : gameDataList) {
-                    System.out.println(gameData);
+                ArrayList<GameData> gameDataList = client.listGames();
+
+                if (gameDataList == null || gameDataList.isEmpty()) {
+                    System.out.println("No games available.");
+                    break;
+                }
+
+                System.out.println("Available Games:");
+                for (int i = 0; i < gameDataList.size(); i++) {
+                    GameData game = gameDataList.get(i);
+                    int displayNumber = i + 1;
+                    String gameName1 = game.gameName();
+                    String whiteUsername = game.whiteUsername() != null ? game.whiteUsername() : "null";
+                    String blackUsername = game.blackUsername() != null ? game.blackUsername() : "null";
+
+                    System.out.printf("%d. %s   white: %s   black: %s%n",
+                            displayNumber, gameName1, whiteUsername, blackUsername);
                 }
                 break;
             case "join":
-                System.out.print("<GAME ID>: ");
+                System.out.print("<GAME NUMBER>: ");
                 String joinId = scanner.nextLine();
                 System.out.print("<COLOR> [WHITE or BLACK]: ");
                 String joinColor = scanner.nextLine();
                 String[] joinParams = { joinId, joinColor };
 
-                client.joinGame(joinParams);
+                if(client.joinGame(joinParams)){
+                    System.out.println("Game joined !");
+                }else{
+                    System.out.println("Error joining game !");
+                }
                 break;
 
             case "observe":
-                System.out.println("<GAME ID>: ");
+                System.out.print("<GAME NUMBER>: ");
                 String obsId = scanner.nextLine();
+                System.out.print("<Color> [WHITE or BLACK]: ");
+                String color = scanner.nextLine();
 
-                String[] obsParams = { obsId };
+                String[] obsParams = { obsId, color };
 
                 client.observeGame(obsParams);
                 break;
+
             case "logout":
                 client.logout();
+                state = State.LOGOUT;
                 break;
             default:
                 System.out.println("Unknown command. Type 'help' for options.");
@@ -108,10 +134,14 @@ public class ChessRepl {
 
                 if (client.doLogin(loginParams)) {
                     state = State.LOGIN;
+                    System.out.println("here is the new commands you can use after logging in.");
+                    printPostloginHelp();
+
                 } else {
                     System.out.println("Login failed");
                 }
                 break;
+
             case "register":
                 System.out.print("<USERNAME>: ");
                 String username = scanner.nextLine();
@@ -123,7 +153,7 @@ public class ChessRepl {
 
                 String[] registerParams = { username, password, email };
 
-                if (!client.doRegister(registerParams)) {
+                if (!(client.doRegister(registerParams))) {
                     System.out.println("Registration failed");
                 }
                 break;
@@ -137,12 +167,13 @@ public class ChessRepl {
         printBlue("register  ");
         printGray("- to create an account ");
 
-        newLine();        printBlue("login  ");
+        newLine();
+        printBlue("login  ");
         printGray("- to play chess game ");
 
         newLine();
-        printBlue("quit ");
-        printGray("- quit chess");
+        printBlue("exit ");
+        printGray("- exit chess");
 
         newLine();
         printBlue("help ");
@@ -177,6 +208,7 @@ public class ChessRepl {
         newLine();
         printBlue("help ");
         printGray("- see all possible commands");
+        newLine();
     }
 
     private void newLine(){
