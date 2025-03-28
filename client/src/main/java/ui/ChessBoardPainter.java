@@ -45,9 +45,9 @@ public class ChessBoardPainter {
     public static void drawBoard(PrintStream out) {
         drawColumnLabels(out);
         if(color.equals(ChessGame.TeamColor.BLACK)){
-            squareColor = SquareColor.WHITE;
-        }else{
             squareColor = SquareColor.GREY;
+        }else{
+            squareColor = SquareColor.WHITE;
         }
         for (int row = 0; row < BoardSquareLength; row++) {
             labelNumer(row, out);

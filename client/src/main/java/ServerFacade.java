@@ -214,4 +214,19 @@ public class ServerFacade {
         return this.authToken;
     }
 
+    public void clear(){
+        var path = "/db";
+
+
+        try {
+            this.makeRequest("DELETE", path, null, null);
+        } catch (ResponseException e) {
+            throw new RuntimeException(e);
+        }
+        this.authToken = null;
+
+
+
+    }
+
 }
