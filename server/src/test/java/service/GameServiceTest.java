@@ -144,6 +144,7 @@ public class GameServiceTest {
         CreateGameRequest createGame = new CreateGameRequest("game1");
 
 
+
         try {
             RegisterResponse response = userService.register(request);
             Assertions.assertNotNull(response);

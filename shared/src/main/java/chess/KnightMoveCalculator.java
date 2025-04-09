@@ -30,8 +30,6 @@ public class KnightMoveCalculator extends ChessMoveCalculator {
             int movingRow = row + direction[0];
             int movingCol = col + direction[1];
             addMoveIfValid(moves, movingRow, movingCol);
-
-
         }
         return moves;
 
