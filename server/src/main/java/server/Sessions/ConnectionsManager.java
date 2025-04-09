@@ -104,9 +104,10 @@ public class ConnectionsManager {
             if (inGame && inSameGame) {
                 send(loopSession, new Gson().toJson(notification.getMessage()));
             }
-
         }
     }
+
+
 }
 
 

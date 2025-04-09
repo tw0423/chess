@@ -124,6 +124,10 @@ public class GameService {
 
     }
 
+    public GameData getGame(int gameID) throws DataAccessException {
+        return gameDAO.getGame(gameID);
+    }
+
 
 
 
