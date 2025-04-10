@@ -128,6 +128,17 @@ public class GameService {
         return gameDAO.getGame(gameID);
     }
 
+    public void updateGame(String authTokenm, GameData gameData) throws DataAccessException , UnauthorizedException{
+        if(checkAuthorization(authTokenm)){
+            gameDAO.updateGame(gameData);
+        }
+        else{
+            throw new UnauthorizedException("{ \"message\": \"Error: unauthorized\" }") ;
+        }
+
+
+    }
+
 
 
 

@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import com.google.gson.Gson;
+import websocket.*;
+import websocket.messages.*;
 //public class ConnectionsManager {
 //    public final ConcurrentHashMap<Integer, Connection> connections = new ConcurrentHashMap<>();
 //
@@ -94,7 +96,7 @@ public class ConnectionsManager {
         session.getRemote().sendString(new Gson().toJson(message));
     }
 
-    public void broadcastInGame(Session currentSession, Notification notification) throws IOException {
+    public void broadcastInGame(Session currentSession, ServerMessage message) throws IOException {
         int currentGameID = connections.get(currentSession);
         for (var session : connections.entrySet()) {
             int loopingGameID = session.getValue();
@@ -102,7 +104,7 @@ public class ConnectionsManager {
             boolean inGame = (loopingGameID != 0);
             boolean inSameGame = (currentGameID == loopingGameID);
             if (inGame && inSameGame) {
-                send(loopSession, new Gson().toJson(notification.getMessage()));
+                send(loopSession, new Gson().toJson(message));
             }
         }
     }

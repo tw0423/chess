@@ -1,5 +1,6 @@
 package server;
 import excpetion.UnsureException;
+import server.Sessions.ConnectionsManager;
 import service.*;
 import dataaccess.*;
 import spark.*;
@@ -11,13 +12,14 @@ public class Server {
     GameHandler gameHandler;
 
 
-    UserService userService;
-    GameService gameService;
+    static UserService userService;
+    static GameService gameService;
 
     UserDAO userDAO;
     AuthDAO authDAO;
     GameDAO gameDAO;
 
+    static ConnectionsManager connections;
     public Server() {
 //change it here
         try {
@@ -34,6 +36,8 @@ public class Server {
 
         userHandler = new UserHandler(userService);
         gameHandler = new GameHandler(gameService);
+
+        connections = new ConnectionsManager();
 
 
 
