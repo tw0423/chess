@@ -202,13 +202,10 @@ public class ChessRepl {
             case "resign":
                 System.out.print("<GAME NAME>: ");
             case "highlightMove":
-                System.out.print("<from>[1-8][a-h]: ");
-                String startingPosition = scanner.nextLine();
-                System.out.print("<to>[1-8][a-h]: >: ");
-                String endingPosition = scanner.nextLine();
-
-                String[] hightlightParams = {startingPosition, endingPosition};
-
+                System.out.print("<at>[1-8][a-h]: ");
+                startingPosition = scanner.nextLine();
+                String[] hightlightParams = {startingPosition};
+                client.highlight(hightlightParams);
 
                 System.out.print("<GAME NAME>: ");
 

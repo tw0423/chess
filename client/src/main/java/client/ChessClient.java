@@ -26,6 +26,8 @@ public class ChessClient{
     private String gameColor = null;
     private ChessGame currentGame = null;
     private int gameID = 0;
+    private ChessBoardPainter painter;
+
 
 
 
@@ -198,7 +200,7 @@ public class ChessClient{
                 ChessGame chessGame = game.game();
                 this.gameID = game.gameID();
                 currentGame = chessGame;
-                ChessBoardPainter painter= new ui.ChessBoardPainter(chessGame, playerColor);
+                painter= new ui.ChessBoardPainter(chessGame, playerColor);
                 painter.main(null);
             }
         }
@@ -256,6 +258,16 @@ public class ChessClient{
         }
     }
 
+    public void highlight(String ... para){
+        if (para.length == 1 && para[0].matches("[a-h][1-8]")) {
+            ChessPosition targetingPosition = new ChessPosition(para[0].charAt(1) - '0', para[0].charAt(0) - ('a' - 1));
+            painter.drawHighlightMoves(targetingPosition);
+        }else{
+            System.out.println("invalid position");
+        }
+
+    }
+
 
 
     public void notify(Notification notification){
@@ -273,7 +285,8 @@ public class ChessClient{
     }
 
     private void drawBoard(ChessGame game, String color){
-        ChessBoardPainter painter= new ui.ChessBoardPainter(game, color);
+        painter.updateGame(game);
+        painter.updateColor(color);
         painter.main(null);
 
     }
