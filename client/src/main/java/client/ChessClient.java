@@ -13,16 +13,16 @@ import websocket.messages.Notification;
 import websocket.messages.Error;
 
 
+import javax.websocket.WebSocketContainer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 
 public class ChessClient{
     private final ServerFacade facade;
+    private WebsoecketCommunicator ws;
     private HashMap<Integer, Integer> matchingIDMap;
     private ArrayList<GameData> gameDataList;
-    private boolean loggedIn = false;
-    private String currentUser = null;  // store username
     private String authToken = null;
     private ChessRepl chessRepl = null;
     private String gameColor = null;
@@ -33,9 +33,15 @@ public class ChessClient{
 
 
 
-    public ChessClient(String serverURL, ChessRepl chessRepl) {
+    public ChessClient(String serverURL, ChessRepl chessRepl){
         this.facade = new ServerFacade(serverURL);
         this.chessRepl = chessRepl;
+        try {
+            this.ws = new WebsoecketCommunicator(serverURL, this);
+        } catch (ResponseException e) {
+            System.out.println("Error: unable to connect to websocket server" );
+        }
+
 //        gameDataList = this.listGames();
 //        createMathcingMap();
     }
@@ -247,7 +253,7 @@ public class ChessClient{
             ChessMove move = new ChessMove(startingPosition, endingPosition, promotiontype);
             if(currentGame.validMoves(startingPosition).contains(move)){
                 MakeMoveCommand makeMove = new MakeMoveCommand(authToken, gameID, move);
-                ws.moveCommand(makeMove);
+                ws.handleMakeMove(makeMove);
             }
             else {
                 System.out.println("invalid move");

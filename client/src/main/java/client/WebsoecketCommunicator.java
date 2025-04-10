@@ -54,6 +54,28 @@ public class WebsoecketCommunicator extends Endpoint{
         }
     }
 
+    public void handleMakeMove(MakeMoveCommand makeMove) {
+        sendCommand(makeMove);
+
+    }
+
+    public void handleResign(ResignCommand resignCommand){
+        sendCommand(resignCommand);
+    }
+
+    public void handleLeaveGame(LeaveCommand leaveCommand) {
+        sendCommand(leaveCommand);
+
+    }
+
+    private void sendCommand(UserGameCommand command) {
+        String message = new Gson().toJson(command);
+        this.session.getAsyncRemote().sendText(message);
+    }
+
+
+
+
 
 
 
