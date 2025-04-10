@@ -161,6 +161,52 @@ public class WebsocketHandler {
 
     }
 
+    public void manageLeave(Session session, LeaveCommand command) {
+        try {
+            String authToken = command.getAuthToken();
+
+            AuthData authData = Server.userService.getAuth(authToken);
+            Server.connections.remove(session);
+
+            Notification notification = new Notification("%s has left the game".formatted(authData.username()));
+            Server.connections.broadcastInGame(session, notification);
+            session.close();
+        }catch (DataAccessException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void manageResign(Session session, ResignCommand command) {
+        try{
+            String authToken = command.getAuthToken();
+            int gameID = command.getGameID();
+            AuthData authData = Server.userService.getAuth(authToken);
+            GameData gameData = Server.gameService.getGame(gameID);
+            ChessGame game = gameData.game();
+
+            ChessGame.TeamColor userColor = getTeamColor(authData, gameData);
+
+            if(userColor == null){
+                Error error = new Error("You are not allowed to make a resign in a game as a observer");
+                sendErrorMessage(session, error);
+                return;
+            }
+            game.setGameOver();
+            Server.gameService.updateGame(authToken, new GameData(gameID, gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), game));
+            Notification notification = new Notification("%s:$s has resohmed. %s now is over".formatted(userColor.toString(), authData.username(), gameData.gameName() ));
+            Server.connections.broadcastInGame(session, notification);
+        }
+        catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (UnauthorizedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+
 
 
     private ChessGame.TeamColor getTeamColor(AuthData authdata, GameData gameData) {
@@ -177,35 +223,9 @@ public class WebsocketHandler {
 
     }
 
-    public void manageLeave(Session session, ResignCommand command) {
-        try {
-            String authToken = command.getAuthToken();
 
-            AuthData authData = Server.userService.getAuth(authToken);
-            Server.connections.remove(session);
 
-            Notification notification = new Notification("%s has left the game".formatted(authData.username()));
-            Server.connections.broadcastInGame(session, notification);
-            session.close();
-        }catch (DataAccessException | IOException e) {
-            throw new RuntimeException(e);
-        }
 
-    }
-
-    public void manageResign(Session session, ResignCommand command) {
-        try{
-            String authToken = command.getAuthToken();
-            int gameID = command.getGameID();
-            AuthData authData = Server.userService.getAuth(authToken);
-            GameData gameData = Server.gameService.getGame(gameID);
-            ChessGame.TeamColor userColor = getTeamColor(authData, gameData);
-            
-        }
-        catch (DataAccessException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     private ChessGame.TeamColor getOpponentColor(ChessGame.TeamColor color) {
         return (color == ChessGame.TeamColor.WHITE) ? ChessGame.TeamColor.BLACK : ChessGame.TeamColor.WHITE;
