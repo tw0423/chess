@@ -1,14 +1,19 @@
 package client;
 
-import chess.ChessGame;
+import chess.*;
 import model.GameData;
 import model.UserData;
 import reqres.*;
 import ui.ChessBoardPainter;
-import websocket.messages.ServerMessage;
+import websocket.commands.MakeMoveCommand;
+import websocket.messages.LoadGame;
+import websocket.messages.Notification;
+import websocket.messages.Error;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
 
 public class ChessClient{
     private final ServerFacade facade;
@@ -18,6 +23,9 @@ public class ChessClient{
     private String currentUser = null;  // store username
     private String authToken = null;
     private ChessRepl chessRepl = null;
+    private String gameColor = null;
+    private ChessGame currentGame = null;
+    private int gameID = 0;
 
 
 
@@ -126,6 +134,7 @@ public class ChessClient{
             System.out.println("missing required information");
             return false;
         }
+        gameColor = playerColor;
 
         ArrayList<GameData> list = this.listGames();
         if(gameID >= list.size()+1 || gameID < 0 ){
@@ -133,9 +142,9 @@ public class ChessClient{
             return false;
         }
         GameData gameData = list.get(gameID-1);
+        this.gameID = gameData.gameID();
         try {
-            facade.joinGame(playerColor, gameData.gameID()
-            );
+            facade.joinGame(playerColor, gameData.gameID());
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return false;
@@ -165,6 +174,7 @@ public class ChessClient{
             System.out.println("only accept color for white or black");
             return false;
         }
+        gameColor = playerColor;
 
 
         int gameNum = Integer.parseInt(para[0]);
@@ -186,6 +196,8 @@ public class ChessClient{
         for(GameData game: games){
             if(game.gameID() == gameID){
                 ChessGame chessGame = game.game();
+                this.gameID = game.gameID();
+                currentGame = chessGame;
                 ChessBoardPainter painter= new ui.ChessBoardPainter(chessGame, playerColor);
                 painter.main(null);
             }
@@ -203,9 +215,93 @@ public class ChessClient{
         }
     }
 
-    public void notifyCommandMessage(ServerMessage message){
-        message.toString();
+    //for client command
+
+    public void reDrawBoard(){
+        drawBoard(currentGame, gameColor);
     }
+
+    public boolean makeMove(String ... para){
+        ChessPiece.PieceType promotiontype;
+        if (para.length >= 3 && para[0].matches("[a-h][1-8]") && para[1].matches("[a-h][1-8]")) {
+            ChessPosition startingPosition = new ChessPosition(para[0].charAt(1) - '0', para[0].charAt(0) - ('a' - 1));
+            ChessPosition endingPosition = new ChessPosition(para[1].charAt(1) - '0', para[1].charAt(0) - ('a' - 1));
+
+            //update the promotion
+            if(para.length == 3){
+                String promotion = para[2];
+                promotiontype = getPieceType(promotion);
+
+            }else{
+                 promotiontype = null;
+            }
+
+            if(!checkColor(startingPosition, currentGame)){
+                System.out.println("You can not move the opponent's chess piece");
+            }
+
+            ChessMove move = new ChessMove(startingPosition, endingPosition, promotiontype);
+            if(currentGame.validMoves(startingPosition).contains(move)){
+                MakeMoveCommand makeMove = new MakeMoveCommand(authToken, gameID, move);
+                ws.moveCommand(makeMove);
+            }
+            else {
+                System.out.println("invalid move");
+                return false;
+            }
+            return true;
+        }else{
+            System.out.println("please provide a valid position");
+            return false;
+        }
+    }
+
+
+
+    public void notify(Notification notification){
+        System.out.println(notification.getMessage());
+    }
+
+    public void notifyError(Error error){
+        System.out.println(error.getMessage());
+    }
+
+    public void handleLoadGame(LoadGame loadGame){
+        System.out.println("game updated: ");
+        this.drawBoard(loadGame.getGame(), gameColor);
+        currentGame = loadGame.getGame();
+    }
+
+    private void drawBoard(ChessGame game, String color){
+        ChessBoardPainter painter= new ui.ChessBoardPainter(game, color);
+        painter.main(null);
+
+    }
+    private ChessPiece.PieceType getPieceType(String piece){
+        if(piece.equals("king")){
+            return ChessPiece.PieceType.KING;
+        }else if(piece.equals("queen")){
+            return ChessPiece.PieceType.QUEEN;
+        }else if(piece.equals("rook")){
+            return ChessPiece.PieceType.ROOK;
+        }else if(piece.equals("knight")){
+            return ChessPiece.PieceType.KNIGHT;
+        }
+        return null;
+
+    }
+
+    private boolean checkColor(ChessPosition position, ChessGame game){
+        ChessBoard board = game.getBoard();
+        ChessPiece piece = board.getPiece(position);
+        if(piece.getTeamColor().equals(gameColor)){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+
 
 
 }

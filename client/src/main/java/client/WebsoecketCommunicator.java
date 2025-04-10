@@ -26,9 +26,10 @@ public class WebsoecketCommunicator extends Endpoint{
             this.session.addMessageHandler(new MessageHandler.Whole<String>() {
                 @Override
                 public void onMessage(String message) {
-                    Notification notification = new Gson().fromJson(message, Notification.class);
+                    handleMessage(message);
 
-                    notificationHandler.notify(notification);
+                    Notification notification = new Gson().fromJson(message, Notification.class);
+                    chessClient.notify(notification);
                 }
             });
         } catch (DeploymentException | IOException | URISyntaxException ex) {
@@ -36,6 +37,22 @@ public class WebsoecketCommunicator extends Endpoint{
         }
     }
 
+
+
+    private void handleMessage(String message) {
+        if (message.contains("\"serverMessageType\":\"NOTIFICATION\"")) {
+            Notification notif = new Gson().fromJson(message, Notification.class);
+            chessClient.notify(notif);
+        }
+        else if (message.contains("\"serverMessageType\":\"ERROR\"")) {
+            Error error = new Gson().fromJson(message, Error.class);
+            chessClient.notifyError(error);
+        }
+        else if (message.contains("\"serverMessageType\":\"LOAD_GAME\"")) {
+            LoadGame loadGame = new Gson().fromJson(message, LoadGame.class);
+            chessClient.handleLoadGame(loadGame);
+        }
+    }
 
 
 

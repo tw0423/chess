@@ -180,41 +180,34 @@ public class ChessRepl {
                 printPreloginHelp();
                 break;
             case "redrawBoard":
-                System.out.print("<USERNAME>: ");
-                String loginUser = scanner.nextLine();
-                System.out.print("<PASSWORD>: ");
-                String loginPass = scanner.nextLine();
-
-                String[] loginParams = {loginUser, loginPass};
-
-                if (client.doLogin(loginParams)) {
-                    state = State.LOGIN;
-                    System.out.println("here is the new commands you can use after logging in.");
-                    printPostloginHelp();
-
-                } else {
-                    System.out.println("Login failed");
-                }
+                client.reDrawBoard();
                 break;
             case "leave":
 
             case "move":
-                System.out.print("<NUMBER>: ");
-                String number = scanner.nextLine();
-                System.out.print("<LETTER>: ");
-                String letter = scanner.nextLine();
+                System.out.print("<from>[1-8][a-h]: ");
+                String startingPosition = scanner.nextLine();
+                System.out.print("<to>[1-8][a-h]: >: ");
+                String endingPosition = scanner.nextLine();
+                System.out.print("<promotion>[queen|rook|bishop|knight] <skip it if not possible>: ");
+                String promotion = scanner.nextLine();
 
-                String[] moveParams = {number, letter};
+                String[] moveParams = {startingPosition, endingPosition, promotion};
+                if(client.makeMove(moveParams)){
+                    System.out.println("Move successful");
+                }else{
+                    System.out.println("Move failed");
+                }
 
             case "resign":
                 System.out.print("<GAME NAME>: ");
             case "highlightMove":
-                System.out.print("<NUMBER>: ");
-                String number1 = scanner.nextLine();
-                System.out.print("<LETTER>: ");
-                String letter1 = scanner.nextLine();
+                System.out.print("<from>[1-8][a-h]: ");
+                String startingPosition = scanner.nextLine();
+                System.out.print("<to>[1-8][a-h]: >: ");
+                String endingPosition = scanner.nextLine();
 
-                String[] hightlightParams = {number1, letter1};
+                String[] hightlightParams = {startingPosition, endingPosition};
 
 
                 System.out.print("<GAME NAME>: ");
