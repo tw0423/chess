@@ -183,6 +183,12 @@ public class ChessRepl {
                 client.reDrawBoard();
                 break;
             case "leave":
+                System.out.print("are you sure you want to leave? (yes): ");
+                String check = scanner.nextLine();
+                if(check.equals("yes")){
+                    client.leaveGame();
+                }
+                break;
 
             case "move":
                 System.out.print("<from>[1-8][a-h]: ");
@@ -198,16 +204,21 @@ public class ChessRepl {
                 }else{
                     System.out.println("Move failed");
                 }
+                break;
 
             case "resign":
-                System.out.print("<GAME NAME>: ");
+                System.out.print("are you sure you want to resign? (yes): ");
+                String check = scanner.nextLine();
+                if(check.equals("yes")){
+                    client.resign();
+                }
+                break;
             case "highlightMove":
                 System.out.print("<at>[1-8][a-h]: ");
                 startingPosition = scanner.nextLine();
                 String[] hightlightParams = {startingPosition};
                 client.highlight(hightlightParams);
 
-                System.out.print("<GAME NAME>: ");
 
         }
     }

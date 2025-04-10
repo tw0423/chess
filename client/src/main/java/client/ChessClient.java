@@ -5,7 +5,9 @@ import model.GameData;
 import model.UserData;
 import reqres.*;
 import ui.ChessBoardPainter;
+import websocket.commands.LeaveCommand;
 import websocket.commands.MakeMoveCommand;
+import websocket.commands.ResignCommand;
 import websocket.messages.LoadGame;
 import websocket.messages.Notification;
 import websocket.messages.Error;
@@ -267,6 +269,19 @@ public class ChessClient{
         }
 
     }
+
+    public void resign(){
+        ResignCommand resignCommand = new ResignCommand(authToken, gameID);
+        ws.handleResign(resignCommand);
+    }
+
+    public void leaveGame(){
+        LeaveCommand leaveCommand = new LeaveCommand(authToken, gameID);
+        ws.handleLeaveGame(leaveCommand);
+
+    }
+
+
 
 
 
