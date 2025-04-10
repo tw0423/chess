@@ -2,5 +2,7 @@ package client;
 
 public enum State {
     LOGOUT,
-    LOGIN
+    LOGIN,
+    INGAME,
+    OBSERVE
 }

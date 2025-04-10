@@ -41,8 +41,14 @@ public class ChessRepl {
         if (state == State.LOGOUT) {
             handleLOGOUT(cmd, scanner);
         }
-        else{
+        else if (state == State.LOGIN) {
             handleLOGGIN(cmd, scanner);
+        }
+        else if (state == State.OBSERVE) {
+            handleINGAME(cmd, scanner);
+        }
+        else{
+            handleOBSERVE(cmd, scanner);
         }
 
     }
@@ -105,6 +111,9 @@ public class ChessRepl {
                 String[] obsParams = { obsId, color };
 
                 client.observeGame(obsParams);
+
+                state = State.INGAME;
+
                 break;
 
             case "logout":
@@ -121,7 +130,7 @@ public class ChessRepl {
         ArrayList<String> params = null;
         switch (command) {
             case "help":
-                printPreloginHelp();
+                printInGameHelp();
                 break;
             case "login":
                 System.out.print("<USERNAME>: ");
@@ -161,6 +170,55 @@ public class ChessRepl {
 
             default:
                 System.out.println("Unknown command. Type 'help' for options.");
+        }
+    }
+
+    private void handleINGAME(String command, Scanner scanner) {
+        ArrayList<String> params = null;
+        switch (command) {
+            case "help":
+                printPreloginHelp();
+                break;
+            case "redrawBoard":
+                System.out.print("<USERNAME>: ");
+                String loginUser = scanner.nextLine();
+                System.out.print("<PASSWORD>: ");
+                String loginPass = scanner.nextLine();
+
+                String[] loginParams = {loginUser, loginPass};
+
+                if (client.doLogin(loginParams)) {
+                    state = State.LOGIN;
+                    System.out.println("here is the new commands you can use after logging in.");
+                    printPostloginHelp();
+
+                } else {
+                    System.out.println("Login failed");
+                }
+                break;
+            case "leave":
+
+            case "move":
+                System.out.print("<NUMBER>: ");
+                String number = scanner.nextLine();
+                System.out.print("<LETTER>: ");
+                String letter = scanner.nextLine();
+
+                String[] moveParams = {number, letter};
+
+            case "resign":
+                System.out.print("<GAME NAME>: ");
+            case "highlightMove":
+                System.out.print("<NUMBER>: ");
+                String number1 = scanner.nextLine();
+                System.out.print("<LETTER>: ");
+                String letter1 = scanner.nextLine();
+
+                String[] hightlightParams = {number1, letter1};
+
+
+                System.out.print("<GAME NAME>: ");
+
         }
     }
 
@@ -210,6 +268,54 @@ public class ChessRepl {
         printBlue("help ");
         printGray("- see all possible commands");
         newLine();
+    }
+
+    private void printInGameHelp() {
+
+        printBlue("redrawBoard ");
+        printGray("- to redraw the chess board ");
+
+        newLine();
+        printBlue("leave ");
+        printGray("- tp leave playing the game ");
+
+        newLine();
+        printBlue("move ");
+        printGray("- make your move");
+
+        newLine();
+        printBlue("resign ");
+        printGray("- resign game");
+
+        newLine();
+        printBlue("highlightMove ");
+        printGray("- highlight legal move for specific chess piece ");
+        newLine();
+        printBlue("help ");
+        printGray("- see all possible commands");
+        newLine();
+
+    }
+
+    private void printObserveGameHelp() {
+        printBlue("redrawBoard ");
+        printGray("- to redraw the chess board ");
+
+        newLine();
+        printBlue("leave ");
+        printGray("- tp leave observing the game ");
+
+
+        newLine();
+        printBlue("highlightMove ");
+        printGray("- highlight legal move ");
+        newLine();
+
+        printBlue("help ");
+        printGray("- see all possible commands");
+        newLine();
+
+
     }
 
     private void newLine(){

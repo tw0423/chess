@@ -5,6 +5,7 @@ import model.GameData;
 import model.UserData;
 import reqres.*;
 import ui.ChessBoardPainter;
+import websocket.messages.ServerMessage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -200,6 +201,10 @@ public class ChessClient{
         } catch (NumberFormatException e) {
             return false;
         }
+    }
+
+    public void notifyCommandMessage(ServerMessage message){
+        message.toString();
     }
 
 

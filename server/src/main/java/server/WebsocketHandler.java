@@ -21,7 +21,6 @@ import websocket.messages.Notification;
 import java.io.IOException;
 import java.util.Objects;
 import chess.*;
-import websocket.messages.Notification;
 
 @WebSocket
 public class WebsocketHandler {
@@ -108,6 +107,7 @@ public class WebsocketHandler {
             if(joinColor == null){
                 Error error = new Error("You are not allowed to make a move in this game since you are just observing the game");
                 sendErrorMessage(session, error);
+                return;
             }
             ChessGame.TeamColor opponentColor = getOpponentColor(joinColor);
             ChessMove move = command.getMove();
