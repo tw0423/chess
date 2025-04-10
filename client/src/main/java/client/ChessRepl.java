@@ -3,6 +3,7 @@ package client;
 import java.util.Scanner;
 import java.util.ArrayList;
 
+import chess.ChessPosition;
 import model.GameData;
 import ui.EscapeSequences;
 public class ChessRepl {
@@ -97,9 +98,13 @@ public class ChessRepl {
 
                 if(client.joinGame(joinParams)){
                     System.out.println("Game joined !");
+                    System.out.print("New possible commands:  ");
                 }else{
                     System.out.println("Error joining game !");
                 }
+                state = State.INGAME;
+
+                printInGameHelp();
                 break;
 
             case "observe":
@@ -112,7 +117,9 @@ public class ChessRepl {
 
                 client.observeGame(obsParams);
 
-                state = State.INGAME;
+                state = State.OBSERVE;
+                System.out.print("New possible commands:  ");
+                printObserveGameHelp();
 
                 break;
 
@@ -177,7 +184,7 @@ public class ChessRepl {
         ArrayList<String> params = null;
         switch (command) {
             case "help":
-                printPreloginHelp();
+                printInGameHelp();
                 break;
             case "redrawBoard":
                 client.reDrawBoard();
@@ -188,7 +195,10 @@ public class ChessRepl {
                 if(check.equals("yes")){
                     client.leaveGame();
                 }
+
+                state = State.LOGIN;
                 break;
+
 
             case "move":
                 System.out.print("<from>[1-8][a-h]: ");
@@ -208,20 +218,50 @@ public class ChessRepl {
 
             case "resign":
                 System.out.print("are you sure you want to resign? (yes): ");
-                String check = scanner.nextLine();
-                if(check.equals("yes")){
+                String check1 = scanner.nextLine();
+                if(check1.equals("yes")){
                     client.resign();
                 }
                 break;
             case "highlightMove":
                 System.out.print("<at>[1-8][a-h]: ");
-                startingPosition = scanner.nextLine();
-                String[] hightlightParams = {startingPosition};
+                String highlightPosition = scanner.nextLine();
+                String[] hightlightParams = {highlightPosition};
                 client.highlight(hightlightParams);
 
 
         }
     }
+
+    private void handleOBSERVE(String command, Scanner scanner) {
+        switch (command) {
+            case "help":
+                printObserveGameHelp();
+                break;
+            case "redrawBoard":
+                client.reDrawBoard();
+                break;
+            case "leave":
+                System.out.print("are you sure you want to leave? (yes): ");
+                String check = scanner.nextLine();
+                if(check.equals("yes")){
+                    client.leaveGame();
+                }
+                state = State.LOGIN;
+                break;
+
+
+            case "highlightMove":
+                System.out.print("<at>[1-8][a-h]: ");
+                String position = scanner.nextLine();
+                String[] hightlightParams = {position};
+                client.highlight(hightlightParams);
+
+
+        }
+    }
+
+
 
     private void printPreloginHelp(){
         printBlue("register  ");

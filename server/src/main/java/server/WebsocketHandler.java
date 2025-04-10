@@ -148,15 +148,13 @@ public class WebsocketHandler {
 
 
         }
-        catch (DataAccessException e) {
+        catch (DataAccessException | IOException | InvalidMoveException | UnauthorizedException e) {
             Error error = new Error(e.getMessage());
-//            sendErrorMessage(session, error);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (InvalidMoveException e) {
-            throw new RuntimeException(e);
-        } catch (UnauthorizedException e) {
-            throw new RuntimeException(e);
+            try {
+                sendErrorMessage(session, error);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
         }
 
     }
@@ -172,7 +170,12 @@ public class WebsocketHandler {
             Server.connections.broadcastInGame(session, notification);
             session.close();
         }catch (DataAccessException | IOException e) {
-            throw new RuntimeException(e);
+            Error error = new Error(e.getMessage());
+            try {
+                sendErrorMessage(session, error);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
         }
     }
 
@@ -196,12 +199,13 @@ public class WebsocketHandler {
             Notification notification = new Notification("%s:$s has resohmed. %s now is over".formatted(userColor.toString(), authData.username(), gameData.gameName() ));
             Server.connections.broadcastInGame(session, notification);
         }
-        catch (DataAccessException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (UnauthorizedException e) {
-            throw new RuntimeException(e);
+        catch (DataAccessException | IOException | UnauthorizedException e) {
+            Error error = new Error(e.getMessage());
+            try {
+                sendErrorMessage(session, error);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
         }
     }
 

@@ -6,6 +6,7 @@ import dataaccess.*;
 import spark.*;
 import com.google.gson.Gson;
 
+
 public class Server {
 
     UserHandler userHandler;
@@ -20,6 +21,8 @@ public class Server {
     GameDAO gameDAO;
 
     static ConnectionsManager connections;
+
+    private WebsocketHandler webSocketHandler;
     public Server() {
 //change it here
         try {
@@ -39,6 +42,8 @@ public class Server {
 
         connections = new ConnectionsManager();
 
+        webSocketHandler = new WebsocketHandler();
+
 
 
     }
@@ -47,6 +52,8 @@ public class Server {
         Spark.port(desiredPort);
 
         Spark.staticFiles.location("web");
+
+        Spark.webSocket("/ws", webSocketHandler);
 
         Spark.delete("/db", this::clear);
         Spark.post("/user", userHandler::register);
