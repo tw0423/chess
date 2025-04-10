@@ -86,7 +86,7 @@ public class ConnectionsManager {
         }
     }
 
-    public void replace(int gameID, Session session) {
+    public void replace( Session session, int gameID) {
         Connection connection = new Connection(gameID, session);
         connections.put( session, gameID);
 

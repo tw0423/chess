@@ -40,7 +40,7 @@ public class WebsocketHandler {
     public void onMessage(Session session, String message) throws Exception {
         if (message.contains("\"commandType\":\"CONNECT\"")) {
             ConnectCommand command = new Gson().fromJson(message, ConnectCommand.class);
-            Server.connections.replace( command.getGameID(), session);
+            Server.connections.replace(  session, command.getGameID());
             manageConnect(session, command);
         }
         else if (message.contains("\"commandType\":\"MAKE_MOVE\"")) {
@@ -58,6 +58,40 @@ public class WebsocketHandler {
     }
 
     private void manageConnect(Session session, ConnectCommand command) {
+        //add the session into the connectionsmanager
+        //check is it the observer or player
+        //if it is observer, boradcast ..observer
+        //if it is gameplaer, broadcast .. joiner
+        try {
+            int gameID = command.getGameID();
+            String authToken = command.getAuthToken();
+
+            GameData gameData = Server.gameService.getGame(gameID);
+
+            AuthData authData = Server.userService.getAuth(authToken);
+            String userName = authData.authToken();
+
+            ChessGame.TeamColor joinColor = getTeamColor(authData, gameData);
+
+            boolean isPlayer;
+            Notification notification;
+            if(joinColor == null){
+//                isPlayer = false;
+                notification = new Notification("%s joined the game as observer".formatted(userName));
+            }else{
+//                isPlayer = true;
+                 notification = new Notification("%s:%s joined the game as player".formatted(joinColor.toString(), userName));
+            }
+
+            Server.connections.replace( session, gameID);
+            Server.connections.broadcastInGame(session, notification);
+        }
+        catch (DataAccessException e) {
+        throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
 
     }
 
@@ -141,6 +175,36 @@ public class WebsocketHandler {
         }
         return null;
 
+    }
+
+    public void manageLeave(Session session, ResignCommand command) {
+        try {
+            String authToken = command.getAuthToken();
+
+            AuthData authData = Server.userService.getAuth(authToken);
+            Server.connections.remove(session);
+
+            Notification notification = new Notification("%s has left the game".formatted(authData.username()));
+            Server.connections.broadcastInGame(session, notification);
+            session.close();
+        }catch (DataAccessException | IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public void manageResign(Session session, ResignCommand command) {
+        try{
+            String authToken = command.getAuthToken();
+            int gameID = command.getGameID();
+            AuthData authData = Server.userService.getAuth(authToken);
+            GameData gameData = Server.gameService.getGame(gameID);
+            ChessGame.TeamColor userColor = getTeamColor(authData, gameData);
+            
+        }
+        catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private ChessGame.TeamColor getOpponentColor(ChessGame.TeamColor color) {

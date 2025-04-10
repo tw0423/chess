@@ -13,7 +13,7 @@ import java.util.Objects;
 public class ChessGame implements Cloneable {
     private TeamColor teamColar;
     private ChessBoard board;
-
+    public boolean gameOver = true;
     public ChessGame() {
         this.board = new ChessBoard();
         this.board.resetBoard();
@@ -303,6 +303,13 @@ public class ChessGame implements Cloneable {
                 "teamColar=" + teamColar +
                 ", board=" + board +
                 '}';
+    }
+
+    public boolean gameNotOver(){
+        return !gameOver;
+    }
+    public void setGameOver(){
+        gameOver = true;
     }
 }
 
