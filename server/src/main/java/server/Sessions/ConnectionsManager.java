@@ -91,19 +91,27 @@ public class ConnectionsManager {
     }
 
     public void send(Session session, String message) throws IOException {
-        session.getRemote().sendString(new Gson().toJson(message));
+        session.getRemote().sendString(message);
     }
 
-    public void broadcastInGame(Session currentSession, ServerMessage message) throws IOException {
+    public void broadcastInGame(Session currentSession, ServerMessage message, boolean toItSelf) throws IOException {
         int currentGameID = connections.get(currentSession);
         for (var session : connections.entrySet()) {
             int loopingGameID = session.getValue();
             Session loopSession = session.getKey();
             boolean inGame = (loopingGameID != 0);
             boolean inSameGame = (currentGameID == loopingGameID);
-            if (inGame && inSameGame) {
-                send(loopSession, new Gson().toJson(message));
+            if(session.getKey().equals(currentSession)) {
+                if(toItSelf) {
+                    send(loopSession, new Gson().toJson(message));
+                }
+            }else{
+
+                if (inGame && inSameGame) {
+                    send(loopSession, new Gson().toJson(message));
+                }
             }
+
         }
     }
 

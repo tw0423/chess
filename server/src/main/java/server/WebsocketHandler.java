@@ -19,7 +19,9 @@ import websocket.messages.LoadGame;
 import websocket.messages.Notification;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Objects;
+
 import chess.*;
 
 @WebSocket
@@ -27,7 +29,7 @@ public class WebsocketHandler {
 
     @OnWebSocketConnect
     public void onConnect(Session session) throws Exception {
-        Server.connections.add( session, 0);
+        Server.connections.add(session, 0);
     }
 
     @OnWebSocketClose
@@ -39,18 +41,15 @@ public class WebsocketHandler {
     public void onMessage(Session session, String message) throws Exception {
         if (message.contains("\"commandType\":\"CONNECT\"")) {
             ConnectCommand command = new Gson().fromJson(message, ConnectCommand.class);
-            Server.connections.replace(  session, command.getGameID());
+            Server.connections.replace(session, command.getGameID());
             manageConnect(session, command);
-        }
-        else if (message.contains("\"commandType\":\"MAKE_MOVE\"")) {
+        } else if (message.contains("\"commandType\":\"MAKE_MOVE\"")) {
             MakeMoveCommand command = new Gson().fromJson(message, MakeMoveCommand.class);
             manageMakeMove(session, command);
-        }
-        else if (message.contains("\"commandType\":\"LEAVE\"")) {
+        } else if (message.contains("\"commandType\":\"LEAVE\"")) {
             LeaveCommand command = new Gson().fromJson(message, LeaveCommand.class);
             manageLeave(session, command);
-        }
-        else if (message.contains("\"commandType\":\"RESIGN\"")) {
+        } else if (message.contains("\"commandType\":\"RESIGN\"")) {
             ResignCommand command = new Gson().fromJson(message, ResignCommand.class);
             manageResign(session, command);
         }
@@ -66,27 +65,39 @@ public class WebsocketHandler {
             String authToken = command.getAuthToken();
 
             GameData gameData = Server.gameService.getGame(gameID);
-
+            if(gameData == null){
+                Error error = new Error("wrong gameID");
+                sendErrorMessage(session, error);
+            }
             AuthData authData = Server.userService.getAuth(authToken);
+            if (authData == null) {
+                // Send an error notification or handle accordingly
+                try {
+                    sendErrorMessage(session, new Error("Invalid auth token"));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return;
+            }
             String userName = authData.authToken();
 
             ChessGame.TeamColor joinColor = getTeamColor(authData, gameData);
 
             boolean isPlayer;
             Notification notification;
-            if(joinColor == null){
+            if (joinColor == null) {
 //                isPlayer = false;
                 notification = new Notification("%s joined the game as observer".formatted(userName));
-            }else{
+            } else {
 //                isPlayer = true;
-                 notification = new Notification("%s:%s joined the game as player".formatted(joinColor.toString(), userName));
+                notification = new Notification("%s:%s joined the game as player".formatted(joinColor.toString(), userName));
             }
 
-            Server.connections.replace( session, gameID);
-            Server.connections.broadcastInGame(session, notification);
-        }
-        catch (DataAccessException e) {
-        throw new RuntimeException(e);
+            Server.connections.replace(session, gameID);
+            sendLoadGame(session, new LoadGame(gameData.game()));
+            Server.connections.broadcastInGame(session, notification, false);
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -99,12 +110,18 @@ public class WebsocketHandler {
             int gameID = command.getGameID();
             String authToken = command.getAuthToken();
             GameData gameData = Server.gameService.getGame(gameID);
+
             AuthData authData = Server.userService.getAuth(authToken);
+
+            if(authData == null){
+                Error error = new Error("not authorized");
+                sendErrorMessage(session, error);
+            }
 
             ChessGame game = gameData.game();
             ChessGame.TeamColor joinColor = getTeamColor(authData, gameData);
             //error if the connector is in an observer
-            if(joinColor == null){
+            if (joinColor == null) {
                 Error error = new Error("You are not allowed to make a move in this game since you are just observing the game");
                 sendErrorMessage(session, error);
                 return;
@@ -112,43 +129,49 @@ public class WebsocketHandler {
             ChessGame.TeamColor opponentColor = getOpponentColor(joinColor);
             ChessMove move = command.getMove();
 
+            Collection<ChessMove> validMoves = game.validMoves(move.getStartPosition());
+
+            if(!validMoves.contains(move)){
+                Error error = new Error("invalid move");
+                sendErrorMessage(session, error);
+                return;
+            }
+
+
+
             String opponentName = (opponentColor == ChessGame.TeamColor.BLACK ? gameData.blackUsername() : gameData.whiteUsername());
 
 
-
-            if(joinColor == game.getTeamTurn()) {
+            if (joinColor == game.getTeamTurn()) {
                 game.makeMove(move);
-                if(game.isInCheck(opponentColor)){
-                    Notification notify = new Notification("%s:%s is checkmated".formatted(opponentColor.toString(), opponentName));
-                    Server.connections.broadcastInGame(session, notify);
-                }
-                else if(game.isInStalemate(opponentColor)){
-                    Notification notify = new Notification("Both of you are in stalemate");
-                    Server.connections.broadcastInGame(session, notify);
-
-                }
-                else if(game.isInCheck(opponentColor)){
+                if (game.isInCheck(opponentColor)) {
                     Notification notify = new Notification("%s:%s is in check".formatted(opponentColor.toString(), opponentName));
-                    Server.connections.broadcastInGame(session, notify);
+                    Server.connections.broadcastInGame(session, notify, true);
+                } else if (game.isInStalemate(opponentColor)) {
+                    Notification notify = new Notification("Both of you are in stalemate");
+                    Server.connections.broadcastInGame(session, notify, true);
+
+                } else if (game.isInCheckmate(opponentColor)) {
+                    Notification notify = new Notification("%s:%s is in checkmated".formatted(opponentColor.toString(), opponentName));
+                    Server.connections.broadcastInGame(session, notify,true);
                 }
 
                 //update the game
                 GameData newData = new GameData(gameID, gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), game);
                 Server.gameService.updateGame(authToken, newData);
                 LoadGame load = new LoadGame(game);
-                Server.connections.broadcastInGame(session, load);
+                Server.connections.broadcastInGame(session, load, true);
+                Notification notification = new Notification("%s:%s just made a new move.".formatted(joinColor.toString(),authData.username()));
+                Server.connections.broadcastInGame(session, notification, false);
 
-
-            }
-            else{
+            } else {
                 Error error = new Error("It's not your term yet");
                 sendErrorMessage(session, error);
                 //send the error messages showing that it is not your term right now
             }
 
 
-        }
-        catch (DataAccessException | IOException | InvalidMoveException | UnauthorizedException e) {
+        } catch (DataAccessException | IOException | InvalidMoveException | UnauthorizedException e) {
             Error error = new Error(e.getMessage());
             try {
                 sendErrorMessage(session, error);
@@ -167,9 +190,9 @@ public class WebsocketHandler {
             Server.connections.remove(session);
 
             Notification notification = new Notification("%s has left the game".formatted(authData.username()));
-            Server.connections.broadcastInGame(session, notification);
+            Server.connections.broadcastInGame(session, notification, false);
             session.close();
-        }catch (DataAccessException | IOException e) {
+        } catch (DataAccessException | IOException e) {
             Error error = new Error(e.getMessage());
             try {
                 sendErrorMessage(session, error);
@@ -180,7 +203,7 @@ public class WebsocketHandler {
     }
 
     public void manageResign(Session session, ResignCommand command) {
-        try{
+        try {
             String authToken = command.getAuthToken();
             int gameID = command.getGameID();
             AuthData authData = Server.userService.getAuth(authToken);
@@ -189,17 +212,16 @@ public class WebsocketHandler {
 
             ChessGame.TeamColor userColor = getTeamColor(authData, gameData);
 
-            if(userColor == null){
+            if (userColor == null) {
                 Error error = new Error("You are not allowed to make a resign in a game as a observer");
                 sendErrorMessage(session, error);
                 return;
             }
             game.setGameOver();
             Server.gameService.updateGame(authToken, new GameData(gameID, gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), game));
-            Notification notification = new Notification("%s:$s has resohmed. %s now is over".formatted(userColor.toString(), authData.username(), gameData.gameName() ));
-            Server.connections.broadcastInGame(session, notification);
-        }
-        catch (DataAccessException | IOException | UnauthorizedException e) {
+            Notification notification = new Notification("%s:%s has resohmed. %s now is over".formatted(userColor.toString(), authData.username(), gameData.gameName()));
+            Server.connections.broadcastInGame(session, notification,false);
+        } catch (DataAccessException | IOException | UnauthorizedException e) {
             Error error = new Error(e.getMessage());
             try {
                 sendErrorMessage(session, error);
@@ -210,25 +232,18 @@ public class WebsocketHandler {
     }
 
 
-
-
-
     private ChessGame.TeamColor getTeamColor(AuthData authdata, GameData gameData) {
         String userName = authdata.username();
         String whiteName = gameData.whiteUsername();
         String blackName = gameData.blackUsername();
-        if(Objects.equals(userName, whiteName)){
+        if (Objects.equals(userName, whiteName)) {
             return ChessGame.TeamColor.WHITE;
-        }
-        else if(Objects.equals(userName, blackName)){
+        } else if (Objects.equals(userName, blackName)) {
             return ChessGame.TeamColor.BLACK;
         }
         return null;
 
     }
-
-
-
 
 
     private ChessGame.TeamColor getOpponentColor(ChessGame.TeamColor color) {
@@ -239,12 +254,15 @@ public class WebsocketHandler {
         session.getRemote().sendString(new Gson().toJson(message));
     }
 
+    private void sendLoadGame(Session session, LoadGame message) throws IOException {
+        session.getRemote().sendString(new Gson().toJson(message));
+    }
+
+
 
 
     //留言板
     //I have't impelemting the situation that the game is over, I am kinda lazy rn
-
-
 
 
 }

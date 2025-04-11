@@ -22,7 +22,7 @@ public class Server {
 
     static ConnectionsManager connections;
 
-    private WebsocketHandler webSocketHandler;
+//    private WebsocketHandler webSocketHandler;
     public Server() {
 //change it here
         try {
@@ -42,7 +42,7 @@ public class Server {
 
         connections = new ConnectionsManager();
 
-        webSocketHandler = new WebsocketHandler();
+//        webSocketHandler = new WebsocketHandler();
 
 
 
@@ -53,7 +53,7 @@ public class Server {
 
         Spark.staticFiles.location("web");
 
-        Spark.webSocket("/ws", webSocketHandler);
+        Spark.webSocket("/ws", WebsocketHandler.class);
 
         Spark.delete("/db", this::clear);
         Spark.post("/user", userHandler::register);

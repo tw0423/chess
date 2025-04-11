@@ -165,7 +165,7 @@ public class WebSocketTests {
         ChessMove move = new ChessMove(new ChessPosition(2, 7), new ChessPosition(4, 7), null);
         makeMove(white, gameID, move, true, false, Set.of(black, observer), Set.of());
         move = new ChessMove(new ChessPosition(7, 5), new ChessPosition(6, 5), null);
-        makeMove(black, gameID, move, true, false, Set.of(white, observer), Set.of());
+        makeMove(black, gameID , move, true, false, Set.of(white, observer), Set.of());
         move = new ChessMove(new ChessPosition(2, 6), new ChessPosition(3, 6), null);
         makeMove(white, gameID, move, true, false, Set.of(black, observer), Set.of());
         move = new ChessMove(new ChessPosition(8, 4), new ChessPosition(4, 8), null);
