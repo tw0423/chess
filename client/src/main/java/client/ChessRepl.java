@@ -194,14 +194,7 @@ public class ChessRepl {
                 client.reDrawBoard();
                 break;
             case "leave":
-                System.out.print("are you sure you want to leave? (yes): ");
-                String check = scanner.nextLine();
-                if(check.equals("yes")){
-                    client.leaveGame();
-                }
-
-                state = State.LOGIN;
-                printPostloginHelp();
+                manageLeave(scanner);
                 break;
 
 
@@ -230,10 +223,9 @@ public class ChessRepl {
                 }
                 break;
             case "hightlightmove":
-                System.out.print("<at>[a-h][1-8]: ");
-                String highlightPosition = scanner.nextLine();
-                String[] hightlightParams = {highlightPosition};
-                client.highlight(hightlightParams);
+                managehightlight( scanner);
+
+                break;
 
 
         }
@@ -248,26 +240,34 @@ public class ChessRepl {
                 client.reDrawBoard();
                 break;
             case "leave":
-                System.out.print("are you sure you want to leave? (yes): ");
-                String check = scanner.nextLine();
-                if(check.equals("yes")){
-                    client.leaveGame();
-                }
-                state = State.LOGIN;
-                printPostloginHelp();
+                manageLeave(scanner);
                 break;
-
-
             case "hightlightmove":
-                System.out.print("<at>[a-h][1-8]: ");
-                String position = scanner.nextLine();
-                String[] hightlightParams = {position};
-                client.highlight(hightlightParams);
+                managehightlight( scanner);
                 break;
 
 
 
         }
+    }
+
+    private void manageLeave(Scanner scanner) {
+        System.out.print("are you sure you want to leave? (yes): ");
+        String check = scanner.nextLine();
+        if(check.equals("yes")){
+            client.leaveGame();
+        }
+        state = State.LOGIN;
+        printPostloginHelp();
+
+    }
+
+    private void managehightlight(Scanner scanner) {
+        System.out.print("<at>[a-h][1-8]: ");
+        String position = scanner.nextLine();
+        String[] hightlightParams = {position};
+        client.highlight(hightlightParams);
+
     }
 
 
