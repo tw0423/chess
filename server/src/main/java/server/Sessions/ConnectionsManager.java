@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import com.google.gson.Gson;
-import websocket.*;
 import websocket.messages.*;
 //public class ConnectionsManager {
 //    public final ConcurrentHashMap<Integer, Connection> connections = new ConcurrentHashMap<>();
@@ -87,7 +86,6 @@ public class ConnectionsManager {
     }
 
     public void replace( Session session, int gameID) {
-        Connection connection = new Connection(gameID, session);
         connections.put( session, gameID);
 
     }

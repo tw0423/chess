@@ -104,20 +104,34 @@ public class ChessBoardPainter {
                 if (subline == middleline) {
                     int prefixLength = SQUARE_CHARACTERS_WIDTH / 2;
                     int suffixLength = SQUARE_CHARACTERS_WIDTH - prefixLength - 1;
-                    out.print(es.EMPTY.repeat(prefixLength));
-                    printPlayer(out, row, squareNum);
-                    out.print(es.EMPTY.repeat(suffixLength));
-                }
-                else {
-                    ChessPosition currentPosition = new ChessPosition(row+1, squareNum+1);
-                    if(isTargerted(row+1, squareNum+1, out)||isHighlighted(row+1, squareNum+1, highlightedMoves, out)){
-                        out.print(es.EMPTY.repeat(SQUARE_CHARACTERS_WIDTH));
+
+                    if(isTargeted(row+1, squareNum+1, out)||isHighlighted(row+1, squareNum+1, highlightedMoves, out)){
+                        out.print(es.EMPTY.repeat(prefixLength));
+                        printPlayer(out, row, squareNum);
+                        out.print(es.EMPTY.repeat(suffixLength));
                         out.print(es.RESET_TEXT_COLOR);
                         out.print(es.RESET_BG_COLOR);
 
                     }
-                    out.print(es.EMPTY.repeat(SQUARE_CHARACTERS_WIDTH));
+                    else {
+                        out.print(es.EMPTY.repeat(prefixLength));
+                        printPlayer(out, row, squareNum);
+                    }
+
+
+
+
                 }
+//                else {
+//                    ChessPosition currentPosition = new ChessPosition(row+1, squareNum+1);
+//                    if(isTargeted(row+1, squareNum+1, out)||isHighlighted(row+1, squareNum+1, highlightedMoves, out)){
+//                        out.print(es.EMPTY.repeat(SQUARE_CHARACTERS_WIDTH));
+//                        out.print(es.RESET_TEXT_COLOR);
+//                        out.print(es.RESET_BG_COLOR);
+//
+//                    }
+//                    out.print(es.EMPTY.repeat(SQUARE_CHARACTERS_WIDTH));
+//                }
 
 
             }
@@ -140,7 +154,7 @@ public class ChessBoardPainter {
     }
 
     public static boolean isHighlighted(int row, int col, Collection<ChessPosition> validPoitions, PrintStream out) {
-        ChessPosition currentPosition = new ChessPosition(row+1, col+1);
+        ChessPosition currentPosition = new ChessPosition(row, col);
         if (validPoitions.contains(currentPosition)) {
             out.print(es.SET_BG_COLOR_GREEN);
             out.print(es.SET_TEXT_COLOR_GREEN);
@@ -149,14 +163,15 @@ public class ChessBoardPainter {
         return false;
     }
 
-    public static boolean isTargerted(int row, int col, PrintStream out ) {
-        ChessPosition position = new ChessPosition(row+1, col+1);
-        if (highlightedPosition.equals(position)) {
+    public static boolean isTargeted(int row, int col, PrintStream out ) {
+        ChessPosition position = new ChessPosition(row, col);
+        if (highlightedPosition != null && highlightedPosition.equals(position)) {
             out.print(es.SET_BG_COLOR_YELLOW);
             out.print(es.SET_TEXT_COLOR_YELLOW);
             return true;
         }
         return false;
+
     }
 
 

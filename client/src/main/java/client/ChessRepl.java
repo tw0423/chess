@@ -45,7 +45,7 @@ public class ChessRepl {
         else if (state == State.LOGIN) {
             handleLOGGIN(cmd, scanner);
         }
-        else if (state == State.OBSERVE) {
+        else if (state == State.INGAME) {
             handleINGAME(cmd, scanner);
         }
         else{
@@ -98,13 +98,15 @@ public class ChessRepl {
 
                 if(client.joinGame(joinParams)){
                     System.out.println("Game joined !");
-                    System.out.print("New possible commands:  ");
+                    System.out.println("New possible commands:  ");
+                    state = State.INGAME;
+                    printInGameHelp();
                 }else{
                     System.out.println("Error joining game !");
                 }
-                state = State.INGAME;
 
-                printInGameHelp();
+
+
                 break;
 
             case "observe":
@@ -115,11 +117,13 @@ public class ChessRepl {
 
                 String[] obsParams = { obsId, color };
 
-                client.observeGame(obsParams);
+                if(client.observeGame(obsParams)){
+                    state = State.OBSERVE;
+                    System.out.print("New possible commands:  ");
+                    printObserveGameHelp();
+                }
 
-                state = State.OBSERVE;
-                System.out.print("New possible commands:  ");
-                printObserveGameHelp();
+
 
                 break;
 
@@ -186,7 +190,7 @@ public class ChessRepl {
             case "help":
                 printInGameHelp();
                 break;
-            case "redrawBoard":
+            case "redrawboard":
                 client.reDrawBoard();
                 break;
             case "leave":
@@ -197,13 +201,14 @@ public class ChessRepl {
                 }
 
                 state = State.LOGIN;
+                printPostloginHelp();
                 break;
 
 
             case "move":
-                System.out.print("<from>[1-8][a-h]: ");
+                System.out.print("<from>[a-h][1-8]: ");
                 String startingPosition = scanner.nextLine();
-                System.out.print("<to>[1-8][a-h]: >: ");
+                System.out.print("<to>[a-h][1-8]: >: ");
                 String endingPosition = scanner.nextLine();
                 System.out.print("<promotion>[queen|rook|bishop|knight] <skip it if not possible>: ");
                 String promotion = scanner.nextLine();
@@ -221,10 +226,11 @@ public class ChessRepl {
                 String check1 = scanner.nextLine();
                 if(check1.equals("yes")){
                     client.resign();
+                    System.out.println("Resign successful");
                 }
                 break;
-            case "highlightMove":
-                System.out.print("<at>[1-8][a-h]: ");
+            case "hightlightmove":
+                System.out.print("<at>[a-h][1-8]: ");
                 String highlightPosition = scanner.nextLine();
                 String[] hightlightParams = {highlightPosition};
                 client.highlight(hightlightParams);
@@ -238,7 +244,7 @@ public class ChessRepl {
             case "help":
                 printObserveGameHelp();
                 break;
-            case "redrawBoard":
+            case "redrawboard":
                 client.reDrawBoard();
                 break;
             case "leave":
@@ -248,14 +254,17 @@ public class ChessRepl {
                     client.leaveGame();
                 }
                 state = State.LOGIN;
+                printPostloginHelp();
                 break;
 
 
-            case "highlightMove":
-                System.out.print("<at>[1-8][a-h]: ");
+            case "hightlightmove":
+                System.out.print("<at>[a-h][1-8]: ");
                 String position = scanner.nextLine();
                 String[] hightlightParams = {position};
                 client.highlight(hightlightParams);
+                break;
+
 
 
         }

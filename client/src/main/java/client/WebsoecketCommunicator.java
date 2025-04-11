@@ -65,7 +65,10 @@ public class WebsoecketCommunicator extends Endpoint{
 
     public void handleLeaveGame(LeaveCommand leaveCommand) {
         sendCommand(leaveCommand);
+    }
 
+    public void handleConnectCommand(ConnectCommand connectCommand) {
+        sendCommand(connectCommand);
     }
 
     private void sendCommand(UserGameCommand command) {

@@ -5,6 +5,7 @@ import model.GameData;
 import model.UserData;
 import reqres.*;
 import ui.ChessBoardPainter;
+import websocket.commands.ConnectCommand;
 import websocket.commands.LeaveCommand;
 import websocket.commands.MakeMoveCommand;
 import websocket.commands.ResignCommand;
@@ -161,7 +162,9 @@ public class ChessClient{
 
         }
 
+
         this.observeGame(para[0], playerColor);
+        ws.handleConnectCommand(new ConnectCommand(authToken, this.gameID));
         return true;
     }
 
@@ -212,6 +215,7 @@ public class ChessClient{
                 painter.main(null);
             }
         }
+        ws.handleConnectCommand(new ConnectCommand(authToken, this.gameID));
         return true;
     }
 
@@ -231,44 +235,64 @@ public class ChessClient{
         drawBoard(currentGame, gameColor);
     }
 
-    public boolean makeMove(String ... para){
-        ChessPiece.PieceType promotiontype;
-        if (para.length >= 3 && para[0].matches("[a-h][1-8]") && para[1].matches("[a-h][1-8]")) {
-            ChessPosition startingPosition = new ChessPosition(para[0].charAt(1) - '0', para[0].charAt(0) - ('a' - 1));
-            ChessPosition endingPosition = new ChessPosition(para[1].charAt(1) - '0', para[1].charAt(0) - ('a' - 1));
+    public boolean makeMove(String ... para) {
+        try {
+            ChessPiece.PieceType promotiontype;
+            if (para.length >= 3 && para[0].matches("[a-h][1-8]") && para[1].matches("[a-h][1-8]")) {
+                ChessPosition endingPosition;
+                ChessPosition startingPosition;
+                if (gameColor.equals("white")) {
+                    startingPosition = new ChessPosition((para[0].charAt(1) - '0'), para[0].charAt(0) - ('a' - 1));
+                    endingPosition = new ChessPosition((para[1].charAt(1) - '0'), para[1].charAt(0) - ('a' - 1));
 
-            //update the promotion
-            if(para.length == 3){
-                String promotion = para[2];
-                promotiontype = getPieceType(promotion);
+                } else {
+                    startingPosition = new ChessPosition(para[0].charAt(1) - '0', para[0].charAt(0) - ('a' - 1));
+                    endingPosition = new ChessPosition(para[1].charAt(1) - '0', para[1].charAt(0) - ('a' - 1));
+                }
 
-            }else{
-                 promotiontype = null;
-            }
+                //update the promotion
+                if (para.length == 3) {
+                    String promotion = para[2];
+                    promotiontype = getPieceType(promotion);
 
-            if(!checkColor(startingPosition, currentGame)){
-                System.out.println("You can not move the opponent's chess piece");
-            }
+                } else {
+                    promotiontype = null;
+                }
 
-            ChessMove move = new ChessMove(startingPosition, endingPosition, promotiontype);
-            if(currentGame.validMoves(startingPosition).contains(move)){
-                MakeMoveCommand makeMove = new MakeMoveCommand(authToken, gameID, move);
-                ws.handleMakeMove(makeMove);
-            }
-            else {
-                System.out.println("invalid move");
+                if (!checkColor(startingPosition, currentGame)) {
+                    System.out.println("You can not move the opponent's chess piece");
+                    return false;
+                }
+
+                ChessMove move = new ChessMove(startingPosition, endingPosition, promotiontype);
+                if (checkValidMove(startingPosition, move)) {
+                    MakeMoveCommand makeMove = new MakeMoveCommand(authToken, gameID, move);
+                    ws.handleMakeMove(makeMove);
+                    currentGame.makeMove(move);
+                } else {
+                    System.out.println("invalid move");
+                    return false;
+                }
+                return true;
+            } else {
+                System.out.println("please provide a valid position");
                 return false;
             }
-            return true;
-        }else{
-            System.out.println("please provide a valid position");
+        }catch(InvalidMoveException e){
+            System.out.println(e.getMessage());
             return false;
         }
     }
 
     public void highlight(String ... para){
         if (para.length == 1 && para[0].matches("[a-h][1-8]")) {
-            ChessPosition targetingPosition = new ChessPosition(para[0].charAt(1) - '0', para[0].charAt(0) - ('a' - 1));
+            ChessPosition targetingPosition;
+            if(gameColor.equals("white")){
+                 targetingPosition = new ChessPosition(9- (para[0].charAt(1) - '0'), para[0].charAt(0) - ('a' - 1));
+            }else{
+                 targetingPosition = new ChessPosition((para[0].charAt(1) - '0'), para[0].charAt(0) - ('a' - 1));
+
+            }
             painter.drawHighlightMoves(targetingPosition);
         }else{
             System.out.println("invalid position");
@@ -327,12 +351,34 @@ public class ChessClient{
 
     private boolean checkColor(ChessPosition position, ChessGame game){
         ChessBoard board = game.getBoard();
-        ChessPiece piece = board.getPiece(position);
-        if(piece.getTeamColor().equals(gameColor)){
+
+        ChessPiece piece;
+
+//        if(gameColor.equals("white")){
+//            piece = board.getPiece(new ChessPosition(9-position.getRow(), position.getColumn()));
+//        }else{
+//            piece = board.getPiece(position);
+//        }
+//        if(piece.getTeamColor().equals(gameColor)){
+//            return true;
+//        }else {
+//            return false;
+//        }
+        piece = board.getPiece(position);
+        String pieceColor = piece.getTeamColor().toString().toLowerCase();
+        if(pieceColor.equals(gameColor)){
             return true;
         }else {
             return false;
         }
+    }
+
+    private boolean checkValidMove(ChessPosition position, ChessMove move){
+//        if(gameColor.equals("white")){
+//            ChessPosition flipPosition = new ChessPosition(9-position.getRow(), position.getColumn());
+//            return currentGame.validMoves(flipPosition).contains(move);
+//        }
+        return currentGame.validMoves(position).contains(move);
     }
 
 
