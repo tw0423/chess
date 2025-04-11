@@ -62,8 +62,7 @@ public class ChessBoardPainter {
                 drawSquares(out, row);
 
             }
-//            labelNumer(row, out);
-            //reset the colors
+
             switchSqaureColors(out);
             setBlack(out);
             out.println();
@@ -91,7 +90,6 @@ public class ChessBoardPainter {
 
 
             }
-//            out.println();
         }
     }
 
@@ -122,20 +120,8 @@ public class ChessBoardPainter {
 
 
                 }
-//                else {
-//                    ChessPosition currentPosition = new ChessPosition(row+1, squareNum+1);
-//                    if(isTargeted(row+1, squareNum+1, out)||isHighlighted(row+1, squareNum+1, highlightedMoves, out)){
-//                        out.print(es.EMPTY.repeat(SQUARE_CHARACTERS_WIDTH));
-//                        out.print(es.RESET_TEXT_COLOR);
-//                        out.print(es.RESET_BG_COLOR);
-//
-//                    }
-//                    out.print(es.EMPTY.repeat(SQUARE_CHARACTERS_WIDTH));
-//                }
-
 
             }
-//            out.println();
         }
     }
 

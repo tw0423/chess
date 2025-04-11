@@ -244,8 +244,11 @@ public class WebsocketHandler {
                 return;
             }
             game.setGameOver();
-            Server.gameService.updateGame(authToken, new GameData(gameID, gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), game));
-            Notification notification = new Notification("%s:%s has resigned. %s now is over".formatted(userColor.toString(), authData.username(), gameData.gameName()));
+            GameData update = new GameData(gameID, gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), game);
+            Server.gameService.updateGame(authToken, update);
+            Notification notification = new Notification(
+                    "%s:%s has resigned. %s now is over".formatted(userColor.toString(), authData.username(), gameData.gameName())
+            );
             Server.connections.broadcastInGame(session, notification,true);
         } catch (DataAccessException | IOException | UnauthorizedException e) {
             Error error = new Error(e.getMessage());
@@ -284,10 +287,7 @@ public class WebsocketHandler {
         session.getRemote().sendString(new Gson().toJson(message));
     }
 
-    private void sendNotification(Session session, Notification message) throws IOException {
-        session.getRemote().sendString(new Gson().toJson(message));
 
-    }
 
 
 

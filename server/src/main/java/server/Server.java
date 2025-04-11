@@ -1,10 +1,9 @@
 package server;
 import excpetion.UnsureException;
-import server.Sessions.ConnectionsManager;
+import server.sessions.ConnectionsManager;
 import service.*;
 import dataaccess.*;
 import spark.*;
-import com.google.gson.Gson;
 
 
 public class Server {

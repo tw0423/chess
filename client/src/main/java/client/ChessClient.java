@@ -354,16 +354,7 @@ public class ChessClient{
 
         ChessPiece piece;
 
-//        if(gameColor.equals("white")){
-//            piece = board.getPiece(new ChessPosition(9-position.getRow(), position.getColumn()));
-//        }else{
-//            piece = board.getPiece(position);
-//        }
-//        if(piece.getTeamColor().equals(gameColor)){
-//            return true;
-//        }else {
-//            return false;
-//        }
+
         piece = board.getPiece(position);
         String pieceColor = piece.getTeamColor().toString().toLowerCase();
         if(pieceColor.equals(gameColor)){
@@ -374,10 +365,7 @@ public class ChessClient{
     }
 
     private boolean checkValidMove(ChessPosition position, ChessMove move){
-//        if(gameColor.equals("white")){
-//            ChessPosition flipPosition = new ChessPosition(9-position.getRow(), position.getColumn());
-//            return currentGame.validMoves(flipPosition).contains(move);
-//        }
+
         return currentGame.validMoves(position).contains(move);
     }
 

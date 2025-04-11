@@ -305,9 +305,7 @@ public class ChessGame implements Cloneable {
                 '}';
     }
 
-    public boolean gameNotOver(){
-        return !gameOver;
-    }
+
     public void setGameOver(){
         gameOver = true;
     }
