@@ -203,7 +203,7 @@ public class WebsocketHandler {
             if(userName.equals(gameData.blackUsername())){
                 updateGame = new GameData(gameID, gameData.whiteUsername(), null, gameData.gameName(), gameData.game());
             }else{
-                updateGame = new GameData(gameID, gameData.whiteUsername(), null, gameData.gameName(), gameData.game());
+                updateGame = new GameData(gameID, null,gameData.blackUsername() , gameData.gameName(), gameData.game());
             }
             Notification notification = new Notification("%s has left the game".formatted(authData.username()));
             Server.gameService.updateGame(authToken,updateGame);
