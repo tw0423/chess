@@ -116,9 +116,16 @@ public class WebsocketHandler {
             if(authData == null){
                 Error error = new Error("not authorized");
                 sendErrorMessage(session, error);
+                return;
             }
 
             ChessGame game = gameData.game();
+
+            if(game.gameOver){
+                Error error = new Error("game is alrealdy over.");
+                sendErrorMessage(session, error);
+                return;
+            }
             ChessGame.TeamColor joinColor = getTeamColor(authData, gameData);
             //error if the connector is in an observer
             if (joinColor == null) {
@@ -184,15 +191,29 @@ public class WebsocketHandler {
 
     public void manageLeave(Session session, LeaveCommand command) {
         try {
+
             String authToken = command.getAuthToken();
-
+            int gameID = command.getGameID();
+            GameData gameData = Server.gameService.getGame(gameID);
             AuthData authData = Server.userService.getAuth(authToken);
-            Server.connections.remove(session);
+            String userName = authData.username();
 
+            GameData updateGame;
+
+            if(userName.equals(gameData.blackUsername())){
+                updateGame = new GameData(gameID, gameData.whiteUsername(), null, gameData.gameName(), gameData.game());
+            }else{
+                updateGame = new GameData(gameID, gameData.whiteUsername(), null, gameData.gameName(), gameData.game());
+            }
             Notification notification = new Notification("%s has left the game".formatted(authData.username()));
+            Server.gameService.updateGame(authToken,updateGame);
             Server.connections.broadcastInGame(session, notification, false);
+            Server.connections.remove(session);
             session.close();
-        } catch (DataAccessException | IOException e) {
+
+
+
+        } catch (DataAccessException | IOException |UnauthorizedException e) {
             Error error = new Error(e.getMessage());
             try {
                 sendErrorMessage(session, error);
@@ -209,7 +230,12 @@ public class WebsocketHandler {
             AuthData authData = Server.userService.getAuth(authToken);
             GameData gameData = Server.gameService.getGame(gameID);
             ChessGame game = gameData.game();
+            if(game.gameOver){
+                Error error = new Error("game is alrealdy over.");
+                sendErrorMessage(session, error);
 
+                return;
+            }
             ChessGame.TeamColor userColor = getTeamColor(authData, gameData);
 
             if (userColor == null) {
@@ -219,8 +245,8 @@ public class WebsocketHandler {
             }
             game.setGameOver();
             Server.gameService.updateGame(authToken, new GameData(gameID, gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), game));
-            Notification notification = new Notification("%s:%s has resohmed. %s now is over".formatted(userColor.toString(), authData.username(), gameData.gameName()));
-            Server.connections.broadcastInGame(session, notification,false);
+            Notification notification = new Notification("%s:%s has resigned. %s now is over".formatted(userColor.toString(), authData.username(), gameData.gameName()));
+            Server.connections.broadcastInGame(session, notification,true);
         } catch (DataAccessException | IOException | UnauthorizedException e) {
             Error error = new Error(e.getMessage());
             try {
@@ -256,6 +282,11 @@ public class WebsocketHandler {
 
     private void sendLoadGame(Session session, LoadGame message) throws IOException {
         session.getRemote().sendString(new Gson().toJson(message));
+    }
+
+    private void sendNotification(Session session, Notification message) throws IOException {
+        session.getRemote().sendString(new Gson().toJson(message));
+
     }
 
 
