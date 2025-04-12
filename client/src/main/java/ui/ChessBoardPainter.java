@@ -20,7 +20,7 @@ public class ChessBoardPainter {
     private static ChessGame.TeamColor color;
     private static ChessPosition highlightedPosition = null;
     private static Collection<ChessPosition> highlightedMoves = new ArrayList<>();
-
+    private PrintStream out;
 
     public ChessBoardPainter(ChessGame chessGame, String playerColor) {
         this.chessGame = chessGame;
@@ -29,6 +29,9 @@ public class ChessBoardPainter {
         }else{
             color = ChessGame.TeamColor.BLACK;
         }
+
+        out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+
 
     }
 
@@ -44,6 +47,10 @@ public class ChessBoardPainter {
 
 //        out.print(SET_BG_COLOR_BLACK);
 //        out.print(SET_TEXT_COLOR_WHITE);
+    }
+
+    public void callDrawBoard(){
+        drawBoard(out, false);
     }
 
     public static void drawBoard(PrintStream out, boolean highlight) {
@@ -126,9 +133,13 @@ public class ChessBoardPainter {
     }
 
     public void drawHighlightMoves(ChessPosition position) {
-        highlightedPosition = position;
         highlightedMoves.clear();
 
+        if(color.equals(ChessGame.TeamColor.BLACK)){
+            highlightedPosition = new ChessPosition(position.getRow(), 9-position.getColumn());
+        }else{
+            highlightedPosition = new ChessPosition(9-position.getRow(), position.getColumn());
+        }
         Collection<ChessMove> moves = chessGame.validMoves(position);
         for (ChessMove move : moves) {
             highlightedMoves.add(move.getEndPosition());
@@ -140,7 +151,12 @@ public class ChessBoardPainter {
     }
 
     public static boolean isHighlighted(int row, int col, Collection<ChessPosition> validPoitions, PrintStream out) {
-        ChessPosition currentPosition = new ChessPosition(row, col);
+        ChessPosition currentPosition;
+        if(color.equals(ChessGame.TeamColor.BLACK)){
+            currentPosition = new ChessPosition(row, 9-col);
+        }else{
+            currentPosition = new ChessPosition(9-row,col);
+        }
         if (validPoitions.contains(currentPosition)) {
             out.print(es.SET_BG_COLOR_GREEN);
             out.print(es.SET_TEXT_COLOR_GREEN);
@@ -151,6 +167,7 @@ public class ChessBoardPainter {
 
     public static boolean isTargeted(int row, int col, PrintStream out ) {
         ChessPosition position = new ChessPosition(row, col);
+
         if (highlightedPosition != null && highlightedPosition.equals(position)) {
             out.print(es.SET_BG_COLOR_YELLOW);
             out.print(es.SET_TEXT_COLOR_YELLOW);

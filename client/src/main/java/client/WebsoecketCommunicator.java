@@ -73,6 +73,7 @@ public class WebsoecketCommunicator extends Endpoint{
 
     private void sendCommand(UserGameCommand command) {
         String message = new Gson().toJson(command);
+
         this.session.getAsyncRemote().sendText(message);
     }
 

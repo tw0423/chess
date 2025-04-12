@@ -30,11 +30,14 @@ public class ChessClient{
     private ChessGame currentGame = null;
     private int gameID = 0;
     private ChessBoardPainter painter;
+    private boolean sessionClose;
+    private String serverURL;
 
 
 
 
     public ChessClient(String serverURL, ChessRepl chessRepl){
+        this.serverURL = serverURL;
         this.facade = new ServerFacade(serverURL);
         this.chessRepl = chessRepl;
         try {
@@ -57,6 +60,7 @@ public class ChessClient{
             String username = para[0];
             String password = para[1];
             String email = para[2];
+
 
             if(username.isEmpty() || password.isEmpty() || email.isEmpty()){
                 System.out.println("missing required information");
@@ -131,7 +135,15 @@ public class ChessClient{
     }
 
     public boolean joinGame(String ... para){
+        if(sessionClose){
 
+            try {
+                this.ws = new WebsoecketCommunicator(serverURL, this);
+            } catch (ResponseException ex) {
+                System.out.println("Error re-establishing websocket connection: " + ex.getMessage());
+            }
+            sessionClose = false;
+        }
         String playerColor = para[1];
         int gameID;
         if(isInteger(para[0])) {
@@ -159,11 +171,15 @@ public class ChessClient{
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return false;
-
         }
 
+        ChessGame game = this.getGame(this.gameID);
+        currentGame = game;
 
-        this.observeGame(para[0], playerColor);
+
+
+//        this.drawBoard(game,playerColor);
+
         ws.handleConnectCommand(new ConnectCommand(authToken, this.gameID));
         return true;
     }
@@ -181,7 +197,16 @@ public class ChessClient{
     }
 
     public boolean observeGame(String ... para){
+        if(sessionClose){
 
+                try {
+                    this.ws = new WebsoecketCommunicator(serverURL, this);
+                } catch (ResponseException ex) {
+                    System.out.println("Error re-establishing websocket connection: " + ex.getMessage());
+                }
+            sessionClose = false;
+
+        }
         String playerColor = para[1];
         if(!(playerColor.equals("white")||playerColor.equals("black"))){
             System.out.println("only accept color for white or black");
@@ -198,23 +223,9 @@ public class ChessClient{
         }
         GameData gameData = list.get(gameNum-1);
         int gameID = gameData.gameID();
-        ListGameReponse res = null;
-        try {
-            res = facade.getGames();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        ChessGame game = this.getGame(gameID);
+        this.drawBoard(game,playerColor);
 
-        }
-        ArrayList<GameData> games = res.games();
-        for(GameData game: games){
-            if(game.gameID() == gameID){
-                ChessGame chessGame = game.game();
-                this.gameID = game.gameID();
-                currentGame = chessGame;
-                painter= new ui.ChessBoardPainter(chessGame, playerColor);
-                painter.main(null);
-            }
-        }
         ws.handleConnectCommand(new ConnectCommand(authToken, this.gameID));
         return true;
     }
@@ -287,11 +298,10 @@ public class ChessClient{
     public void highlight(String ... para){
         if (para.length == 1 && para[0].matches("[a-h][1-8]")) {
             ChessPosition targetingPosition;
-            if(gameColor.equals("white")){
-                 targetingPosition = new ChessPosition(9- (para[0].charAt(1) - '0'), para[0].charAt(0) - ('a' - 1));
+            if(gameColor.equals("black")){
+                 targetingPosition = new ChessPosition((para[0].charAt(1) - '0'), para[0].charAt(0) - ('a' - 1));
             }else{
                  targetingPosition = new ChessPosition((para[0].charAt(1) - '0'), para[0].charAt(0) - ('a' - 1));
-
             }
             painter.drawHighlightMoves(targetingPosition);
         }else{
@@ -308,6 +318,7 @@ public class ChessClient{
     public void leaveGame(){
         LeaveCommand leaveCommand = new LeaveCommand(authToken, gameID);
         ws.handleLeaveGame(leaveCommand);
+        this.sessionClose = true;
 
     }
 
@@ -325,14 +336,23 @@ public class ChessClient{
 
     public void handleLoadGame(LoadGame loadGame){
         System.out.println("game updated: ");
-        this.drawBoard(loadGame.getGame(), gameColor);
         currentGame = loadGame.getGame();
+
+        this.drawBoard(loadGame.getGame(), gameColor);
+        System.out.println(">>> ");
     }
 
     private void drawBoard(ChessGame game, String color){
-        painter.updateGame(game);
-        painter.updateColor(color);
-        painter.main(null);
+        if(painter == null){
+            painter= new ui.ChessBoardPainter(game,color);
+        }
+        else{
+            painter.updateGame(game);
+            painter.updateColor(color);
+        }
+
+
+        painter.callDrawBoard();
 
     }
     private ChessPiece.PieceType getPieceType(String piece){
@@ -367,6 +387,25 @@ public class ChessClient{
     private boolean checkValidMove(ChessPosition position, ChessMove move){
 
         return currentGame.validMoves(position).contains(move);
+    }
+
+    private ChessGame getGame(int gameID){
+        ListGameReponse res = null;
+        ChessGame  chessGame = null;
+        try {
+            res = facade.getGames();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+
+        }
+        ArrayList<GameData> games = res.games();
+        for(GameData game: games) {
+            if (game.gameID() == gameID) {
+                chessGame = game.game();
+            }
+        }
+        return chessGame;
+
     }
 
 
