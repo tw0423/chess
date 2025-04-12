@@ -28,8 +28,7 @@ public class WebsoecketCommunicator extends Endpoint{
                 public void onMessage(String message) {
                     handleMessage(message);
 
-                    Notification notification = new Gson().fromJson(message, Notification.class);
-                    chessClient.notify(notification);
+
                 }
             });
         } catch (DeploymentException | IOException | URISyntaxException ex) {

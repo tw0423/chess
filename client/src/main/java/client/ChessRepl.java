@@ -219,7 +219,8 @@ public class ChessRepl {
                 String check1 = scanner.nextLine();
                 if(check1.equals("yes")){
                     client.resign();
-                    System.out.println("Resign successful");
+                    state = State.LOGIN;
+                    printPostloginHelp();
                 }
                 break;
             case "hightlightmove":

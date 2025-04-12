@@ -223,10 +223,11 @@ public class ChessClient{
         }
         GameData gameData = list.get(gameNum-1);
         int gameID = gameData.gameID();
-        ChessGame game = this.getGame(gameID);
-        this.drawBoard(game,playerColor);
+        this.gameID = gameID;
+//        ChessGame game = this.getGame(gameID);
+//        this.drawBoard(game,playerColor);
 
-        ws.handleConnectCommand(new ConnectCommand(authToken, this.gameID));
+        ws.handleConnectCommand(new ConnectCommand(authToken, gameID));
         return true;
     }
 
@@ -313,12 +314,20 @@ public class ChessClient{
     public void resign(){
         ResignCommand resignCommand = new ResignCommand(authToken, gameID);
         ws.handleResign(resignCommand);
+
     }
 
     public void leaveGame(){
         LeaveCommand leaveCommand = new LeaveCommand(authToken, gameID);
         ws.handleLeaveGame(leaveCommand);
         this.sessionClose = true;
+
+//        try {
+//            this.ws = new WebsoecketCommunicator(serverURL, this);
+//            sessionClose = false;
+//        } catch (ResponseException ex) {
+//            System.out.println("Error re-establishing websocket: " + ex.getMessage());
+//        }
 
     }
 
@@ -328,6 +337,9 @@ public class ChessClient{
 
     public void notify(Notification notification){
         System.out.println(notification.getMessage());
+        System.out.println();
+        System.out.println(notification.getMessage());
+        System.out.print(">>> ");
     }
 
     public void notifyError(Error error){
