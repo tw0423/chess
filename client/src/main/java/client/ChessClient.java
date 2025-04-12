@@ -255,6 +255,7 @@ public class ChessClient{
                 ChessPosition startingPosition;
                 if (gameColor.equals("white")) {
                     startingPosition = new ChessPosition((para[0].charAt(1) - '0'), para[0].charAt(0) - ('a' - 1));
+
                     endingPosition = new ChessPosition((para[1].charAt(1) - '0'), para[1].charAt(0) - ('a' - 1));
 
                 } else {
@@ -272,7 +273,7 @@ public class ChessClient{
                 }
 
                 if (!checkColor(startingPosition, currentGame)) {
-                    System.out.println("You can not move the opponent's chess piece");
+                    System.out.println("You can not move the opponent's chess piece or piece not existd");
                     return false;
                 }
 
@@ -387,7 +388,12 @@ public class ChessClient{
         ChessPiece piece;
 
 
+
         piece = board.getPiece(position);
+        if(piece ==null){
+            return false;
+
+        }
         String pieceColor = piece.getTeamColor().toString().toLowerCase();
         if(pieceColor.equals(gameColor)){
             return true;

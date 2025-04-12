@@ -79,7 +79,8 @@ public class WebsocketHandler {
                 }
                 return;
             }
-            String userName = authData.authToken();
+            //change it to username
+            String userName = authData.username();
 
             ChessGame.TeamColor joinColor = getTeamColor(authData, gameData);
 
@@ -110,7 +111,6 @@ public class WebsocketHandler {
             int gameID = command.getGameID();
             String authToken = command.getAuthToken();
             GameData gameData = Server.gameService.getGame(gameID);
-
             AuthData authData = Server.userService.getAuth(authToken);
 
             if(authData == null){
@@ -118,6 +118,8 @@ public class WebsocketHandler {
                 sendErrorMessage(session, error);
                 return;
             }
+            String uername = authData.username();
+
 
             ChessGame game = gameData.game();
 
@@ -151,25 +153,38 @@ public class WebsocketHandler {
 
             if (joinColor == game.getTeamTurn()) {
                 game.makeMove(move);
-                if (game.isInCheck(opponentColor)) {
-                    Notification notify = new Notification("%s:%s is in check".formatted(opponentColor.toString(), opponentName));
-                    Server.connections.broadcastInGame(session, notify, true);
-                } else if (game.isInStalemate(opponentColor)) {
-                    Notification notify = new Notification("Both of you are in stalemate");
-                    Server.connections.broadcastInGame(session, notify, true);
-
-                } else if (game.isInCheckmate(opponentColor)) {
-                    Notification notify = new Notification("%s:%s is in checkmated".formatted(opponentColor.toString(), opponentName));
-                    Server.connections.broadcastInGame(session, notify,true);
-                }
 
                 //update the game
                 GameData newData = new GameData(gameID, gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), game);
                 Server.gameService.updateGame(authToken, newData);
                 LoadGame load = new LoadGame(game);
                 Server.connections.broadcastInGame(session, load, true);
-                Notification notification = new Notification("%s:%s just made a new move.".formatted(joinColor.toString(),authData.username()));
-                Server.connections.broadcastInGame(session, notification, false);
+
+
+
+                ChessPosition startPosition = move.getStartPosition();
+                ChessPosition endPosition = move.getEndPosition();
+                String fromNotation = positionToNotation(startPosition);
+                String toNotation = positionToNotation(endPosition);
+
+                Notification notifyMove = new Notification("%s:%s moved from %s to %s."
+                        .formatted(joinColor.toString(), uername, fromNotation, toNotation));
+
+                Server.connections.broadcastInGame(session, notifyMove, true);
+
+
+                if ( game.isInCheckmate(opponentColor)) {
+                    Notification notify = new Notification("%s:%s is in checkmated".formatted(opponentColor.toString(), opponentName));
+                    Server.connections.broadcastInGame(session, notify,true);
+                } else if (game.isInStalemate(opponentColor)) {
+                    Notification notify = new Notification("Both of you are in stalemate");
+                    Server.connections.broadcastInGame(session, notify, true);
+
+                } else if (game.isInCheck(opponentColor) ) {
+                    Notification notify = new Notification("%s:%s is in check".formatted(opponentColor.toString(), opponentName));
+                    Server.connections.broadcastInGame(session, notify, true);
+                }
+
 
             } else {
                 Error error = new Error("It's not your term yet");
@@ -202,8 +217,10 @@ public class WebsocketHandler {
 
             if(userName.equals(gameData.blackUsername())){
                 updateGame = new GameData(gameID, gameData.whiteUsername(), null, gameData.gameName(), gameData.game());
-            }else{
+            }else if (userName.equals(gameData.blackUsername())){
                 updateGame = new GameData(gameID, null,gameData.blackUsername() , gameData.gameName(), gameData.game());
+            }else{
+                updateGame = gameData;
             }
             Notification notification = new Notification("%s has left the game".formatted(authData.username()));
             Server.gameService.updateGame(authToken,updateGame);
@@ -295,5 +312,11 @@ public class WebsocketHandler {
     //留言板
     //I have't impelemting the situation that the game is over, I am kinda lazy rn
 
-
+    private String positionToNotation(ChessPosition pos) {
+        // Assuming getRow() and getColumn() methods exist.
+        int row = pos.getRow();
+        int col = pos.getColumn(); // where 1 = a, 2 = b, etc.
+        char file = (char) ('a' + col - 1);
+        return "" + file + row;
+    }
 }

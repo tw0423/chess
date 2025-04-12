@@ -1,7 +1,7 @@
 package ui;
 
 import chess.*;
-
+import client.nullPieceException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -55,7 +55,7 @@ public class ChessBoardPainter {
 
     public static void drawBoard(PrintStream out, boolean highlight) {
         drawColumnLabels(out);
-        if(color.equals(ChessGame.TeamColor.BLACK)){
+        if(color.equals(ChessGame.TeamColor.WHITE)){
             squareColor = SquareColor.GREY;
         }else{
             squareColor = SquareColor.WHITE;
@@ -190,7 +190,7 @@ public class ChessBoardPainter {
         }
     }
 
-    private static void printPlayer(PrintStream out, int row, int col) {
+    private static void printPlayer(PrintStream out, int row, int col){
         ChessPiece piece;
         if(color.equals(ChessGame.TeamColor.BLACK)){
              piece = chessGame.getBoard().getPiece(new ChessPosition(row+1, 9-(col+1)));
